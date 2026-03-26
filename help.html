@@ -306,6 +306,114 @@
                 <li><strong>発点てこ</strong>をクリック → 点灯（選択状態になる）</li>
                 <li><strong>着点てこ</strong>をクリック → 進路の開通を試みる</li>
             </ol>
+
+            <!-- 進路開通手順 図解 -->
+            <figure style="margin:20px 0;overflow-x:auto;">
+              <svg viewBox="0 0 862 172" xmlns="http://www.w3.org/2000/svg"
+                   style="width:100%;max-width:862px;display:block;"
+                   font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,sans-serif">
+                <defs>
+                  <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#4a90d9"/>
+                  </marker>
+                </defs>
+
+                <!-- ===== Panel 1: 初期状態 ===== -->
+                <g transform="translate(0,0)">
+                  <rect width="258" height="158" rx="6" fill="#1a1d27" stroke="#2e3250" stroke-width="1"/>
+                  <circle cx="22" cy="22" r="12" fill="#4a90d9"/>
+                  <text x="22" y="27" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+                  <text x="140" y="27" text-anchor="middle" fill="#9ca3af" font-size="12">発点てこをクリック</text>
+                  <!-- track base -->
+                  <line x1="22" y1="90" x2="236" y2="90" stroke="#2e3250" stroke-width="5" stroke-linecap="round"/>
+                  <!-- train -->
+                  <rect x="22" y="77" width="30" height="22" rx="3" fill="#3d5a80"/>
+                  <text x="37" y="92" text-anchor="middle" fill="white" font-size="9" font-weight="bold">列車</text>
+                  <!-- track circuit (unset) -->
+                  <line x1="82" y1="90" x2="188" y2="90" stroke="#2e3250" stroke-width="5"/>
+                  <!-- 発点てこ (unlit) ▶ -->
+                  <polygon points="68,79 68,101 90,90" fill="#444"/>
+                  <text x="79" y="110" text-anchor="middle" fill="#555" font-size="9">発点</text>
+                  <!-- 着点てこ (unlit) ○ -->
+                  <circle cx="189" cy="90" r="11" fill="none" stroke="#444" stroke-width="2.5"/>
+                  <text x="189" y="110" text-anchor="middle" fill="#555" font-size="9">着点</text>
+                  <!-- signal (red) -->
+                  <circle cx="220" cy="90" r="9" fill="#7f1d1d" stroke="#fca5a5" stroke-width="1.5"/>
+                  <text x="220" y="94" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="bold">停止</text>
+                  <text x="220" y="113" text-anchor="middle" fill="#9ca3af" font-size="9">信号</text>
+                  <!-- caption -->
+                  <text x="129" y="138" text-anchor="middle" fill="#e8eaf6" font-size="11">発点てこをクリックする</text>
+                  <text x="129" y="154" text-anchor="middle" fill="#9ca3af" font-size="10">発点てこが黄色に点灯する</text>
+                </g>
+
+                <!-- Arrow 1→2 -->
+                <line x1="262" y1="88" x2="289" y2="88" stroke="#4a90d9" stroke-width="2" marker-end="url(#arr)"/>
+
+                <!-- ===== Panel 2: 発点点灯→着点クリック ===== -->
+                <g transform="translate(294,0)">
+                  <rect width="258" height="158" rx="6" fill="#1a1d27" stroke="#2e3250" stroke-width="1"/>
+                  <circle cx="22" cy="22" r="12" fill="#4a90d9"/>
+                  <text x="22" y="27" text-anchor="middle" fill="white" font-size="13" font-weight="bold">2</text>
+                  <text x="140" y="27" text-anchor="middle" fill="#9ca3af" font-size="12">着点てこをクリック</text>
+                  <!-- track base -->
+                  <line x1="22" y1="90" x2="236" y2="90" stroke="#2e3250" stroke-width="5" stroke-linecap="round"/>
+                  <!-- train -->
+                  <rect x="22" y="77" width="30" height="22" rx="3" fill="#3d5a80"/>
+                  <text x="37" y="92" text-anchor="middle" fill="white" font-size="9" font-weight="bold">列車</text>
+                  <!-- track circuit (unset) -->
+                  <line x1="82" y1="90" x2="188" y2="90" stroke="#2e3250" stroke-width="5"/>
+                  <!-- 発点てこ (lit = yellow) ▶ -->
+                  <polygon points="68,79 68,101 90,90" fill="#f59e0b"/>
+                  <text x="79" y="110" text-anchor="middle" fill="#f59e0b" font-size="9">発点</text>
+                  <!-- 着点てこ (about to click, dashed border) ○ -->
+                  <circle cx="189" cy="90" r="11" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-dasharray="3,2"/>
+                  <text x="189" y="110" text-anchor="middle" fill="#aaa" font-size="9">着点</text>
+                  <!-- signal (red still) -->
+                  <circle cx="220" cy="90" r="9" fill="#7f1d1d" stroke="#fca5a5" stroke-width="1.5"/>
+                  <text x="220" y="94" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="bold">停止</text>
+                  <text x="220" y="113" text-anchor="middle" fill="#9ca3af" font-size="9">信号</text>
+                  <!-- caption -->
+                  <text x="129" y="138" text-anchor="middle" fill="#e8eaf6" font-size="11">着点てこをクリックする</text>
+                  <text x="129" y="154" text-anchor="middle" fill="#9ca3af" font-size="10">進路の開通を試みる</text>
+                </g>
+
+                <!-- Arrow 2→3 -->
+                <line x1="556" y1="88" x2="583" y2="88" stroke="#4a90d9" stroke-width="2" marker-end="url(#arr)"/>
+
+                <!-- ===== Panel 3: 進路開通 ===== -->
+                <g transform="translate(588,0)">
+                  <rect width="274" height="158" rx="6" fill="#1a1d27" stroke="#6ab04c" stroke-width="1.5"/>
+                  <circle cx="22" cy="22" r="12" fill="#6ab04c"/>
+                  <text x="22" y="27" text-anchor="middle" fill="white" font-size="12" font-weight="bold">✓</text>
+                  <text x="148" y="27" text-anchor="middle" fill="#6ab04c" font-size="13" font-weight="bold">進路開通！</text>
+                  <!-- track base -->
+                  <line x1="22" y1="90" x2="250" y2="90" stroke="#2e3250" stroke-width="5" stroke-linecap="round"/>
+                  <!-- train -->
+                  <rect x="22" y="77" width="30" height="22" rx="3" fill="#3d5a80"/>
+                  <text x="37" y="92" text-anchor="middle" fill="white" font-size="9" font-weight="bold">列車</text>
+                  <!-- track circuit (YELLOW = route set) -->
+                  <line x1="82" y1="90" x2="198" y2="90" stroke="#d97706" stroke-width="6"/>
+                  <line x1="82" y1="90" x2="198" y2="90" stroke="#fcd34d" stroke-width="2" opacity="0.5"/>
+                  <!-- 発点てこ (lit) ▶ -->
+                  <polygon points="68,79 68,101 90,90" fill="#f59e0b"/>
+                  <text x="79" y="110" text-anchor="middle" fill="#f59e0b" font-size="9">発点</text>
+                  <!-- 着点てこ (lit) ○ -->
+                  <circle cx="199" cy="90" r="11" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+                  <text x="199" y="110" text-anchor="middle" fill="#f59e0b" font-size="9">着点</text>
+                  <!-- signal (BLUE = proceed) -->
+                  <circle cx="234" cy="90" r="9" fill="#1e3a5f" stroke="#93c5fd" stroke-width="1.5"/>
+                  <text x="234" y="94" text-anchor="middle" fill="#93c5fd" font-size="8" font-weight="bold">進行</text>
+                  <text x="234" y="113" text-anchor="middle" fill="#93c5fd" font-size="9">信号</text>
+                  <!-- caption -->
+                  <text x="140" y="138" text-anchor="middle" fill="#e8eaf6" font-size="11">軌道回路が黄色に変わり</text>
+                  <text x="140" y="154" text-anchor="middle" fill="#6ab04c" font-size="11">信号が進行現示になる</text>
+                </g>
+              </svg>
+              <figcaption style="text-align:center;font-size:11px;color:#9ca3af;margin-top:6px;">
+                ■ 黄色の線：進路設定済みの軌道回路　　● 水色：進行現示　　● 赤：停止現示
+              </figcaption>
+            </figure>
+
             <p>進路が開通できる状態であれば、ポイント（分岐器）が自動的に切り替わり、信号が進行を示す表示に変わります。</p>
             <div class="callout">
                 <strong>ポイント：</strong> 発点てこと着点てこの組み合わせが「進路」を決めます。間違えた場合は発点てこをもう一度クリックして解除しましょう。
