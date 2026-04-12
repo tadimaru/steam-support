@@ -119,6 +119,11 @@
 
         strong { color: #fff; }
 
+        main ul {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+
         .flow-box {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -233,6 +238,15 @@
 
         .faq-a { color: var(--text-dim); font-size: 14px; }
 
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
         @media (max-width: 700px) {
             nav { display: none; }
             main { padding: 20px 16px; }
@@ -254,6 +268,10 @@
         <div class="section-title">基本</div>
         <ul>
             <li><a href="#goal">ゲームの目的</a></li>
+            <li><a href="#screen-layout">画面の見かた</a></li>
+            <li><a href="#map-controls">マップ操作</a></li>
+            <li><a href="#time-controls">時間操作</a></li>
+            <li><a href="#ui-elements">画面上のアイコン</a></li>
             <li><a href="#flow">基本の流れ</a></li>
             <li><a href="#lever">てこを操作する</a></li>
             <li><a href="#departure">出発ボタンを押す</a></li>
@@ -271,6 +289,7 @@
         <div class="section-title">サポート</div>
         <ul>
             <li><a href="#faq">よくある質問</a></li>
+            <li><a href="train-icon.html">列車アイコン変更</a></li>
         </ul>
     </nav>
 
@@ -284,15 +303,79 @@
             </p>
         </section>
 
+        <section id="screen-layout">
+            <h2>🖥 画面の見かた</h2>
+            <img src="screen-layout.png" alt="画面構成の説明" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px;">
+            <ul>
+                <li><strong>メイン表示エリア</strong> — 実際にゲームの操作を行うエリアです</li>
+                <li><strong>発車標エリア</strong>（右上） — 列車の発車順序・種別・発車時刻が表示されます</li>
+                <li><strong>ログ表示エリア</strong>（左下） — エラーメッセージなどが表示されます</li>
+            </ul>
+        </section>
+
+        <section id="map-controls">
+            <h2>🗺 マップ操作</h2>
+            <img src="map-controls.png" alt="マップ操作の説明" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px;">
+            <h3>マップの移動</h3>
+            <p>マップを上下左右に移動できます。</p>
+            <ul>
+                <li><strong>右クリック + ドラッグ</strong> で移動</li>
+            </ul>
+            <h3>マップの拡大・縮小</h3>
+            <p>マップを拡大、縮小できます。</p>
+            <ul>
+                <li><kbd>+</kbd>（プラス）キーで拡大</li>
+                <li><kbd>-</kbd>（マイナス）キーで縮小</li>
+                <li>または <kbd>Ctrl</kbd> + マウスホイール回転</li>
+            </ul>
+        </section>
+
+        <section id="time-controls">
+            <h2>⏱ 時間進行の操作</h2>
+            <p>一時停止、1倍速・2倍速・4倍速が選べます。画面左上のボタン、またはキーボードで操作できます。</p>
+            <ul>
+                <li><kbd>Space</kbd> — 一時停止 / 再開</li>
+                <li><kbd>1</kbd> キー — 1倍速</li>
+                <li><kbd>2</kbd> キー — 2倍速</li>
+                <li><kbd>3</kbd> キー — 4倍速</li>
+            </ul>
+        </section>
+
         <section id="flow">
             <h2>📋 基本の流れ</h2>
-            <div class="flow-box">① てこを操作して進路を開通させる
+            <div class="flow-box">① 到着する列車のホームを確認し、進路を開通させる
          ↓
-② 出発ボタンを押して列車を発車させる
+② 列車の発車時刻・順序を発車標で確認する
          ↓
-③ てこを戻して進路を解除する
+③ 発車するための進路を開通させる
+         ↓
+④ 出発ボタンを押して発車合図を出す
+         ↓
+⑤ てこを戻して進路を解除する
          ↓
     次の列車へ</div>
+        </section>
+
+        <section id="ui-elements">
+            <h2>🎮 画面上のアイコン</h2>
+            <p>マップ上のアイコンには、<strong>操作できるもの</strong>と<strong>表示のみのもの</strong>があります。</p>
+
+            <h3>操作できるアイコン</h3>
+            <img src="interactive-elements.png" alt="操作するボタン類の説明" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px;">
+            <ul>
+                <li><strong>発点てこ（▶）</strong> — クリックして点灯させます。進路の始点を指定します</li>
+                <li><strong>着点てこ（○）</strong> — 発点てこが点灯中にクリックすると、進路の開通を試みます</li>
+                <li><strong>出発ボタン</strong> — 列車を発車させるボタンです。進路が開通している状態でクリックします</li>
+            </ul>
+
+            <h3>表示のみ（操作できないもの）</h3>
+            <img src="display-elements.png" alt="操作できない表示類の説明" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px;">
+            <ul>
+                <li><strong>信号機</strong> — 進路の状態に応じて自動的に現示が変わります</li>
+                <li><strong>選別表示装置</strong> — 出発ボタンを押すと、発車する列車の種別が表示されます</li>
+                <li><strong>軌道回路（黄色の線）</strong> — 進路が開通した区間を示します</li>
+                <li><strong>軌道回路（赤色の線）</strong> — その区間に列車がいることを示します</li>
+            </ul>
         </section>
 
         <section id="lever">
@@ -300,6 +383,12 @@
             <p>
                 マップ上にある<strong>▶（矢印）アイコン</strong>がてこです。<br>
                 てこには<strong>発点（はつてん）</strong>と<strong>着点（ちゃくてん）</strong>の2種類があります。
+            </p>
+            <h3>到着させる番線を確認する</h3>
+            <p>
+                まず、<strong>列車のアイコンにカーソルを合わせる</strong>と列車番号が表示されます。
+                その列車番号を画面右上の<strong>発車標</strong>で確認し、何番線（のりば）に到着させるべきかを把握しましょう。
+                確認できたら、その番線に到着できる進路を開通させます。
             </p>
             <h3>操作手順</h3>
             <ol class="step-list">
@@ -414,6 +503,11 @@
               </figcaption>
             </figure>
 
+            <h3>進路（しんろ）とは？</h3>
+            <p>
+                <strong>進路</strong>とは、列車が安全に通るために確保された<strong>出発地点から目的地点までの一本の道筋</strong>のことです。
+                進路が「開通」すると、その経路上のポイント（分岐器）が正しい方向にセットされ、他の列車が入れないようにロックされます。
+            </p>
             <p>進路が開通できる状態であれば、ポイント（分岐器）が自動的に切り替わり、信号が進行を示す表示に変わります。</p>
             <div class="callout">
                 <strong>ポイント：</strong> 発点てこと着点てこの組み合わせが「進路」を決めます。間違えた場合は発点てこをもう一度クリックして解除しましょう。
@@ -456,6 +550,7 @@
 
         <section id="lever-types">
             <h2>🔧 てこの種類</h2>
+            <img src="lever-types.png" alt="てこ・信号機の種類の説明" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px;">
             <p>てこには<strong>本線用</strong>と<strong>入換用</strong>の2種類があります。選択時の色で区別できます。</p>
             <table>
                 <tr><th>種類</th><th>選択時の色</th><th>用途</th></tr>
@@ -548,7 +643,13 @@
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q. 出発ボタンを押しても列車が動かない</div>
-                <div class="faq-a">進路が開通しているか確認してください。進路が開通していないと出発ボタンは無効です。</div>
+                <div class="faq-a">
+                    まず<strong>発車ベル（ブザー）が鳴り、選別装置が表示されているか</strong>を確認してください。
+                    <ul>
+                        <li><strong>ベルが鳴って表示もされている場合</strong> — 列車がまだ完全に停車していない、またはドアの開閉中など、発車できる状態になっていないタイミングで押した可能性があります。少し待ってからもう一度出発ボタンを押してみてください。</li>
+                        <li><strong>ベルも鳴らず表示もされていない場合</strong> — ログに「進路が開通していません」などのメッセージが出ていないか確認してください。正しく進路を開通させてから、もう一度出発ボタンを押してみてください。</li>
+                    </ul>
+                </div>
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q. てこが戻せない</div>
@@ -558,10 +659,25 @@
                 <div class="faq-q">Q. 進路が設定できない</div>
                 <div class="faq-a">① 競合する進路がすでに開通している、② 進路内の線路に別の列車がいる、のどちらかです。ログを確認してください。</div>
             </div>
+            <div class="callout" style="margin-top: 20px;">
+                <strong>解決しない場合は</strong> <a href="https://tadimaru.github.io/steam-support/" style="color: var(--accent);">サポートページ</a> をご覧ください。
+            </div>
+        </section>
+
+        <section id="related">
+            <h2>関連ガイド</h2>
+            <ul class="step-list">
+                <li><a href="train-icon.html" style="color: var(--accent);">列車アイコン変更ガイド</a> — 列車の表示画像をカスタマイズする方法</li>
+            </ul>
         </section>
 
     </main>
 </div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
 
 </body>
 </html>
