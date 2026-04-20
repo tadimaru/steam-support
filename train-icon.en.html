@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>列車アイコン変更ガイド | 鉄道運行管理シミュレーター</title>
+    <title>Customizing Train Icons | Railway Dispatch Simulator</title>
     <style>
         :root {
             --bg: #0f1117;
@@ -22,7 +22,7 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             font-size: 15px;
             line-height: 1.75;
         }
@@ -190,98 +190,96 @@
 <header>
     <span class="icon">🖼️</span>
     <div>
-        <h1>列車アイコン変更ガイド</h1>
-        <p>鉄道運行管理シミュレーター</p>
+        <h1>Customizing Train Icons</h1>
+        <p>Railway Dispatch Simulator</p>
     </div>
-    <div class="lang-switch"><a href="train-icon.en.html">English</a></div>
+    <div class="lang-switch"><a href="train-icon.html">日本語</a></div>
 </header>
 
 <main>
 
     <section>
-        <h2>🎯 概要</h2>
+        <h2>🎯 Overview</h2>
         <p>
-            好きな列車画像を用意してフォルダに置くだけで、ゲーム内に表示される列車アイコンを自分の画像に変更できます。
-            プログラムの知識は不要です。
+            You can replace the train icons shown in-game with your own images. Just prepare the images and drop them into a folder — no programming knowledge required.
         </p>
     </section>
 
     <section>
-        <h2>📁 ファイルの置き場所</h2>
-        <p>ゲーム内の設定画面から <strong>「アイコンフォルダを開く」</strong> ボタンを押すと、該当フォルダが自動で開きます。</p>
-        <p>手動で開く場合は以下のパスです：</p>
-        <div class="path-box">C:\Users\（ユーザー名）\AppData\LocalLow\（ゲーム会社名）\（ゲーム名）\TrainIcons\</div>
+        <h2>📁 Where to Put the Files</h2>
+        <p>In the in-game settings screen, click <strong>"Open Icon Folder"</strong> and the correct folder will open automatically.</p>
+        <p>If you prefer to open it manually, the path is:</p>
+        <div class="path-box">C:\Users\(your username)\AppData\LocalLow\(company name)\(game name)\TrainIcons\</div>
         <div class="callout">
-            <strong>AppDataフォルダが見えない場合：</strong><br>
-            エクスプローラーの「表示」→「隠しファイル」を有効にするか、アドレスバーに直接パスを貼り付けてください。
+            <strong>If the AppData folder is hidden:</strong><br>
+            In File Explorer, enable "View → Hidden items," or paste the path directly into the address bar.
         </div>
     </section>
 
     <section>
-        <h2>📝 ファイルの命名規則</h2>
-        <p>ファイル名は <strong>列車形式ID + <code>.png</code></strong> にする必要があります。</p>
+        <h2>📝 File Naming Rules</h2>
+        <p>The file name must be <strong>train type ID + <code>.png</code></strong>.</p>
 
-        <p>対応している列車形式とファイル名の一覧は以下のとおりです。</p>
+        <p>The supported train types and their file names are listed below.</p>
         <table>
-            <tr><th>会社</th><th>列車形式</th><th>ファイル名</th></tr>
-            <tr><td>横浜湘南急行</td><td>1000形6連</td><td><code>Y1000_6.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>1000形8連</td><td><code>Y1000_8.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>1000形12連</td><td><code>Y1000_12.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>1500形6連</td><td><code>Y1500_6.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>1500形8連</td><td><code>Y1500_8.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>2000形8連</td><td><code>Y2000_8.png</code></td></tr>
-            <tr><td>横浜湘南急行</td><td>2000形12連</td><td><code>Y2000_12.png</code></td></tr>
-            <tr><td>帝都地下鉄</td><td>5000形8連</td><td><code>S5000_8.png</code></td></tr>
-            <tr><td>千葉みなと鉄道</td><td>3000形8連</td><td><code>C3000_8.png</code></td></tr>
-            <tr><td>千葉北鉄道</td><td>7000形8連</td><td><code>N7000_8.png</code></td></tr>
+            <tr><th>Company</th><th>Train Type</th><th>File Name</th></tr>
+            <tr><td>Yokohama Shonan Express</td><td>1000 Series (6-car)</td><td><code>Y1000_6.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>1000 Series (8-car)</td><td><code>Y1000_8.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>1000 Series (12-car)</td><td><code>Y1000_12.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>1500 Series (6-car)</td><td><code>Y1500_6.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>1500 Series (8-car)</td><td><code>Y1500_8.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>2000 Series (8-car)</td><td><code>Y2000_8.png</code></td></tr>
+            <tr><td>Yokohama Shonan Express</td><td>2000 Series (12-car)</td><td><code>Y2000_12.png</code></td></tr>
+            <tr><td>Teito Subway</td><td>5000 Series (8-car)</td><td><code>S5000_8.png</code></td></tr>
+            <tr><td>Chiba Minato Railway</td><td>3000 Series (8-car)</td><td><code>C3000_8.png</code></td></tr>
+            <tr><td>Chiba-kita Railway</td><td>7000 Series (8-car)</td><td><code>N7000_8.png</code></td></tr>
         </table>
     </section>
 
     <section>
-        <h2>🖼️ 画像ファイルの仕様</h2>
+        <h2>🖼️ Image File Specs</h2>
         <table>
-            <tr><th>項目</th><th>推奨</th></tr>
-            <tr><td>形式</td><td>PNG（透過あり推奨）</td></tr>
-            <tr><td>サイズ</td><td>256 × 256 px 前後（正方形推奨）</td></tr>
-            <tr><td>背景</td><td>透過（透過なしでも動作します）</td></tr>
+            <tr><th>Item</th><th>Recommended</th></tr>
+            <tr><td>Format</td><td>PNG (transparency recommended)</td></tr>
+            <tr><td>Size</td><td>Around 256 × 256 px (square is recommended)</td></tr>
+            <tr><td>Background</td><td>Transparent (opaque also works)</td></tr>
         </table>
         <div class="callout">
-            画像のアスペクト比によっては、ゲーム内で縦や横に引き伸ばされて表示されることがあります。
-            実際のアイコンに近い比率で作成することをおすすめします。
+            Depending on the image's aspect ratio, the icon may be stretched in-game. We recommend creating images close to the actual display aspect ratio.
         </div>
     </section>
 
     <section>
-        <h2>🚀 変更手順</h2>
+        <h2>🚀 Steps</h2>
         <ol class="step-list">
-            <li>変更したい列車形式のIDを確認する（例: <code>Y1500_6</code>）</li>
-            <li>PNG画像を用意し、ファイル名を <code>Y1500_6.png</code> にリネームする</li>
-            <li>設定画面の「アイコンフォルダを開く」でフォルダを開き、画像を配置する</li>
-            <li>ゲームを再起動する（起動済みの場合）</li>
-            <li>マップ上の列車アイコンが変わっていれば成功です</li>
+            <li>Identify the train type ID you want to change (e.g., <code>Y1500_6</code>).</li>
+            <li>Prepare a PNG image and rename it to <code>Y1500_6.png</code>.</li>
+            <li>Click "Open Icon Folder" in the settings screen and place the image there.</li>
+            <li>Restart the game (if it's already running).</li>
+            <li>If the train icon on the map has changed, you're done.</li>
         </ol>
     </section>
 
     <section>
-        <h2>❓ うまくいかない場合</h2>
-        <p><strong>アイコンが変わらない</strong></p>
+        <h2>❓ Troubleshooting</h2>
+        <p><strong>The icon didn't change</strong></p>
         <ul style="list-style: disc; padding-left: 20px; margin-bottom: 12px;">
-            <li>ファイル名のスペルが正しいか確認してください（大文字・小文字は区別されます）</li>
-            <li>拡張子が <code>.png</code> になっているか確認してください（<code>.PNG</code> は不可）</li>
-            <li>ゲームを再起動してみてください</li>
+            <li>Double-check the file name spelling (it is case-sensitive).</li>
+            <li>Make sure the extension is <code>.png</code> (uppercase <code>.PNG</code> will not work).</li>
+            <li>Try restarting the game.</li>
         </ul>
-        <p><strong>画像が変に表示される</strong></p>
+        <p><strong>The image looks distorted</strong></p>
         <ul style="list-style: disc; padding-left: 20px;">
-            <li>推奨サイズ（256×256px前後の正方形）に近いサイズに調整してみてください</li>
-            <li>透過PNGを使用すると見た目がきれいになります</li>
+            <li>Try resizing closer to the recommended size (256×256 square).</li>
+            <li>Use transparent PNGs for a cleaner look.</li>
         </ul>
     </section>
 
 </main>
 
 <footer>
-    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
-    &copy; 2026 たでぃまる / 合同会社たでぃまる
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / Tadimaru LLC
 </footer>
 
 </body>
