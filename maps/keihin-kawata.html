@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京浜川田マップガイド | 鉄道運行管理シミュレーター</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-general  { background: #713f12; color: #fde68a; }
+        .badge-shunting { background: #14532d; color: #86efac; }
+        .badge-end      { background: #1e3a5f; color: #93c5fd; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>京浜川田マップガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="keihin-kawata.en.html">English</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">マップ</div>
+        <ul>
+            <li><a href="#overview">マップ概要</a></li>
+            <li><a href="#lever-layout">てこの配置図</a></li>
+            <li><a href="#routes">進路一覧</a></li>
+        </ul>
+        <div class="section-title">折り返し運用</div>
+        <ul>
+            <li><a href="#turnaround-intro">はじめに</a></li>
+            <li><a href="#turnaround-basics">事前知識</a></li>
+            <li><a href="#turnaround-identify">折り返し列車を把握する</a></li>
+            <li><a href="#turnaround-steps">6ステップの操作手順</a></li>
+            <li><a href="#turnaround-cautions">よくある間違い</a></li>
+        </ul>
+        <div class="section-title">関連</div>
+        <ul>
+            <li><a href="../help.html">← 遊び方ガイド</a></li>
+            <li><a href="heikai-jima.html">平海島マップ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.html">← 遊び方ガイド</a> / 京浜川田マップ
+        </div>
+
+        <section id="overview">
+            <h2>🎯 マップ概要</h2>
+            <p>
+                京浜川田は、<strong>4〜7番線の4本のホーム</strong>と、折り返し運用のための<strong>引き上げ線</strong>を備えた中核駅（途中駅）です。
+                本線を通過する列車もあれば、引き上げ線に入って方向転換し別運用として再出発する「折り返し運用」もあり、
+                多様な運行パターンを体験できます。
+            </p>
+            <ul>
+                <li><strong>番線</strong>: 4番線 / 5番線 / 6番線 / 7番線</li>
+                <li><strong>引き上げ線</strong>: あり（折り返し運用で使用）</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 てこの配置図</h2>
+            <img src="keihin-kawata-levers.png" alt="京浜川田のてこ配置図" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>駅構内のてこ（発点・着点）と番線の位置関係を上の図で確認してください。</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 進路一覧</h2>
+            <p>
+                進路は<strong>発点てこ</strong>と<strong>着点てこ</strong>の組み合わせで構成されます。
+                例えば進路<strong>1A</strong>は、発点てこ「1」と着点てこ「A」で開通させる進路を指します。
+            </p>
+            <p>京浜川田の進路は、<strong>本線用</strong>と<strong>入換用</strong>の2種類に分かれます。</p>
+
+            <h3>本線進路</h3>
+            <p>旅客列車が本線〜駅構内を行き来するための進路です。発点てこは黄色で光ります。</p>
+            <table>
+                <tr><th>進路名</th><th>発点 → 着点</th><th>用途</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>下り本線から4番線に進入する進路</td></tr>
+                <tr><td><strong>1B</strong></td><td>1 → B</td><td>下り本線から5番線に進入する進路</td></tr>
+                <tr><td><strong>1C</strong></td><td>1 → C</td><td>下り本線から駅構内の引き上げ線に入る進路</td></tr>
+                <tr><td><strong>3D</strong></td><td>3 → D</td><td>4番線から下り本線へ出発する進路</td></tr>
+                <tr><td><strong>4D</strong></td><td>4 → D</td><td>5番線から下り本線へ出発する進路</td></tr>
+                <tr><td><strong>11F</strong></td><td>11 → F</td><td>上り本線から6番線に進入する進路</td></tr>
+                <tr><td><strong>11G</strong></td><td>11 → G</td><td>上り本線から7番線に進入する進路</td></tr>
+                <tr><td><strong>12I</strong></td><td>12 → I</td><td>6番線から上り本線へ出発する進路</td></tr>
+                <tr><td><strong>13I</strong></td><td>13 → I</td><td>7番線から上り本線へ出発する進路</td></tr>
+            </table>
+
+            <h3>入換進路</h3>
+            <p>駅構内での入換移動（引き上げ線入線・折り返しなど）に使う進路です。発点てこは緑で光ります。</p>
+            <table>
+                <tr><th>進路名</th><th>発点 → 着点</th><th>用途</th></tr>
+                <tr><td><strong>21C</strong></td><td>21 → C</td><td>上り本線から駅構内の引き上げ線に進入する進路</td></tr>
+                <tr><td><strong>22B</strong></td><td>22 → B</td><td>引き上げ線から5番線に進入する進路</td></tr>
+                <tr><td><strong>23D</strong></td><td>23 → D</td><td>4番線から下り本線上の折り返しポイントまで出発する進路</td></tr>
+                <tr><td><strong>24D</strong></td><td>24 → D</td><td>5番線から下り本線上の折り返しポイントまで出発する進路</td></tr>
+                <tr><td><strong>31F</strong></td><td>31 → F</td><td>下り本線から6番線に進入する進路</td></tr>
+                <tr><td><strong>31G</strong></td><td>31 → G</td><td>下り本線から7番線に進入する進路</td></tr>
+                <tr><td><strong>32C</strong></td><td>32 → C</td><td>6番線から引き上げ線に出発する進路</td></tr>
+                <tr><td><strong>32I</strong></td><td>32 → I</td><td>6番線から上り本線上の折り返しポイントまで出発する進路</td></tr>
+                <tr><td><strong>33I</strong></td><td>33 → I</td><td>7番線から上り本線上の折り返しポイントまで出発する進路</td></tr>
+            </table>
+        </section>
+
+        <section id="turnaround-intro">
+            <h2>🔄 折り返し運用の手順（京浜川田ならでは）</h2>
+            <p>
+                京浜川田では、<strong>上り列車として到着した営業列車が引き上げ線に入って方向転換し、
+                下り列車として再出発する</strong>折り返し運用があります。
+                途中で「営業 → 入換 → 営業」と用途が2回切り替わるため、<strong>本線用</strong>と<strong>入換用</strong>のてこ・信号機を使い分ける必要があります。
+                最初は戸惑いやすいですが、6ステップの決まった順序で必ず捌けます。
+            </p>
+        </section>
+
+        <section id="turnaround-basics">
+            <h2>📚 事前知識：UI要素の見分け方</h2>
+
+            <h3>発点てこの枠色</h3>
+            <table>
+                <tr><th>枠の色</th><th>用途</th><th>説明</th></tr>
+                <tr><td><strong>黄枠</strong></td><td>本線用</td><td>営業運転中の列車の進路設定に使う</td></tr>
+                <tr><td><strong>緑枠</strong></td><td>入換用</td><td>駅構内の引き上げ線などへの移動に使う（折り返し操作で必要）</td></tr>
+            </table>
+
+            <h3>信号機の塗り方</h3>
+            <table>
+                <tr><th>塗り方</th><th>用途</th></tr>
+                <tr><td><strong>単色塗りつぶし</strong></td><td>本線進路用の信号</td></tr>
+                <tr><td><strong>白枠</strong></td><td>入換進路用の信号（入換信号機）</td></tr>
+            </table>
+        </section>
+
+        <section id="turnaround-identify">
+            <h2>🔍 折り返し列車を把握する</h2>
+            <p>
+                朝ラッシュシナリオには<strong>4本の折り返し列車</strong>があります。
+                それぞれ「到着 → 引き上げ線入換(入線) → 引き上げ線入換(出線) → 出発」の順に列車番号が切り替わります。
+                発車標でこれらの到着列車番号を見つけたら、折り返し操作を開始します。
+            </p>
+            <table>
+                <tr><th>到着時</th><th>引き上げ線入換（入線）</th><th>引き上げ線入換（出線）</th><th>出発時</th></tr>
+                <tr><td><strong>649</strong></td><td>回649</td><td>回748</td><td><strong>748</strong></td></tr>
+                <tr><td><strong>651</strong></td><td>回651</td><td>回750</td><td><strong>750</strong></td></tr>
+                <tr><td><strong>653</strong></td><td>回653</td><td>回852</td><td><strong>852</strong></td></tr>
+                <tr><td><strong>655</strong></td><td>回655</td><td>回854</td><td><strong>854</strong></td></tr>
+            </table>
+            <div class="callout">
+                <strong>列車番号の見方のコツ：</strong> 引き上げ線に入ると列車番号は「回〜」に変わり、折り返して出発する際は別の列車番号として再出発します。上の表で同一行にある列車は、すべて<strong>同じ車両</strong>が担っています。
+            </div>
+            <img src="keihin-kawata-step0.png" alt="折り返し列車の把握" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 10px; display: block;">
+        </section>
+
+        <section id="turnaround-steps">
+            <h2>🔢 6ステップの操作手順</h2>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>上り6番線への進路を引く（本線用）</strong>
+                        <p>
+                            到着する営業列車を6番線に迎え入れます。
+                            <strong>黄枠</strong>の発点てこ（本線用）と6番線に対応する着点てこを操作。
+                            <strong>単色塗りつぶし</strong>の信号機が進行現示になります。
+                        </p>
+                        <img src="keihin-kawata-step1.png" alt="Step 1: 上り6番線への進路">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>引き上げ線への進路を引く（入換用）</strong>
+                        <p>
+                            6番線に到着した列車を、引き上げ線に移動させます。
+                            <strong>緑枠</strong>の発点てこ（入換用）と引き上げ線に対応する着点てこを操作。
+                            <strong>白枠</strong>の信号機（入換信号）が進行現示になります。
+                        </p>
+                        <img src="keihin-kawata-step2.png" alt="Step 2: 引き上げ線への進路">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>出発ボタンを押す（上り回送用）</strong>
+                        <p>
+                            上り回送用の出発ボタンを押します。列車が引き上げ線へ移動を開始します。
+                        </p>
+                        <img src="keihin-kawata-step3.png" alt="Step 3: 出発ボタンを押す">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>下り出発順序を確認する</strong>
+                        <p>
+                            引き上げ線にいる列車（折り返し後）が、いつどの番線から発車するかを<strong>発車標</strong>で確認します。
+                            折り返し列車は「748 / 750 / 852 / 854」のいずれかの列車番号で下り側から出発します。
+                        </p>
+                        <img src="keihin-kawata-step4.png" alt="Step 4: 下り出発順序を確認">
+                    </div>
+                </li>
+            </ol>
+
+            <div class="callout warn">
+                <strong>⚠ 重要：引き上げ線には出発ボタンがありません</strong><br>
+                引き上げ線からの発車は、<strong>進路が開通し、かつ時間になると自動で発車</strong>します。
+                順序を間違えると後続列車を妨害するため、<strong>必ず発車標で下り列車の発車順序を確認してから</strong>進路を引いてください。
+            </div>
+
+            <ol class="step-list" style="counter-reset: step 4;">
+                <li>
+                    <div class="step-content">
+                        <strong>下り5番線への進路を引く（入換用）</strong>
+                        <p>
+                            引き上げ線にいる列車を5番線（下り）に移動させます。
+                            <strong>緑枠</strong>の発点てこ（入換用・引き上げ線側）と5番線に対応する着点てこを操作。
+                            <strong>白枠</strong>の信号機が進行現示になります。
+                        </p>
+                        <img src="keihin-kawata-step5.png" alt="Step 5: 下り5番線への進路">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>下り本線への進路を引く（本線用）</strong>
+                        <p>
+                            5番線にいる列車を下り本線へ送り出します。
+                            <strong>黄枠</strong>の発点てこ（本線用）と下り本線方向の着点てこを操作。
+                            <strong>単色塗りつぶし</strong>の信号機が進行現示になり、出発時刻になると下り本線方向に発車します。
+                        </p>
+                        <img src="keihin-kawata-step6.png" alt="Step 6: 下り本線への進路">
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section id="turnaround-cautions">
+            <h2>⚠ よくある間違い・注意点</h2>
+
+            <h3>① 用途違いのてこ・信号機を使わない</h3>
+            <p>本線（黄枠）と入換（緑枠）の発点てこを混同しないこと。本線進路に入換用てこは使えません（逆も同様）。</p>
+
+            <h3>② 引き上げ線からの発車は時間管理が重要</h3>
+            <p>出発ボタンがなく時間で自動発車するため、<strong>必ず発車標で順序を確認してから</strong>進路を引いてください。</p>
+
+            <h3>③ 列車の取り違え</h3>
+            <p>
+                列車番号が「649 → 回649 → 回748 → 748」のように切り替わるので、
+                本来折り返すべき列車を見送らないよう、発車標で到着列車番号と折り返し列車の対応を確認してください。
+            </p>
+        </section>
+
+        <section id="related">
+            <h2>関連ガイド</h2>
+            <ul>
+                <li><a href="../help.html" style="color: var(--accent);">← 遊び方ガイド（共通操作）</a></li>
+                <li><a href="heikai-jima.html" style="color: var(--accent);">平海島マップガイド</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

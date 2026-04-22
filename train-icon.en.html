@@ -43,10 +43,68 @@
         header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
         header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
 
-        main {
-            max-width: 780px;
+        .layout {
+            display: flex;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 36px 24px;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
         }
 
         section { margin-bottom: 48px; }
@@ -196,16 +254,37 @@
     <div class="lang-switch"><a href="train-icon.html">日本語</a></div>
 </header>
 
+<div class="layout">
+<nav>
+    <div class="section-title">Guide</div>
+    <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#file-location">Where to Put the Files</a></li>
+        <li><a href="#naming">File Naming Rules</a></li>
+        <li><a href="#specs">Image File Specs</a></li>
+        <li><a href="#steps">Steps</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="help.en.html">← How to Play</a></li>
+    </ul>
+</nav>
+
 <main>
 
-    <section>
+    <div class="breadcrumb">
+        <a href="help.en.html">← How to Play</a> / Customizing Train Icons
+    </div>
+
+    <section id="overview">
         <h2>🎯 Overview</h2>
         <p>
             You can replace the train icons shown in-game with your own images. Just prepare the images and drop them into a folder — no programming knowledge required.
         </p>
     </section>
 
-    <section>
+    <section id="file-location">
         <h2>📁 Where to Put the Files</h2>
         <p>In the in-game settings screen, click <strong>"Open Icon Folder"</strong> and the correct folder will open automatically.</p>
         <p>If you prefer to open it manually, the path is:</p>
@@ -216,7 +295,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="naming">
         <h2>📝 File Naming Rules</h2>
         <p>The file name must be <strong>train type ID + <code>.png</code></strong>.</p>
 
@@ -236,12 +315,12 @@
         </table>
     </section>
 
-    <section>
+    <section id="specs">
         <h2>🖼️ Image File Specs</h2>
         <table>
             <tr><th>Item</th><th>Recommended</th></tr>
             <tr><td>Format</td><td>PNG (transparency recommended)</td></tr>
-            <tr><td>Size</td><td>Around 256 × 256 px (square is recommended)</td></tr>
+            <tr><td>Size</td><td>Around 100 × 100 px (square is recommended)</td></tr>
             <tr><td>Background</td><td>Transparent (opaque also works)</td></tr>
         </table>
         <div class="callout">
@@ -249,7 +328,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="steps">
         <h2>🚀 Steps</h2>
         <ol class="step-list">
             <li>Identify the train type ID you want to change (e.g., <code>Y1500_6</code>).</li>
@@ -260,7 +339,7 @@
         </ol>
     </section>
 
-    <section>
+    <section id="troubleshooting">
         <h2>❓ Troubleshooting</h2>
         <p><strong>The icon didn't change</strong></p>
         <ul style="list-style: disc; padding-left: 20px; margin-bottom: 12px;">
@@ -270,12 +349,13 @@
         </ul>
         <p><strong>The image looks distorted</strong></p>
         <ul style="list-style: disc; padding-left: 20px;">
-            <li>Try resizing closer to the recommended size (256×256 square).</li>
+            <li>Try resizing closer to the recommended size (100×100 square).</li>
             <li>Use transparent PNGs for a cleaner look.</li>
         </ul>
     </section>
 
 </main>
+</div>
 
 <footer>
     <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>

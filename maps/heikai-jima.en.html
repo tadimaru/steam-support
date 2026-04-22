@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heikai-jima Map Guide | Railway Dispatch Simulator</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .placeholder-image {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            margin: 16px 0;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Heikai-jima Map Guide</h1>
+        <p>Railway Dispatch Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="heikai-jima.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#routes">Route List</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="keihin-kawata.en.html">Keihin-Kawata Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Heikai-jima Map
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Heikai-jima is a <strong>four-track urban station</strong> with passing loops that let express trains overtake locals.
+                There are no turnaround operations — trains simply pass through or stop along the main line.
+                This simpler layout makes it a good starting point for new players.
+            </p>
+            <ul>
+                <li><strong>Tracks</strong>: Track 1 / Track 2 / Track 3 / Track 4</li>
+                <li><strong>Passing loops</strong>: Yes (used for express overtakes)</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="heikai-jima-levers.png" alt="Heikai-jima lever layout" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>Use the diagram above to see how Start Levers, End Levers, and tracks are arranged in the station.</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 Route List</h2>
+            <p>
+                A route is defined by a <strong>Start Lever</strong> and an <strong>End Lever</strong>.
+                For example, route <strong>1A</strong> is opened by Start Lever "1" and End Lever "A".
+            </p>
+            <p>All routes at Heikai-jima are <strong>main-line</strong> routes (no shunting routes). Start levers light up yellow.</p>
+
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>Entry from the outbound main line into Track 1</td></tr>
+                <tr><td><strong>1B</strong></td><td>1 → B</td><td>Entry from the outbound main line into Track 2</td></tr>
+                <tr><td><strong>2C</strong></td><td>2 → C</td><td>Departure from Track 1 onto the outbound main line</td></tr>
+                <tr><td><strong>3C</strong></td><td>3 → C</td><td>Departure from Track 2 onto the outbound main line</td></tr>
+                <tr><td><strong>4D</strong></td><td>4 → D</td><td>Entry from the inbound main line into Track 3</td></tr>
+                <tr><td><strong>4E</strong></td><td>4 → E</td><td>Entry from the inbound main line into Track 4</td></tr>
+                <tr><td><strong>5F</strong></td><td>5 → F</td><td>Departure from Track 3 onto the inbound main line</td></tr>
+                <tr><td><strong>6F</strong></td><td>6 → F</td><td>Departure from Track 4 onto the inbound main line</td></tr>
+            </table>
+        </section>
+
+        <section id="related">
+            <h2>Related Guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (general)</a></li>
+                <li><a href="keihin-kawata.en.html" style="color: var(--accent);">Keihin-Kawata Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>

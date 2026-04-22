@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keihin-Kawata Map Guide | Railway Dispatch Simulator</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-general  { background: #713f12; color: #fde68a; }
+        .badge-shunting { background: #14532d; color: #86efac; }
+        .badge-end      { background: #1e3a5f; color: #93c5fd; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Keihin-Kawata Map Guide</h1>
+        <p>Railway Dispatch Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="keihin-kawata.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#routes">Route List</a></li>
+        </ul>
+        <div class="section-title">Turnaround</div>
+        <ul>
+            <li><a href="#turnaround-intro">Introduction</a></li>
+            <li><a href="#turnaround-basics">Prerequisites</a></li>
+            <li><a href="#turnaround-identify">Identify the Trains</a></li>
+            <li><a href="#turnaround-steps">6-Step Procedure</a></li>
+            <li><a href="#turnaround-cautions">Common Mistakes</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="heikai-jima.en.html">Heikai-jima Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Keihin-Kawata Map
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Keihin-Kawata is a central junction station (mid-line stop) with <strong>four platforms (Tracks 4–7)</strong> and a <strong>siding</strong> used for turnaround operations.
+                Some trains pass straight through on the main line, while others enter the siding, reverse direction, and depart again as a different service —
+                giving you a variety of operational patterns to manage.
+            </p>
+            <ul>
+                <li><strong>Tracks</strong>: Track 4 / Track 5 / Track 6 / Track 7</li>
+                <li><strong>Siding</strong>: Yes (used for turnaround)</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="keihin-kawata-levers.png" alt="Keihin-Kawata lever layout" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>Use the diagram above to see how Start Levers, End Levers, and tracks are arranged in the station.</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 Route List</h2>
+            <p>
+                A route is defined by a <strong>Start Lever</strong> and an <strong>End Lever</strong>.
+                For example, route <strong>1A</strong> is opened by Start Lever "1" and End Lever "A".
+            </p>
+            <p>Routes at Keihin-Kawata come in two types: <strong>Main Line</strong> and <strong>Shunting</strong>.</p>
+
+            <h3>Main Line Routes</h3>
+            <p>Routes used by passenger trains between the main line and the station. Start levers light up yellow.</p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>Entry from the outbound main line into Track 4</td></tr>
+                <tr><td><strong>1B</strong></td><td>1 → B</td><td>Entry from the outbound main line into Track 5</td></tr>
+                <tr><td><strong>1C</strong></td><td>1 → C</td><td>From the outbound main line into the siding</td></tr>
+                <tr><td><strong>3D</strong></td><td>3 → D</td><td>Departure from Track 4 onto the outbound main line</td></tr>
+                <tr><td><strong>4D</strong></td><td>4 → D</td><td>Departure from Track 5 onto the outbound main line</td></tr>
+                <tr><td><strong>11F</strong></td><td>11 → F</td><td>Entry from the inbound main line into Track 6</td></tr>
+                <tr><td><strong>11G</strong></td><td>11 → G</td><td>Entry from the inbound main line into Track 7</td></tr>
+                <tr><td><strong>12I</strong></td><td>12 → I</td><td>Departure from Track 6 onto the inbound main line</td></tr>
+                <tr><td><strong>13I</strong></td><td>13 → I</td><td>Departure from Track 7 onto the inbound main line</td></tr>
+            </table>
+
+            <h3>Shunting Routes</h3>
+            <p>Used for in-yard movements such as entering the siding or turnaround operations. Start levers light up green.</p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>21C</strong></td><td>21 → C</td><td>Entry from the inbound main line into the siding</td></tr>
+                <tr><td><strong>22B</strong></td><td>22 → B</td><td>Entry from the siding into Track 5</td></tr>
+                <tr><td><strong>23D</strong></td><td>23 → D</td><td>Departure from Track 4 to the turnback point on the outbound main line</td></tr>
+                <tr><td><strong>24D</strong></td><td>24 → D</td><td>Departure from Track 5 to the turnback point on the outbound main line</td></tr>
+                <tr><td><strong>31F</strong></td><td>31 → F</td><td>Entry from the outbound main line into Track 6</td></tr>
+                <tr><td><strong>31G</strong></td><td>31 → G</td><td>Entry from the outbound main line into Track 7</td></tr>
+                <tr><td><strong>32C</strong></td><td>32 → C</td><td>Departure from Track 6 into the siding</td></tr>
+                <tr><td><strong>32I</strong></td><td>32 → I</td><td>Departure from Track 6 to the turnback point on the inbound main line</td></tr>
+                <tr><td><strong>33I</strong></td><td>33 → I</td><td>Departure from Track 7 to the turnback point on the inbound main line</td></tr>
+            </table>
+        </section>
+
+        <section id="turnaround-intro">
+            <h2>🔄 Turnaround Operation (Keihin-Kawata's highlight)</h2>
+            <p>
+                At Keihin-Kawata, <strong>an inbound service train arrives at the platform, moves to the siding to reverse direction, and departs again as an outbound service</strong>.
+                The flow switches between <strong>service → shunting → service</strong>, so you need to switch between <strong>main-line</strong> and <strong>shunting</strong> levers and signals accordingly.
+                It can feel confusing at first, but the 6-step procedure always works.
+            </p>
+        </section>
+
+        <section id="turnaround-basics">
+            <h2>📚 Prerequisites: Identifying UI Elements</h2>
+
+            <h3>Start Lever border color</h3>
+            <table>
+                <tr><th>Border color</th><th>Purpose</th><th>Description</th></tr>
+                <tr><td><strong>Yellow</strong></td><td>Main line</td><td>Used to set routes for service (revenue) trains</td></tr>
+                <tr><td><strong>Green</strong></td><td>Shunting</td><td>Used for in-station moves such as entering the siding (required for turnaround)</td></tr>
+            </table>
+
+            <h3>Signal fill style</h3>
+            <table>
+                <tr><th>Fill style</th><th>Purpose</th></tr>
+                <tr><td><strong>Solid fill</strong></td><td>Signals for main-line routes</td></tr>
+                <tr><td><strong>White-bordered</strong></td><td>Signals for shunting routes (shunting signals)</td></tr>
+            </table>
+        </section>
+
+        <section id="turnaround-identify">
+            <h2>🔍 Identify the Turnaround Trains</h2>
+            <p>
+                The Morning Rush scenario contains <strong>four turnaround trains</strong>.
+                Each one changes its train number through the sequence: "Arrival → Siding entry → Siding exit → Departure."
+                Watch the departure board, and when you see one of the arrival numbers below, start the turnaround procedure.
+            </p>
+            <table>
+                <tr><th>Arrival</th><th>Siding entry</th><th>Siding exit</th><th>Departure</th></tr>
+                <tr><td><strong>649</strong></td><td>回649</td><td>回748</td><td><strong>748</strong></td></tr>
+                <tr><td><strong>651</strong></td><td>回651</td><td>回750</td><td><strong>750</strong></td></tr>
+                <tr><td><strong>653</strong></td><td>回653</td><td>回852</td><td><strong>852</strong></td></tr>
+                <tr><td><strong>655</strong></td><td>回655</td><td>回854</td><td><strong>854</strong></td></tr>
+            </table>
+            <div class="callout">
+                <strong>How to read the train numbers:</strong> Once a train enters the siding, its number changes to "回〜" (out-of-service). When it departs in the other direction, it becomes a new train number. Trains on the same row above are all <strong>the same physical vehicle</strong>.
+            </div>
+            <img src="keihin-kawata-step0.png" alt="Identifying the turnaround trains" style="width: 100%; max-width: 720px; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 10px; display: block;">
+        </section>
+
+        <section id="turnaround-steps">
+            <h2>🔢 6-Step Procedure</h2>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>Set the route to Track 6 (Main line)</strong>
+                        <p>
+                            Bring the arriving service train into Track 6.
+                            Operate a <strong>yellow-bordered</strong> Start Lever (main line) and the End Lever for Track 6.
+                            The <strong>solid-fill</strong> signal will turn to proceed.
+                        </p>
+                        <img src="keihin-kawata-step1.png" alt="Step 1: Route to Track 6">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the route to the siding (Shunting)</strong>
+                        <p>
+                            Move the train from Track 6 into the siding.
+                            Operate a <strong>green-bordered</strong> Start Lever (shunting) and the End Lever for the siding.
+                            The <strong>white-bordered</strong> signal (shunting signal) will turn to proceed.
+                        </p>
+                        <img src="keihin-kawata-step2.png" alt="Step 2: Route to the siding">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Press the Departure Button (inbound out-of-service)</strong>
+                        <p>
+                            Press the inbound out-of-service Departure Button. The train begins moving toward the siding.
+                        </p>
+                        <img src="keihin-kawata-step3.png" alt="Step 3: Press the Departure Button">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Check the outbound departure order</strong>
+                        <p>
+                            On the <strong>departure board</strong>, check when and from which platform the turnaround train will depart.
+                            After the turnaround, each train will reappear with one of the departure numbers: 748 / 750 / 852 / 854.
+                        </p>
+                        <img src="keihin-kawata-step4.png" alt="Step 4: Check the outbound departure order">
+                    </div>
+                </li>
+            </ol>
+
+            <div class="callout warn">
+                <strong>⚠ Important: The siding has no Departure Button</strong><br>
+                Trains in the siding <strong>depart automatically when the route is set and the scheduled time arrives</strong>.
+                If you set the routes in the wrong order, you can block following trains, so <strong>always check the outbound departure order on the departure board before setting the route</strong>.
+            </div>
+
+            <ol class="step-list" style="counter-reset: step 4;">
+                <li>
+                    <div class="step-content">
+                        <strong>Set the route to Track 5 (Shunting)</strong>
+                        <p>
+                            Move the train from the siding to Track 5 (outbound).
+                            Operate a <strong>green-bordered</strong> Start Lever (shunting, on the siding side) and the End Lever for Track 5.
+                            The <strong>white-bordered</strong> signal will turn to proceed.
+                        </p>
+                        <img src="keihin-kawata-step5.png" alt="Step 5: Route to Track 5">
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the route to the outbound main line (Main line)</strong>
+                        <p>
+                            Send the train from Track 5 out to the outbound main line.
+                            Operate a <strong>yellow-bordered</strong> Start Lever (main line) and the End Lever pointing outbound.
+                            The <strong>solid-fill</strong> signal will turn to proceed, and the train will depart at the scheduled time.
+                        </p>
+                        <img src="keihin-kawata-step6.png" alt="Step 6: Route to the outbound main line">
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section id="turnaround-cautions">
+            <h2>⚠ Common Mistakes and Cautions</h2>
+
+            <h3>① Don't mix up lever and signal types</h3>
+            <p>Do not confuse main-line (yellow) and shunting (green) Start Levers. Main-line routes cannot be opened with shunting levers, and vice versa.</p>
+
+            <h3>② Timing is critical for departures from the siding</h3>
+            <p>Since there is no Departure Button and trains leave automatically at the scheduled time, <strong>always check the departure order on the board before setting the route</strong>.</p>
+
+            <h3>③ Don't misidentify trains</h3>
+            <p>
+                The train number changes through "649 → 回649 → 回748 → 748" as the vehicle passes through the turnaround.
+                Use the departure board to match the arriving number with the corresponding turnaround service so you don't miss the right train.
+            </p>
+        </section>
+
+        <section id="related">
+            <h2>Related Guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (general)</a></li>
+                <li><a href="heikai-jima.en.html" style="color: var(--accent);">Heikai-jima Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>
