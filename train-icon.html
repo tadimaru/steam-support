@@ -43,10 +43,68 @@
         header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
         header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
 
-        main {
-            max-width: 780px;
+        .layout {
+            display: flex;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 36px 24px;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
         }
 
         section { margin-bottom: 48px; }
@@ -196,9 +254,30 @@
     <div class="lang-switch"><a href="train-icon.en.html">English</a></div>
 </header>
 
+<div class="layout">
+<nav>
+    <div class="section-title">ガイド</div>
+    <ul>
+        <li><a href="#overview">概要</a></li>
+        <li><a href="#file-location">ファイルの置き場所</a></li>
+        <li><a href="#naming">ファイルの命名規則</a></li>
+        <li><a href="#specs">画像ファイルの仕様</a></li>
+        <li><a href="#steps">変更手順</a></li>
+        <li><a href="#troubleshooting">うまくいかない場合</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
 <main>
 
-    <section>
+    <div class="breadcrumb">
+        <a href="help.html">← 遊び方ガイド</a> / 列車アイコン変更
+    </div>
+
+    <section id="overview">
         <h2>🎯 概要</h2>
         <p>
             好きな列車画像を用意してフォルダに置くだけで、ゲーム内に表示される列車アイコンを自分の画像に変更できます。
@@ -206,7 +285,7 @@
         </p>
     </section>
 
-    <section>
+    <section id="file-location">
         <h2>📁 ファイルの置き場所</h2>
         <p>ゲーム内の設定画面から <strong>「アイコンフォルダを開く」</strong> ボタンを押すと、該当フォルダが自動で開きます。</p>
         <p>手動で開く場合は以下のパスです：</p>
@@ -217,7 +296,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="naming">
         <h2>📝 ファイルの命名規則</h2>
         <p>ファイル名は <strong>列車形式ID + <code>.png</code></strong> にする必要があります。</p>
 
@@ -237,12 +316,12 @@
         </table>
     </section>
 
-    <section>
+    <section id="specs">
         <h2>🖼️ 画像ファイルの仕様</h2>
         <table>
             <tr><th>項目</th><th>推奨</th></tr>
             <tr><td>形式</td><td>PNG（透過あり推奨）</td></tr>
-            <tr><td>サイズ</td><td>256 × 256 px 前後（正方形推奨）</td></tr>
+            <tr><td>サイズ</td><td>100 × 100 px 前後（正方形推奨）</td></tr>
             <tr><td>背景</td><td>透過（透過なしでも動作します）</td></tr>
         </table>
         <div class="callout">
@@ -251,7 +330,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="steps">
         <h2>🚀 変更手順</h2>
         <ol class="step-list">
             <li>変更したい列車形式のIDを確認する（例: <code>Y1500_6</code>）</li>
@@ -262,7 +341,7 @@
         </ol>
     </section>
 
-    <section>
+    <section id="troubleshooting">
         <h2>❓ うまくいかない場合</h2>
         <p><strong>アイコンが変わらない</strong></p>
         <ul style="list-style: disc; padding-left: 20px; margin-bottom: 12px;">
@@ -272,12 +351,13 @@
         </ul>
         <p><strong>画像が変に表示される</strong></p>
         <ul style="list-style: disc; padding-left: 20px;">
-            <li>推奨サイズ（256×256px前後の正方形）に近いサイズに調整してみてください</li>
+            <li>推奨サイズ（100×100px前後の正方形）に近いサイズに調整してみてください</li>
             <li>透過PNGを使用すると見た目がきれいになります</li>
         </ul>
     </section>
 
 </main>
+</div>
 
 <footer>
     <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>

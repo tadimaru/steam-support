@@ -91,6 +91,35 @@
             font-weight: bold;
         }
 
+        nav details { margin-top: 8px; }
+        nav details > summary {
+            list-style: none;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 8px 12px;
+            font-weight: bold;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        nav details > summary::-webkit-details-marker { display: none; }
+        nav details > summary::before {
+            content: "▶";
+            font-size: 9px;
+            color: var(--text-dim);
+            transition: transform 0.15s;
+            display: inline-block;
+        }
+        nav details[open] > summary::before { transform: rotate(90deg); }
+        nav details > summary:hover { background: var(--surface2); color: var(--accent); }
+        nav details[open] > summary { color: var(--text); }
+        nav details > ul { margin-top: 2px; }
+
         main {
             flex: 1;
             padding: 32px 28px;
@@ -269,33 +298,51 @@
 
 <div class="layout">
     <nav>
-        <div class="section-title">基本</div>
-        <ul>
-            <li><a href="#goal">ゲームの目的</a></li>
-            <li><a href="#screen-layout">画面の見かた</a></li>
-            <li><a href="#map-controls">マップ操作</a></li>
-            <li><a href="#time-controls">時間操作</a></li>
-            <li><a href="#menu">メニュー</a></li>
-            <li><a href="#ui-elements">画面上のアイコン</a></li>
-            <li><a href="#flow">基本の流れ</a></li>
-            <li><a href="#lever">てこを操作する</a></li>
-            <li><a href="#departure">出発ボタンを押す</a></li>
-            <li><a href="#release">てこを戻す</a></li>
-            <li><a href="#tips">知っておくと便利なこと</a></li>
-        </ul>
-        <div class="section-title">上級者向け</div>
-        <ul>
-            <li><a href="#lever-types">てこの種類</a></li>
-            <li><a href="#signal-types">信号機の種類</a></li>
-            <li><a href="#signal-aspects">信号の現示</a></li>
-            <li><a href="#locks">鎖錠の仕組み</a></li>
-            <li><a href="#turnback">折り返し列車</a></li>
-        </ul>
-        <div class="section-title">サポート</div>
-        <ul>
-            <li><a href="#faq">よくある質問</a></li>
-            <li><a href="train-icon.html">列車アイコン変更</a></li>
-        </ul>
+        <details open>
+            <summary>基本</summary>
+            <ul>
+                <li><a href="#goal">ゲームの目的</a></li>
+                <li><a href="#screen-layout">画面の見かた</a></li>
+                <li><a href="#map-controls">マップ操作</a></li>
+                <li><a href="#time-controls">時間操作</a></li>
+                <li><a href="#menu">メニュー</a></li>
+                <li><a href="#ui-elements">画面上のアイコン</a></li>
+                <li><a href="#flow">基本の流れ</a></li>
+                <li><a href="#lever">てこを操作する</a></li>
+                <li><a href="#departure">出発ボタンを押す</a></li>
+                <li><a href="#release">てこを戻す</a></li>
+                <li><a href="#tips">知っておくと便利なこと</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>列車アイコン</summary>
+            <ul>
+                <li><a href="train-icon.html">列車アイコン変更</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>上級者向け</summary>
+            <ul>
+                <li><a href="#lever-types">てこの種類</a></li>
+                <li><a href="#signal-types">信号機の種類</a></li>
+                <li><a href="#signal-aspects">信号の現示</a></li>
+                <li><a href="#locks">鎖錠の仕組み</a></li>
+                <li><a href="#turnback">折り返し列車</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>マップ別ガイド</summary>
+            <ul>
+                <li><a href="maps/heikai-jima.html">平海島</a></li>
+                <li><a href="maps/keihin-kawata.html">京浜川田</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>サポート</summary>
+            <ul>
+                <li><a href="#faq">よくある質問</a></li>
+            </ul>
+        </details>
     </nav>
 
     <main>

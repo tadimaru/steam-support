@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平海島マップガイド | 鉄道運行管理シミュレーター</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .placeholder-image {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            margin: 16px 0;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>平海島マップガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="heikai-jima.en.html">English</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">マップ</div>
+        <ul>
+            <li><a href="#overview">マップ概要</a></li>
+            <li><a href="#lever-layout">てこの配置図</a></li>
+            <li><a href="#routes">進路一覧</a></li>
+        </ul>
+        <div class="section-title">関連</div>
+        <ul>
+            <li><a href="../help.html">← 遊び方ガイド</a></li>
+            <li><a href="keihin-kawata.html">京浜川田マップ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.html">← 遊び方ガイド</a> / 平海島マップ
+        </div>
+
+        <section id="overview">
+            <h2>🎯 マップ概要</h2>
+            <p>
+                平海島は、<strong>4番線構成の都市駅</strong>です。
+                待避線を備えており、急行が普通列車を追い越す様子を楽しめます。
+                折り返し運用はなく、本線を列車が通過していくシンプルな構造で、初めて遊ぶ方にもおすすめのマップです。
+            </p>
+            <ul>
+                <li><strong>番線</strong>: 1番線 / 2番線 / 3番線 / 4番線</li>
+                <li><strong>待避線</strong>: あり（急行の待ち合わせで使用）</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 てこの配置図</h2>
+            <img src="heikai-jima-levers.png" alt="平海島のてこ配置図" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>駅構内のてこ（発点・着点）と番線の位置関係を上の図で確認してください。</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 進路一覧</h2>
+            <p>
+                進路は<strong>発点てこ</strong>と<strong>着点てこ</strong>の組み合わせで構成されます。
+                例えば進路<strong>1A</strong>は、発点てこ「1」と着点てこ「A」で開通させる進路を指します。
+            </p>
+            <p>平海島の進路はすべて<strong>本線用</strong>（入換進路なし）です。発点てこは黄色で光ります。</p>
+
+            <table>
+                <tr><th>進路名</th><th>発点 → 着点</th><th>用途</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>下り本線から1番線に進入する進路</td></tr>
+                <tr><td><strong>1B</strong></td><td>1 → B</td><td>下り本線から2番線に進入する進路</td></tr>
+                <tr><td><strong>2C</strong></td><td>2 → C</td><td>1番線から下り本線へ出発する進路</td></tr>
+                <tr><td><strong>3C</strong></td><td>3 → C</td><td>2番線から下り本線へ出発する進路</td></tr>
+                <tr><td><strong>4D</strong></td><td>4 → D</td><td>上り本線から3番線に進入する進路</td></tr>
+                <tr><td><strong>4E</strong></td><td>4 → E</td><td>上り本線から4番線に進入する進路</td></tr>
+                <tr><td><strong>5F</strong></td><td>5 → F</td><td>3番線から上り本線へ出発する進路</td></tr>
+                <tr><td><strong>6F</strong></td><td>6 → F</td><td>4番線から上り本線へ出発する進路</td></tr>
+            </table>
+        </section>
+
+        <section id="related">
+            <h2>関連ガイド</h2>
+            <ul>
+                <li><a href="../help.html" style="color: var(--accent);">← 遊び方ガイド（共通操作）</a></li>
+                <li><a href="keihin-kawata.html" style="color: var(--accent);">京浜川田マップガイド</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

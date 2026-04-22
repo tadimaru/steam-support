@@ -91,6 +91,35 @@
             font-weight: bold;
         }
 
+        nav details { margin-top: 8px; }
+        nav details > summary {
+            list-style: none;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 8px 12px;
+            font-weight: bold;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        nav details > summary::-webkit-details-marker { display: none; }
+        nav details > summary::before {
+            content: "▶";
+            font-size: 9px;
+            color: var(--text-dim);
+            transition: transform 0.15s;
+            display: inline-block;
+        }
+        nav details[open] > summary::before { transform: rotate(90deg); }
+        nav details > summary:hover { background: var(--surface2); color: var(--accent); }
+        nav details[open] > summary { color: var(--text); }
+        nav details > ul { margin-top: 2px; }
+
         main {
             flex: 1;
             padding: 32px 28px;
@@ -269,33 +298,51 @@
 
 <div class="layout">
     <nav>
-        <div class="section-title">Basics</div>
-        <ul>
-            <li><a href="#goal">Game Objective</a></li>
-            <li><a href="#screen-layout">Screen Layout</a></li>
-            <li><a href="#map-controls">Map Controls</a></li>
-            <li><a href="#time-controls">Time Controls</a></li>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#ui-elements">On-screen Icons</a></li>
-            <li><a href="#flow">Core Gameplay Loop</a></li>
-            <li><a href="#lever">Using Levers</a></li>
-            <li><a href="#departure">Departure Button</a></li>
-            <li><a href="#release">Releasing Levers</a></li>
-            <li><a href="#tips">Useful Tips</a></li>
-        </ul>
-        <div class="section-title">Advanced</div>
-        <ul>
-            <li><a href="#lever-types">Lever Types</a></li>
-            <li><a href="#signal-types">Signal Types</a></li>
-            <li><a href="#signal-aspects">Signal Aspects</a></li>
-            <li><a href="#locks">How Interlocking Works</a></li>
-            <li><a href="#turnback">Turnaround Trains</a></li>
-        </ul>
-        <div class="section-title">Support</div>
-        <ul>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="train-icon.en.html">Customizing Train Icons</a></li>
-        </ul>
+        <details open>
+            <summary>Basics</summary>
+            <ul>
+                <li><a href="#goal">Game Objective</a></li>
+                <li><a href="#screen-layout">Screen Layout</a></li>
+                <li><a href="#map-controls">Map Controls</a></li>
+                <li><a href="#time-controls">Time Controls</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#ui-elements">On-screen Icons</a></li>
+                <li><a href="#flow">Core Gameplay Loop</a></li>
+                <li><a href="#lever">Using Levers</a></li>
+                <li><a href="#departure">Departure Button</a></li>
+                <li><a href="#release">Releasing Levers</a></li>
+                <li><a href="#tips">Useful Tips</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Train Icons</summary>
+            <ul>
+                <li><a href="train-icon.en.html">Customizing Train Icons</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>Advanced</summary>
+            <ul>
+                <li><a href="#lever-types">Lever Types</a></li>
+                <li><a href="#signal-types">Signal Types</a></li>
+                <li><a href="#signal-aspects">Signal Aspects</a></li>
+                <li><a href="#locks">How Interlocking Works</a></li>
+                <li><a href="#turnback">Turnaround Trains</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>Map Guides</summary>
+            <ul>
+                <li><a href="maps/heikai-jima.en.html">Heikai-jima</a></li>
+                <li><a href="maps/keihin-kawata.en.html">Keihin-Kawata</a></li>
+            </ul>
+        </details>
+        <details>
+            <summary>Support</summary>
+            <ul>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </details>
     </nav>
 
     <main>
