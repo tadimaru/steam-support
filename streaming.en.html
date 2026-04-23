@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming & Let's Play Guidelines | Railway Dispatch Simulator</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .breadcrumb {
+            max-width: 880px;
+            margin: 14px auto 0;
+            padding: 0 24px;
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        main {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 28px 24px 60px;
+        }
+
+        section { margin-bottom: 36px; }
+
+        h2 {
+            font-size: 22px;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: var(--accent);
+            margin: 18px 0 8px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        ul, ol { margin: 0 0 12px 24px; }
+        li { margin-bottom: 6px; }
+
+        a { color: var(--accent); }
+
+        .tldr {
+            background: linear-gradient(135deg, #1e3a5f 0%, #14532d 100%);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin-bottom: 32px;
+            font-size: 16px;
+            color: var(--text);
+        }
+        .tldr strong { color: #86efac; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+            width: 30%;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:last-child td, tr:last-child th { border-bottom: none; }
+        tr:nth-child(even) td, tr:nth-child(even) th { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .badge-green { background: #14532d; color: #86efac; }
+        .badge-red   { background: #7f1d1d; color: #fca5a5; }
+
+        code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 700px) {
+            main { padding: 20px 16px; }
+            th { width: auto; white-space: normal; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🎬</span>
+    <div>
+        <h1>Railway Dispatch Simulator</h1>
+        <p>Streaming & Let's Play Guidelines</p>
+    </div>
+    <div class="lang-switch"><a href="streaming.html">日本語</a></div>
+</header>
+
+<div class="breadcrumb">
+    <a href="help.en.html">← Help</a> / Streaming & Let's Play Guidelines
+</div>
+
+<main>
+
+    <section>
+        <div class="tldr">
+            <strong>📢 Summary</strong><br>
+            <strong>Streaming, Let's Plays, clips, and monetization</strong> of this game are all permitted <strong>without prior permission</strong>.<br>
+            Whether you are an individual or a company, feel free to share your content within these guidelines.
+        </div>
+    </section>
+
+    <section id="allowed">
+        <h2>✅ What You Are Free to Do</h2>
+        <table>
+            <tr>
+                <th>Streaming & Let's Plays</th>
+                <td><span class="badge badge-green">OK</span> Stream and upload freely on any platform — YouTube, Twitch, Niconico, X (Twitter), TikTok, and others.</td>
+            </tr>
+            <tr>
+                <th>Monetization (ads, super chats, etc.)</th>
+                <td><span class="badge badge-green">OK</span> Any revenue earned from videos or streams is yours to keep. No prior permission and no payment to us are required.</td>
+            </tr>
+            <tr>
+                <th>Clip/Highlight Videos</th>
+                <td><span class="badge badge-green">OK</span> You may create and publish clip/highlight videos, whether of your own content or someone else's.<br><small style="color: var(--text-dim);">* If you clip another creator's stream or video, we cannot take responsibility for any disputes between you and the original creator or rights holder. Please also check the original creator's terms and permissions.</small></td>
+            </tr>
+            <tr>
+                <th>Screenshot Use</th>
+                <td><span class="badge badge-green">OK</span> Feel free to use in-game screenshots for thumbnails, social media posts, blog articles, and similar purposes.</td>
+            </tr>
+            <tr>
+                <th>Paid/Subscriber-Only Streams</th>
+                <td><span class="badge badge-green">OK</span> Use in members-only videos or subscription-based streams is fine.</td>
+            </tr>
+            <tr>
+                <th>Competitions & Events</th>
+                <td><span class="badge badge-green">OK</span> You may use this game in contests and events, both online and offline.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="please">
+        <h2>🙏 Requests (Optional)</h2>
+
+        <h3>Credit</h3>
+        <p>Not required, but we would greatly appreciate it if you include the game's name and Steam store URL in your video description or stream title — it helps viewers find the game.</p>
+        <div class="callout">
+            <strong>Example:</strong><br>
+            Game: Railway Dispatch Simulator<br>
+            Steam: <code>https://store.steampowered.com/app/4282480/</code>
+        </div>
+
+        <h3>Social Media Hashtags</h3>
+        <p>When posting on X (Twitter), TikTok, and similar platforms, we'd love it if you used the following hashtags:</p>
+        <ul>
+            <li><code>#RailwayDispatchSimulator</code></li>
+            <li><code>#TrainSim</code></li>
+        </ul>
+        <p>The developer (<a href="https://x.com/tadi_maru" target="_blank">@tadi_maru</a>) may repost or drop a greeting when they spot your post.</p>
+    </section>
+
+    <section id="restrictions">
+        <h2>⚠️ What Is Not Allowed</h2>
+        <table>
+            <tr>
+                <th>Distribution/Re-upload of Game Files</th>
+                <td><span class="badge badge-red">NG</span> Distributing or re-uploading the game's installer, executable, or data files on other sites is prohibited.</td>
+            </tr>
+            <tr>
+                <th>Modification & Reverse Engineering</th>
+                <td><span class="badge badge-red">NG</span> Disassembling the game or distributing modified data is prohibited. MOD distribution is also not supported at this time.</td>
+            </tr>
+            <tr>
+                <th>Use Against Public Decency</th>
+                <td><span class="badge badge-red">NG</span> Use for discriminatory, defamatory, or illegal purposes is prohibited.</td>
+            </tr>
+            <tr>
+                <th>Impersonating the Developer</th>
+                <td><span class="badge badge-red">NG</span> Falsely claiming to be "official" or "developer-endorsed" (for example, implying sponsorship by a specific company or municipality) is prohibited.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="legal">
+        <h2>📋 For Companies & Large-Scale Streamers</h2>
+        <p>These guidelines apply equally to individuals and companies. No prior application or separate contract is required.</p>
+        <p>However, if you are considering any of the following <strong>large-scale promotional use cases</strong>, please reach out in advance so we can avoid surprises:</p>
+        <ul>
+            <li>Use in broadcast television programs</li>
+            <li>Large-scale features at streaming events with audiences of 500,000+</li>
+            <li>Publications or merchandise based on this game</li>
+            <li>Use involving sponsorships or tie-ins</li>
+        </ul>
+        <div class="callout">
+            <strong>Contact:</strong> X DM <a href="https://x.com/tadi_maru" target="_blank">@tadi_maru</a> or the <a href="index.en.html">contact form</a>
+        </div>
+    </section>
+
+    <section id="disclaimer">
+        <h2>📝 Disclaimer</h2>
+        <ul>
+            <li>These guidelines may change without notice. Please refer to this page for the latest version.</li>
+            <li>The developer accepts no liability for any damages or disputes arising from your use of this game, whether as a streamer or a viewer.</li>
+            <li>If any questions arise regarding the interpretation of these guidelines, please contact the developer.</li>
+        </ul>
+    </section>
+
+    <section id="contact">
+        <h2>📮 Contact</h2>
+        <p>For questions or inquiries, please reach out via:</p>
+        <ul>
+            <li>X (Twitter): <a href="https://x.com/tadi_maru" target="_blank">@tadi_maru</a></li>
+            <li>Contact form: <a href="index.en.html">here</a></li>
+        </ul>
+    </section>
+
+    <p style="color: var(--text-dim); font-size: 12px; text-align: right; margin-top: 40px;">Last updated: 2026-04-23</p>
+
+</main>
+
+<footer>
+    <a href="help.en.html">Help</a> | <a href="streaming.en.html">Streaming Guidelines</a> | <a href="index.en.html">Contact</a> | <a href="privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>
