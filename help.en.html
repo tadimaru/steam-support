@@ -337,6 +337,7 @@
                 <li><a href="#signal-handling">Signal Handling Mode</a></li>
                 <li><a href="#locks">How Interlocking Works</a></li>
                 <li><a href="#turnback">Turnaround Trains</a></li>
+                <li><a href="#scoring-mode">Scoring Mode</a></li>
             </ul>
         </details>
         <details>
@@ -710,6 +711,71 @@
                 For these trains you must set an <strong>outgoing route in the reversed direction</strong>.
                 Check the arrow direction in the timetable carefully before setting the route.
             </p>
+        </section>
+
+        <section id="scoring-mode">
+            <h2>🏆 Scoring Mode</h2>
+            <p>
+                When you start a scenario with <strong>Scoring Mode ON</strong> from the title screen,
+                every dispatch action earns or costs points. On-time departures and well-timed
+                departure signals add points; delays, wrong order, and mistakes deduct points.
+                At the end of the scenario you receive a <strong>total score</strong> and a
+                <strong>S / A / B / C / D rank</strong>.
+            </p>
+            <p>
+                With scoring OFF (Sandbox Mode) you can practice the same scenario freely. No score is recorded.
+            </p>
+
+            <h3>Bonus Points</h3>
+            <table>
+                <tr><th>Item</th><th>Condition</th><th>Score</th></tr>
+                <tr><td>On-time departure</td><td>-15s to +35s of scheduled time</td><td>+100</td></tr>
+                <tr><td>On-time pass</td><td>-15s to +35s of scheduled time</td><td>+50</td></tr>
+                <tr><td>Best-timing departure signal</td><td>Press Departure Button -30s to -5s before scheduled departure</td><td>+50</td></tr>
+                <tr><td>Pass button honored</td><td>Pass indicator lit when a pass-through train enters</td><td>+50</td></tr>
+            </table>
+
+            <h3>Penalties</h3>
+            <table>
+                <tr><th>Item</th><th>Condition</th><th>Score</th></tr>
+                <tr><td>Late departure</td><td>+45s to +60s after scheduled time</td><td>-50</td></tr>
+                <tr><td>Heavily late departure</td><td>More than +60s after scheduled time</td><td>-100</td></tr>
+                <tr><td>Order swap</td><td>Departed out of the scheduled sequence</td><td>-200</td></tr>
+                <tr><td>Departure button pressed too early</td><td>Pressed earlier than -60s</td><td>-50</td></tr>
+                <tr><td>No target train</td><td>Departure Button pressed at a platform with no train</td><td>-50</td></tr>
+                <tr><td>Approach lock triggered</td><td>Tried to release a lever while a train was approaching</td><td>-100</td></tr>
+            </table>
+
+            <div class="callout">
+                <strong>About the +35s tolerance:</strong>
+                Minor delays such as door re-cycling won't reduce your score — anything up to +35s
+                still counts as on-time. +35s to +45s is also penalty-free; only past +45s do deductions kick in.
+            </div>
+
+            <h3>Rank Calculation</h3>
+            <p>Achievement rate = Earned Score ÷ Scenario Maximum Score × 100%.</p>
+            <table>
+                <tr><th>Rank</th><th>Achievement Rate</th></tr>
+                <tr><td><span class="badge badge-blue">S</span></td><td>95% or higher</td></tr>
+                <tr><td><span class="badge badge-green">A</span></td><td>85% or higher</td></tr>
+                <tr><td><span class="badge badge-yellow">B</span></td><td>70% or higher</td></tr>
+                <tr><td><span class="badge badge-orange">C</span></td><td>50% or higher</td></tr>
+                <tr><td><span class="badge badge-red">D</span></td><td>Below 50%</td></tr>
+            </table>
+
+            <h3>High Scores &amp; Achievements</h3>
+            <p>
+                Your best score is automatically saved per map × scenario.
+                Replay the same scenario and aim for an S rank or a <strong>penalty-free run</strong>.
+                A few Steam achievements are also tied to scoring — for first completion, S rank,
+                no-penalty runs, and a full on-time run.
+            </p>
+
+            <div class="callout warn">
+                <strong>Either handling mode works:</strong>
+                Scoring mode can be combined with both Hold and Auto signal handling.
+                Use whichever style you prefer and chase the score.
+            </div>
         </section>
 
         <section id="faq">
