@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takanawa Map Guide | Railway Dispatch Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --orange: #f97316;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        h3.op-major {
+            font-size: 20px;
+            color: var(--accent);
+            border-top: 2px solid var(--border);
+            padding-top: 28px;
+            margin-top: 44px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .highlight-callout {
+            background: linear-gradient(90deg, rgba(249,115,22,0.18), rgba(74,144,217,0.10));
+            border: 1px solid var(--orange);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 0 0 28px;
+        }
+        .highlight-callout .label {
+            display: inline-block;
+            background: var(--orange);
+            color: #1a1a1a;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+            letter-spacing: 0.06em;
+        }
+        .highlight-callout a {
+            display: inline-block;
+            margin-top: 8px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px solid var(--orange);
+        }
+        .highlight-callout a:hover { color: var(--orange); }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.coupling { border-left-color: var(--orange); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list > li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list > li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+        .step-list.coupling > li::before { background: var(--orange); color: #1a1a1a; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-general  { background: #713f12; color: #fde68a; }
+        .badge-shunting { background: #14532d; color: #86efac; }
+        .badge-coupling { background: #7c2d12; color: #fed7aa; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Takanawa Map Guide</h1>
+        <p>Railway Dispatch Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="takanawa.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#routes">Route List</a></li>
+        </ul>
+        <div class="section-title">Operations (Map highlight)</div>
+        <ul>
+            <li><a href="#coupling">★ Overview &amp; key elements</a></li>
+            <li><a href="#decoupling">Decoupling</a></li>
+            <li><a href="#coupling-seq">Coupling</a></li>
+            <li><a href="#parallel">Parallel parking</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="keihin-kawata.en.html">Keihin-Kawata Map</a></li>
+            <li><a href="heikai-jima.en.html">Heikai-jima Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Takanawa Map
+        </div>
+
+        <div class="highlight-callout">
+            <div class="label">★ MAP HIGHLIGHT</div>
+            <p style="margin: 0; color: var(--text-dim);">
+                What makes Takanawa unique is its <strong>coupling &amp; decoupling</strong> and
+                <strong>parallel parking</strong> operations — brand new in V1.6.
+                You can join a short train to a longer one to form an extended formation,
+                split a long train and send the rear half off as a separate service, or even
+                park two trains nose-to-tail on the same platform. Getting the hang of these
+                mechanics first will make the rest of the scenario much easier to handle.
+            </p>
+            <a href="#coupling">Learn about coupling, decoupling &amp; parallel parking →</a>
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Takanawa is a terminal-style map containing two stations: <strong>Takanawa</strong> and <strong>Minami-Takanawa</strong>.
+                Takanawa has Tracks 1–3, Minami-Takanawa has Tracks 1–2, and the side of the yard hosts two pull-back tracks
+                (<strong>Pull-back X</strong> and <strong>Pull-back Y</strong>). Turnaround trains, through-running trains, and
+                coupling/decoupling services all share the same yard — making it a step up in difficulty over earlier maps.
+            </p>
+            <ul>
+                <li><strong>Takanawa</strong>: Track 1 / Track 2 / Track 3 (the station where you actually set routes)</li>
+                <li><strong>Minami-Takanawa</strong>: Track 1 / Track 2. <strong>Local services only</strong>; trains
+                    <strong>stop, depart, or pass through automatically without any player input</strong>.</li>
+                <li><strong>Pull-back tracks</strong>: Pull-back X / Pull-back Y (used for turnaround and coupling).
+                    <strong>On screen, X is the upper track and Y is the lower track.</strong></li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="takanawa-levers.png" alt="Lever layout for the Takanawa map (Takanawa &amp; Minami-Takanawa)" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <!-- TODO: capture screenshot — Whole-yard view showing Takanawa, Minami-Takanawa, Pull-back X/Y, and start levers 1–5 / 11–13 / 21–27 / 31–36 plus coupling levers 81 / 82, with end levers A–L visible. -->
+            <p>Use the diagram above to see how Start Levers, End Levers, platforms, and pull-back tracks are arranged in the yard.</p>
+
+            <h3>Start Lever types</h3>
+            <table>
+                <tr><th>Border color</th><th>Purpose</th><th>Lever numbers</th></tr>
+                <tr><td><strong>Yellow</strong> <span class="badge badge-general">Main line</span></td><td>Routes for revenue trains</td><td>1–5 (rightbound) / 11–13 (leftbound)</td></tr>
+                <tr><td><strong>Green</strong> <span class="badge badge-shunting">Shunting</span></td><td>Movements into pull-back tracks / turnaround</td><td>21–27 (rightbound) / 31–36 (leftbound)</td></tr>
+                <tr><td><strong>Orange</strong> <span class="badge badge-coupling">Coupling</span></td><td>Special shunting for joining trains</td><td>81 (rightbound) / 82 (leftbound)</td></tr>
+            </table>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 Route List</h2>
+            <p>
+                A route is defined by a <strong>Start Lever</strong> and an <strong>End Lever</strong>.
+                On top of the usual <strong>main-line</strong> and <strong>shunting</strong> categories,
+                the Takanawa map introduces a brand-new third type: <strong>Coupling Shunting routes</strong>.
+            </p>
+
+            <h3>Main Line Routes</h3>
+            <p>
+                Routes used by passenger trains between the main line and the station. Start levers light up <strong>yellow</strong>.
+                On the Takanawa map, <strong>some moves require pulling two routes in sequence</strong>, so the table lists routes per operation rather than per individual route.
+            </p>
+            <table>
+                <tr><th>Operation</th><th>Routes (pull in order from left)</th></tr>
+                <tr><td>Down main line → Takanawa Track 1 (entry)</td><td><strong>1A → 2C</strong></td></tr>
+                <tr><td>Takanawa Track 1 → Down main line (departure)</td><td><strong>3D</strong></td></tr>
+                <tr><td>Up main line → Takanawa Track 2 (entry)</td><td><strong>11E → 12F</strong></td></tr>
+                <tr><td>Takanawa Track 2 → Up main line (departure)</td><td><strong>13H</strong></td></tr>
+                <tr><td>Up main line → Takanawa Track 3 (entry, for turnaround)</td><td><strong>11G</strong></td></tr>
+                <tr><td>Takanawa Track 3 → Down main line (turnaround departure)</td><td><strong>5D</strong></td></tr>
+            </table>
+            <div class="callout warn">
+                <strong>⚠ Watch out for similar names:</strong> the second route into Track 1 is <strong>2C</strong> — not 2B.
+            </div>
+
+            <h3>Shunting Routes</h3>
+            <p>
+                Routes for in-yard moves (entering pull-back tracks, turnaround, returning to Track 1). Start levers light up <strong>green</strong>.
+                As with main-line routes, a single move <strong>typically requires pulling several routes in sequence</strong>.
+            </p>
+            <table>
+                <tr><th>Operation</th><th>Routes (pull in order from left)</th></tr>
+                <tr><td>Takanawa Track 2 → Pull-back X</td><td><strong>33J → 35K</strong></td></tr>
+                <tr><td>Takanawa Track 2 → Pull-back Y</td><td><strong>33J → 35L</strong></td></tr>
+                <tr><td>Pull-back X → Takanawa Track 1</td><td><strong>21A → 23B → 24C</strong></td></tr>
+                <tr><td>Pull-back Y → Takanawa Track 1</td><td><strong>22A → 23B → 24C</strong></td></tr>
+            </table>
+
+            <h3>Coupling Shunting Routes</h3>
+            <p>
+                Start levers light up <strong>orange</strong>. These are special routes that <strong>deliberately enter an occupied
+                track circuit</strong> (regular routes refuse to open into an occupied track). Use them to bring an additional
+                train up to a stationary train ready for coupling or parallel parking.
+            </p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>81B</strong></td><td>81 → B</td><td>Rightbound: bring a coupling train up to a train already stopped at Takanawa Track 1 (end-lever B side)</td></tr>
+                <tr><td><strong>82L</strong></td><td>82 → L</td><td>Leftbound: bring a coupling train up to a train already stopped at Pull-back Y (end-lever L side)</td></tr>
+            </table>
+            <div class="callout coupling">
+                <strong>💡 What makes coupling routes special:</strong> Ordinary routes refuse to open if a train is sitting in
+                any track circuit the route runs through. Coupling routes intentionally relax that restriction, so the route
+                can <strong>open into an occupied track</strong>. This is the very mechanism that enables coupling and parallel parking.
+            </div>
+            <div class="callout warn">
+                <strong>⚠ The coupling signal is NOT "always available":</strong>
+                It only clears to proceed once the joining train has entered the track circuit
+                <strong>immediately before the standing train and slowed sufficiently</strong>.
+                Trying to clear it from further away does nothing — think of it as a signal that
+                <strong>requires the joining train to be close to its target before you can pull the lever</strong>.
+            </div>
+        </section>
+
+        <section id="coupling">
+            <h2>🟧 Coupling, Decoupling &amp; Parallel Parking (Takanawa's flagship operations)</h2>
+            <p>
+                Brand new in V1.6: a single service number can be operated by combining multiple formations into one train.
+                In the morning rush, a <strong>12-car train arrives at Takanawa Track 2 and is split into front 8 + rear 4</strong> —
+                the front 8 cars depart on the up main line, while the rear 4 cars are pulled back into a pull-back track.
+                In the evening it works in reverse: an <strong>8-car train arrives at Takanawa Track 1 from the down main line</strong>,
+                and a <strong>4-car train is brought in from the pull-back track and joined to its rear to form a 12-car service</strong>,
+                which then departs on the down main line.
+                On top of that, the Takanawa map adds <strong>parallel parking</strong> — stopping two distinct trains
+                nose-to-tail on the same platform.
+            </p>
+
+            <h3>Key elements</h3>
+            <table>
+                <tr><th>Element</th><th>Role</th></tr>
+                <tr><td><strong>Orange-bordered levers 81 / 82</strong></td><td>Coupling start levers. They open the "<strong>enter occupied track</strong>" coupling routes</td></tr>
+                <tr><td><strong>Coupling shunting routes (81B / 82L)</strong></td><td>Routes that bring a coupling train up to a track where another train is already standing</td></tr>
+                <tr><td><strong>Coupling shunting signal</strong></td><td>A dedicated signal that only goes proceed for coupling routes. Visually distinct from main-line and ordinary shunting signals</td></tr>
+            </table>
+
+            <h3 id="decoupling" class="op-major">Decoupling sequence</h3>
+            <p>
+                On the Takanawa map, decoupling happens at <strong>Takanawa Track 2</strong> or <strong>Pull-back X</strong>.
+            </p>
+            <ol class="step-list coupling">
+                <li>
+                    <div class="step-content">
+                        <strong>Bring the target train to its designated stopping position</strong>
+                        <p>
+                            Bring the train scheduled to decouple to its predetermined stop position. Once stopped, the train automatically enters the
+                            <strong>decoupling-ready state</strong>, and decoupling completes <strong>roughly 30 seconds later</strong>.
+                            Decoupling itself is handled by the game — the player does not need to do anything.
+                        </p>
+                        <div class="callout">
+                            <strong>Inputs are ignored during decoupling:</strong> pulling routes or pressing departure buttons has no effect.
+                            Wait for decoupling to complete before doing anything else.
+                        </div>
+                        <img src="takanawa-coupling-step5.png" alt="Step 1: Decoupling (automatic)">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Pull the route for the <u>front</u> half and send it out first</strong>
+                        <p>
+                            Once split, the <strong>front and rear halves each receive a new service number</strong> (the original service number is not retained).
+                            Send the <strong>front half</strong> out first. Depending on its onward run, the route you pull may be a main-line route or a shunting route.
+                        </p>
+                        <ul>
+                            <li>Example — Takanawa Track 2, the front 8 cars depart on the up main line as a Limited Express → <strong>13H</strong></li>
+                            <li>Example — Takanawa Track 2, the front 4 cars head into a pull-back track as an out-of-service run → <strong>33J</strong></li>
+                        </ul>
+                        <div class="callout">
+                            <strong>At Takanawa Track 2:</strong> after pulling the route, you must <strong>press the departure button</strong>.<br>
+                            <strong>At Pull-back X:</strong> no departure button is needed — once the route is open, the train <strong>departs automatically at its scheduled time</strong>.
+                        </div>
+                        <img src="takanawa-coupling-step6.png" alt="Step 2: Send out the front half">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Send out the remaining <u>rear</u> half</strong>
+                        <p>
+                            After the front half leaves, the rear half (usually an out-of-service run) remains at the same stopping position.
+                            Pull <strong>its</strong> route the same way; at Takanawa Track 2 press the departure button to send it on,
+                            and at Pull-back X the train departs automatically once its scheduled time arrives.
+                        </p>
+                        <img src="takanawa-coupling-step7.png" alt="Step 3: Send out the rear half">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+            </ol>
+
+            <h3>Where decoupling happens (by scenario)</h3>
+
+            <p><strong>Morning Rush — Decoupling at Takanawa Track 2</strong></p>
+            <ul>
+                <li>
+                    <strong>Rear 4 cars split off</strong>: <code>557H</code> / <code>659H</code> / <code>661H</code><br>
+                    Front 8 cars (<code>557Hb</code> / <code>659Hb</code> / <code>661Hb</code>) depart first onto the up main line; rear 4 cars (<code>回557H</code> / <code>回659H</code> / <code>回661H</code>) head into Pull-back Y.
+                </li>
+                <li>
+                    <strong>Front 4 cars split off</strong>: <code>663H</code> / <code>665H</code> / <code>667H</code> / <code>669H</code> / <code>671H</code> / <code>673H</code> / <code>775H</code> / <code>777H</code><br>
+                    Front 4 cars (<code>回◯◯H</code>) head into Pull-back Y; rear 8 cars (<code>◯◯Hb</code>) depart later onto the up main line.
+                </li>
+            </ul>
+
+            <p><strong>Morning Rush — Decoupling at Pull-back X</strong></p>
+            <ul>
+                <li><code>回653A</code> (12 cars) → 4 cars (<code>回724Cb</code>) depart first and couple to the rear of <code>724C</code>; 8 cars (<code>回720A</code>) depart later as <code>720A</code></li>
+                <li><code>回603B</code> (12 cars) → 4 cars (<code>回724H</code>) depart first and couple to the rear of <code>724H</code>; 8 cars (<code>回722A</code>) depart later as <code>722A</code></li>
+            </ul>
+
+            <p><strong>Evening Rush — Decoupling at Takanawa Track 2</strong></p>
+            <ul>
+                <li>
+                    <strong>Rear 4 cars split off</strong>: <code>1833H</code><br>
+                    Front 8 cars (<code>1833Hb</code>) depart first onto the up main line; rear 4 cars (<code>回1833H</code>) head into Pull-back Y as an out-of-service run.
+                </li>
+            </ul>
+
+            <h3 id="coupling-seq" class="op-major">Coupling sequence</h3>
+            <ol class="step-list coupling">
+                <li>
+                    <div class="step-content">
+                        <strong>Stop the base train at the target track</strong>
+                        <p>Bring the base formation into the platform (or pull-back track) using ordinary main-line or shunting routes.</p>
+                        <img src="takanawa-coupling-step1.png" alt="Step 1: Park the base train">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Move the additional formation toward it (shunting)</strong>
+                        <p>Use ordinary shunting routes to bring the joining formation — usually a short train waiting on a pull-back track or another platform — close to the base train.</p>
+                        <img src="takanawa-coupling-step2.png" alt="Step 2: Approach with the coupling train">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Open a coupling route using lever 81 or 82</strong>
+                        <p>For coupling at Takanawa Track 1, use <strong>81 → B</strong>; for coupling at Pull-back Y, use <strong>82 → L</strong>. Because the route enters an
+                        occupied track, the move is only allowed when the <strong>coupling shunting signal</strong> shows proceed.</p>
+                        <img src="takanawa-coupling-step3.png" alt="Step 3: Open the coupling route">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Drive in and couple</strong>
+                        <p>Once the coupling signal shows proceed, the coupling train rolls slowly toward the standing formation and <strong>couples automatically</strong> — no player input required. After coupling, the service number is unified to <strong>the base train's number</strong>.</p>
+                        <img src="takanawa-coupling-step4.png" alt="Step 4: Coupled">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+            </ol>
+
+            <h3>Where coupling happens (by scenario)</h3>
+
+            <p><strong>Morning Rush — Coupling at Takanawa Track 1 (via 81B)</strong></p>
+            <ul>
+                <li><code>724H</code> + <code>回724H</code> → 12 cars, departs as <code>724H</code></li>
+                <li><code>722H</code> + <code>回722H</code> → 12 cars, departs as <code>722H</code></li>
+                <li><code>752H</code> + <code>回752H</code> → 12 cars, departs as <code>752H</code></li>
+                <li><code>754H</code> + <code>回754H</code> → 12 cars, departs as <code>754H</code></li>
+                <li><code>756H</code> + <code>回756H</code> → 12 cars, departs as <code>756H</code></li>
+                <li><code>858H</code> + <code>回858H</code> → 12 cars, departs as <code>858H</code></li>
+                <li><code>860H</code> + <code>回860H</code> → 12 cars, departs as <code>860H</code></li>
+                <li><code>回724Ca</code> (8 cars, from Pull-back Y) + <code>回724Cb</code> (4 cars, from Pull-back X) → 12 cars, departs as <code>724C</code></li>
+            </ul>
+            <div class="callout">All 4-car formations (<code>回◯◯H</code> / <code>回724Cb</code>) come from Pull-back X and use <strong>81B</strong> to couple to the rear of the 8-car train already standing at Track 1.</div>
+
+            <p><strong>Morning Rush — Coupling at Pull-back Y (via 82L)</strong></p>
+            <ul>
+                <li><code>回659H</code> + <code>回661H</code> → 8 cars (later moves to Takanawa Track 1 as <code>回724Ca</code>, serving as the front 8 of <code>724C</code>)</li>
+                <li><code>回557H</code> + <code>回663H</code> + <code>回665H</code> → 12 cars (later departs from Takanawa Track 1 as <code>726C</code>)</li>
+            </ul>
+            <div class="callout">The arriving 4-car formation uses <strong>82L</strong> to couple to the rear of the train already standing at Pull-back Y.</div>
+
+            <p><strong>Evening Rush — Coupling at Takanawa Track 1 (via 81B)</strong></p>
+            <ul>
+                <li><code>1972H</code> (8 cars) + <code>回1972H</code> (4 cars, from Pull-back Y) → 12 cars, departs as <code>1972H</code></li>
+            </ul>
+
+            <h3 id="parallel" class="op-major">Parallel parking sequence</h3>
+            <p>
+                Parallel parking happens <strong>only at Pull-back Y</strong>, and the only route used is <strong>82L</strong>.
+                The procedure is identical to Steps 1–3 of <a href="#coupling" style="color: var(--accent);">the coupling sequence</a> — except the two trains do not couple; they simply park nose-to-tail on the same track.
+            </p>
+            <div class="callout">
+                <strong>Whether a move ends in coupling or parallel parking is decided by the scenario</strong>; you do not need to do anything different. As long as you drive each train to its scheduled position, the game produces the correct outcome automatically.
+            </div>
+
+            <h3>Where parallel parking happens (by scenario)</h3>
+
+            <p><strong>Morning Rush — Parallel parking at Pull-back Y</strong></p>
+            <ul>
+                <li><code>回557H</code> is parked first; <code>回659H</code> parks alongside it</li>
+            </ul>
+
+            <p><strong>Evening Rush — Parallel parking at Pull-back Y</strong></p>
+            <ul>
+                <li><code>回1767</code> and <code>回1863b</code> park in tandem</li>
+                <li><code>回1833H</code> is parked first; <code>回1723</code> parks alongside it, then leaves. Later, <code>回1713</code> arrives and parks with <code>回1833H</code> (the 3 trains are never on the track simultaneously)</li>
+            </ul>
+        </section>
+
+        <section id="related">
+            <h2>Related guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (common operations)</a></li>
+                <li><a href="../diagram-view.en.html" style="color: var(--accent);">Diagram View Guide</a> — handy for tracking turnaround and coupling pairs</li>
+                <li><a href="keihin-kawata.en.html" style="color: var(--accent);">Keihin-Kawata Map Guide</a></li>
+                <li><a href="heikai-jima.en.html" style="color: var(--accent);">Heikai-jima Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>
