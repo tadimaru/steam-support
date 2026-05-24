@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高輪マップガイド | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --orange: #f97316;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        h3.op-major {
+            font-size: 20px;
+            color: var(--accent);
+            border-top: 2px solid var(--border);
+            padding-top: 28px;
+            margin-top: 44px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .highlight-callout {
+            background: linear-gradient(90deg, rgba(249,115,22,0.18), rgba(74,144,217,0.10));
+            border: 1px solid var(--orange);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 0 0 28px;
+        }
+        .highlight-callout .label {
+            display: inline-block;
+            background: var(--orange);
+            color: #1a1a1a;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+            letter-spacing: 0.06em;
+        }
+        .highlight-callout a {
+            display: inline-block;
+            margin-top: 8px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px solid var(--orange);
+        }
+        .highlight-callout a:hover { color: var(--orange); }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.coupling { border-left-color: var(--orange); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list > li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list > li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+        .step-list.coupling > li::before { background: var(--orange); color: #1a1a1a; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-general  { background: #713f12; color: #fde68a; }
+        .badge-shunting { background: #14532d; color: #86efac; }
+        .badge-coupling { background: #7c2d12; color: #fed7aa; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>高輪マップガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="takanawa.en.html">English</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">マップ</div>
+        <ul>
+            <li><a href="#overview">マップ概要</a></li>
+            <li><a href="#lever-layout">てこの配置図</a></li>
+            <li><a href="#routes">進路一覧</a></li>
+        </ul>
+        <div class="section-title">運用（マップの目玉）</div>
+        <ul>
+            <li><a href="#coupling">★ 概要・仕組み</a></li>
+            <li><a href="#decoupling">解結</a></li>
+            <li><a href="#coupling-seq">増結</a></li>
+            <li><a href="#parallel">縦列駐車</a></li>
+        </ul>
+        <div class="section-title">関連</div>
+        <ul>
+            <li><a href="../help.html">← 遊び方ガイド</a></li>
+            <li><a href="keihin-kawata.html">京浜川田マップ</a></li>
+            <li><a href="heikai-jima.html">平海島マップ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.html">← 遊び方ガイド</a> / 高輪マップ
+        </div>
+
+        <div class="highlight-callout">
+            <div class="label">★ このマップの目玉</div>
+            <p style="margin: 0; color: var(--text-dim);">
+                高輪マップの最大の特徴は、これまでのマップにはなかった<strong>「増結・解結」「縦列駐車」運用</strong>です。
+                到着した列車に別の列車を連結して長い編成にしたり、逆に切り離して別運用に回したり、
+                同じ番線に 2 本の列車を縦に並べて止めたりします。
+                まずこの仕組みを押さえておくと、シナリオ中の捌きがぐっと楽になります。
+            </p>
+            <a href="#coupling">増結・解結・縦列駐車運用について知る →</a>
+        </div>
+
+        <section id="overview">
+            <h2>🎯 マップ概要</h2>
+            <p>
+                高輪マップは <strong>高輪駅</strong> と <strong>南高輪駅</strong> の 2 駅を含むターミナル系マップです。
+                高輪駅は 3 番線まで、南高輪駅は 2 番線まであり、駅構内の片側には折り返し用の<strong>引上線 X / 引上線 Y</strong> を備えます。
+                折り返し列車・通過列車・増結解結列車が同じ駅構内で交錯するため、これまでよりも一段難易度の高い扱いが求められます。
+            </p>
+            <ul>
+                <li><strong>高輪駅</strong>: 1番線 / 2番線 / 3番線（プレイヤーが進路を扱うメインの駅）</li>
+                <li><strong>南高輪駅</strong>: 1番線 / 2番線。<strong>普通電車のみが停車する駅</strong>で、列車は<strong>プレイヤーが何の操作をしなくても自動で停車・発車（または通過）</strong>します。</li>
+                <li><strong>引上線</strong>: 引上線 X / 引上線 Y（折り返し・増結解結で使用）。<strong>画面上では X が上の線、Y が下の線</strong>として並んでいます。</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 てこの配置図</h2>
+            <img src="takanawa-levers.png" alt="高輪マップ（高輪・南高輪）のてこ配置図" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <!-- TODO: capture screenshot — 高輪駅・南高輪駅・引上線 X/Y を含む駅構内全体のてこ配置（発点 1〜5・11〜13・21〜27・31〜36 と増結用 81・82、着点 A〜L が見える構図）。 -->
+            <p>駅構内のてこ（発点・着点）と番線・引上線の位置関係を上の図で確認してください。</p>
+
+            <h3>発点てこの種類</h3>
+            <table>
+                <tr><th>枠の色</th><th>用途</th><th>てこ番号</th></tr>
+                <tr><td><strong>黄枠</strong> <span class="badge badge-general">本線</span></td><td>営業運転中の進路設定</td><td>1〜5（右行）／ 11〜13（左行）</td></tr>
+                <tr><td><strong>緑枠</strong> <span class="badge badge-shunting">入換</span></td><td>引上線への入線・折り返し</td><td>21〜27（右行）／ 31〜36（左行）</td></tr>
+                <tr><td><strong>オレンジ枠</strong> <span class="badge badge-coupling">増結</span></td><td>連結のための特殊入換</td><td>81（右行）／ 82（左行）</td></tr>
+            </table>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 進路一覧</h2>
+            <p>
+                進路は<strong>発点てこ</strong>と<strong>着点てこ</strong>の組み合わせで構成されます。
+                高輪マップでは<strong>本線進路</strong>・<strong>入換進路</strong>に加えて、増結用の特殊進路 <strong>「増結用入換進路」</strong> が新登場します。
+            </p>
+
+            <h3>本線進路</h3>
+            <p>
+                旅客列車が本線〜駅構内を行き来する操作です。発点てこは<strong>黄色</strong>で光ります。
+                高輪マップでは <strong>1 つの操作で進路を 2 本続けて引く必要があるケース</strong>があるため、操作ごとに使う進路を順番に示します。
+            </p>
+            <table>
+                <tr><th>操作</th><th>使う進路（左から順に引く）</th></tr>
+                <tr><td>下り本線 → 高輪駅 1番線へ進入</td><td><strong>1A → 2C</strong></td></tr>
+                <tr><td>高輪駅 1番線 → 下り本線へ出発</td><td><strong>3D</strong></td></tr>
+                <tr><td>上り本線 → 高輪駅 2番線へ進入</td><td><strong>11E → 12F</strong></td></tr>
+                <tr><td>高輪駅 2番線 → 上り本線へ出発</td><td><strong>13H</strong></td></tr>
+                <tr><td>上り本線 → 高輪駅 3番線へ進入（折り返し用）</td><td><strong>11G</strong></td></tr>
+                <tr><td>高輪駅 3番線 → 下り本線へ折り返し出発</td><td><strong>5D</strong></td></tr>
+            </table>
+            <div class="callout warn">
+                <strong>⚠ 紛らわしい進路名：</strong>1 番線への進入で 2 本目に引くのは <strong>2C</strong> です（2B ではありません）。
+            </div>
+
+            <h3>入換進路</h3>
+            <p>
+                駅構内での入換移動（引上線への入線・折り返し・1番線への戻し）に使う進路です。発点てこは<strong>緑色</strong>で光ります。
+                本線進路と同じく、<strong>1 つの操作に対して複数の進路を続けて引く</strong>のが基本です。
+            </p>
+            <table>
+                <tr><th>操作</th><th>使う進路（左から順に引く）</th></tr>
+                <tr><td>高輪駅 2番線 → 引上線 X へ入換</td><td><strong>33J → 35K</strong></td></tr>
+                <tr><td>高輪駅 2番線 → 引上線 Y へ入換</td><td><strong>33J → 35L</strong></td></tr>
+                <tr><td>引上線 X → 高輪駅 1番線へ入換</td><td><strong>21A → 23B → 24C</strong></td></tr>
+                <tr><td>引上線 Y → 高輪駅 1番線へ入換</td><td><strong>22A → 23B → 24C</strong></td></tr>
+            </table>
+
+            <h3>増結用入換進路</h3>
+            <p>
+                発点てこは<strong>オレンジ色</strong>。<strong>在線中の軌道回路にあえて進入する</strong>ための特殊進路です（通常の進路は在線中の軌道に進入できません）。
+                増結・縦列駐車の対象の列車が止まっている所へ、別の列車を寄せていく目的で使います。
+            </p>
+            <table>
+                <tr><th>進路名</th><th>発点 → 着点</th><th>用途</th></tr>
+                <tr><td><strong>81B</strong></td><td>81 → B</td><td>右行：先に高輪 1番線（着点 B 側）に停車中の列車に、後続の連結車を寄せる</td></tr>
+                <tr><td><strong>82L</strong></td><td>82 → L</td><td>左行：引上線 Y（着点 L 側）に停車中の列車に、別の列車を寄せる</td></tr>
+            </table>
+            <div class="callout coupling">
+                <strong>💡 増結用入換進路だけの特性：</strong> 通常の進路は、その進路が通る軌道回路に列車が在線していると開通できません。
+                増結用進路はこの制限を意図的にゆるめてあり、<strong>目的の軌道回路に列車が止まっていても進入できる</strong>ようにしてあります。
+                これが「増結」「縦列駐車」操作の中核です。
+            </div>
+            <div class="callout warn">
+                <strong>⚠ 増結用入換信号は "いつでも" 操作できる信号ではない：</strong>
+                寄せる側の列車が、<strong>停車中の列車の直前の軌道回路まで進入し、十分に減速したタイミング</strong>でのみ進行現示にできます。
+                まだ離れた位置にあるうちに開通させようとしても応じません。
+                対象列車に十分接近させてから扱う前提の信号、と覚えてください。
+            </div>
+        </section>
+
+        <section id="coupling">
+            <h2>🟧 増結・解結・縦列駐車運用（高輪マップの目玉）</h2>
+            <p>
+                高輪マップで初登場する運用です。<strong>1 つの列車番号に対し、複数の編成を組み合わせて運転する</strong>仕組みです。
+                朝ラッシュでは、<strong>12 両編成</strong>で高輪駅 2番線に到着した列車を <strong>前 8 両 + 後ろ 4 両</strong>に分割し、
+                前 8 両はそのまま上り本線へ発車、後ろ 4 両は引上線へ引き上げる、という運用があります。
+                夕方は逆に、高輪駅 1番線で下り本線から到着した <strong>8 両編成</strong>の後ろに、
+                <strong>引上線から 4 両編成を回して連結</strong>し、12 両編成として下り本線へ発車させます。
+                さらに、同じ番線に 2 本の列車を縦に並べて止める <strong>「縦列駐車」</strong> もこのマップで新登場します。
+            </p>
+
+            <h3>仕組みのキーポイント</h3>
+            <table>
+                <tr><th>要素</th><th>役割</th></tr>
+                <tr><td><strong>オレンジ枠てこ 81 / 82</strong></td><td>増結用の発点てこ。「<strong>在線中の軌道回路に進入できる</strong>」進路を開通させる</td></tr>
+                <tr><td><strong>増結用入換進路（81B・82L）</strong></td><td>連結対象が止まっている軌道へ別の列車を寄せていく進路</td></tr>
+                <tr><td><strong>増結用入換信号機</strong></td><td>増結進路でのみ進行現示になる専用信号。本線・通常入換とは見た目で区別される</td></tr>
+            </table>
+
+            <h3 id="decoupling" class="op-major">解結の基本手順</h3>
+            <p>
+                高輪マップでは、<strong>高輪駅 2番線</strong> または <strong>引上線 X</strong> で解結が発生します。
+            </p>
+            <ol class="step-list coupling">
+                <li>
+                    <div class="step-content">
+                        <strong>解結対象の列車を所定の停車位置まで持ってくる</strong>
+                        <p>
+                            シナリオで解結が予定されている列車を、決められた停車位置まで持ってきます。
+                            停車すると<strong>自動で解結準備状態</strong>になり、約 <strong>30 秒で解結作業が完了</strong>します。
+                            解結はゲーム側で自動で行われるため、プレイヤーが何かを操作する必要はありません。
+                        </p>
+                        <div class="callout">
+                            <strong>解結作業中の操作は無効：</strong>進路を引いたり出発ボタンを押しても受け付けられません。完了を待ってから次の操作に進んでください。
+                        </div>
+                        <img src="takanawa-coupling-step5.png" alt="Step 1: 解結準備（自動）">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>進行方向<u>前側</u>の列車に進路を引いて発車させる</strong>
+                        <p>
+                            分離されると、<strong>前側・後ろ側それぞれに別の列車番号</strong>が割り当てられます（元の列車番号は残りません）。
+                            先に出すのは<strong>進行方向の前側の列車</strong>です。前側の運用に応じて、引く進路は本線進路にも入換進路にもなり得ます。
+                        </p>
+                        <ul>
+                            <li>例: 高輪駅 2番線で前 8 両が特急として上り本線へ発車する場合 → <strong>13H</strong></li>
+                            <li>例: 高輪駅 2番線で前 4 両が回送として引上線へ入る場合 → <strong>33J</strong></li>
+                        </ul>
+                        <div class="callout">
+                            <strong>高輪駅 2番線で解結した場合：</strong>進路を引いたあと <strong>出発ボタンを押す</strong>必要があります。<br>
+                            <strong>引上線 X で解結した場合：</strong>出発ボタンは不要です。進路を引いておけば<strong>時刻になれば自動で発車</strong>します。
+                        </div>
+                        <img src="takanawa-coupling-step6.png" alt="Step 2: 前側の列車を発車">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>残った<u>後ろ側</u>の列車を発車させる</strong>
+                        <p>
+                            前側が出発したあと、後ろ側の列車（多くは回送）が同じ停車位置に残ります。同じ要領で<strong>後ろ側の列車の進路</strong>を引き、
+                            高輪駅 2番線の場合は出発ボタンを押すと出発します。引上線 X の場合は時刻になれば自動で発車します。
+                        </p>
+                        <img src="takanawa-coupling-step7.png" alt="Step 3: 後ろ側の列車を発車">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+            </ol>
+
+            <h3>解結が発生する運用（シナリオ別）</h3>
+
+            <p><strong>朝ラッシュ — 高輪駅 2番線で解結</strong></p>
+            <ul>
+                <li>
+                    <strong>後ろ 4 両を切り離すタイプ</strong>: <code>557H</code> / <code>659H</code> / <code>661H</code><br>
+                    前 8 両（<code>557Hb</code> / <code>659Hb</code> / <code>661Hb</code>）は上り本線方面として先発、後ろ 4 両（<code>回557H</code> / <code>回659H</code> / <code>回661H</code>）は引上線 Y へ。
+                </li>
+                <li>
+                    <strong>前 4 両を切り離すタイプ</strong>: <code>663H</code> / <code>665H</code> / <code>667H</code> / <code>669H</code> / <code>671H</code> / <code>673H</code> / <code>775H</code> / <code>777H</code><br>
+                    前 4 両（<code>回◯◯H</code>）は引上線 Y へ、後ろ 8 両（<code>◯◯Hb</code>）は上り本線方面として後発。
+                </li>
+            </ul>
+
+            <p><strong>朝ラッシュ — 引上線 X で解結</strong></p>
+            <ul>
+                <li><code>回653A</code>（12 両）→ 4 両（<code>回724Cb</code>）が先に発車し <code>724C</code> の後ろに増結／8 両（<code>回720A</code>）はそのあと <code>720A</code> として発車</li>
+                <li><code>回603B</code>（12 両）→ 4 両（<code>回724H</code>）が先に発車し <code>724H</code> の後ろに増結／8 両（<code>回722A</code>）はそのあと <code>722A</code> として発車</li>
+            </ul>
+
+            <p><strong>夕方ラッシュ — 高輪駅 2番線で解結</strong></p>
+            <ul>
+                <li>
+                    <strong>後ろ 4 両を切り離すタイプ</strong>: <code>1833H</code><br>
+                    前 8 両（<code>1833Hb</code>）は上り本線方面として先発、後ろ 4 両（<code>回1833H</code>）は引上線 Y へ回送。
+                </li>
+            </ul>
+
+            <h3 id="coupling-seq" class="op-major">増結の基本手順</h3>
+            <ol class="step-list coupling">
+                <li>
+                    <div class="step-content">
+                        <strong>連結先の列車を所定の番線に止める</strong>
+                        <p>通常の本線進路または入換進路で、ベースになる列車を番線（または引上線）に取り込みます。</p>
+                        <img src="takanawa-coupling-step1.png" alt="Step 1: 連結先の列車を待機">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>連結する追加編成を入換で持って来る</strong>
+                        <p>連結用の編成（多くは引上線・別番線にいる短編成）を、増結対象に近い軌道まで入換で寄せます。</p>
+                        <img src="takanawa-coupling-step2.png" alt="Step 2: 連結編成を寄せる">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>オレンジてこ 81 / 82 で増結進路を開通させる</strong>
+                        <p>高輪駅 1番線で増結する場合は <strong>81 → B</strong>、引上線 Y で増結する場合は <strong>82 → L</strong> を扱います。
+                        在線中の軌道回路に進入する特殊進路なので、<strong>増結用入換信号機が進行現示</strong>になることを確認してください。</p>
+                        <img src="takanawa-coupling-step3.png" alt="Step 3: 増結進路の開通">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>連結車を進めて連結完了</strong>
+                        <p>増結進路の信号が進行現示になると、連結車は停止中の編成へゆっくり近づき<strong>自動で連結します</strong>。プレイヤー側の操作は不要です。連結が完了すると、列車番号は<strong>連結先（ベース側）の番号</strong>に統合されます。</p>
+                        <img src="takanawa-coupling-step4.png" alt="Step 4: 連結完了">
+                        <!-- TODO: capture screenshot -->
+                    </div>
+                </li>
+            </ol>
+
+            <h3>増結が発生する運用（シナリオ別）</h3>
+
+            <p><strong>朝ラッシュ — 高輪駅 1番線で増結（81B 使用）</strong></p>
+            <ul>
+                <li><code>724H</code> + <code>回724H</code> → 12 両として <code>724H</code> で発車</li>
+                <li><code>722H</code> + <code>回722H</code> → 12 両として <code>722H</code> で発車</li>
+                <li><code>752H</code> + <code>回752H</code> → 12 両として <code>752H</code> で発車</li>
+                <li><code>754H</code> + <code>回754H</code> → 12 両として <code>754H</code> で発車</li>
+                <li><code>756H</code> + <code>回756H</code> → 12 両として <code>756H</code> で発車</li>
+                <li><code>858H</code> + <code>回858H</code> → 12 両として <code>858H</code> で発車</li>
+                <li><code>860H</code> + <code>回860H</code> → 12 両として <code>860H</code> で発車</li>
+                <li><code>回724Ca</code>（8 両、引上線 Y 発）+ <code>回724Cb</code>（4 両、引上線 X 発）→ 12 両として <code>724C</code> で発車</li>
+            </ul>
+            <div class="callout">4 両側（<code>回◯◯H</code> / <code>回724Cb</code>）はすべて引上線 X から <strong>81B</strong> を扱って、1 番線で待機中の 8 両編成の後ろに連結します。</div>
+
+            <p><strong>朝ラッシュ — 引上線 Y で増結（82L 使用）</strong></p>
+            <ul>
+                <li><code>回659H</code> + <code>回661H</code> → 8 両（その後 高輪駅 1番線へ移動し <code>回724Ca</code> として <code>724C</code> の前 8 両に充当）</li>
+                <li><code>回557H</code> + <code>回663H</code> + <code>回665H</code> → 12 両（その後 <code>726C</code> として高輪駅 1番線から発車）</li>
+            </ul>
+            <div class="callout">後着の編成が <strong>82L</strong> を扱って、引上線 Y で待機中の編成の後ろに連結します。</div>
+
+            <p><strong>夕方ラッシュ — 高輪駅 1番線で増結（81B 使用）</strong></p>
+            <ul>
+                <li><code>1972H</code>（8 両）+ <code>回1972H</code>（4 両、引上線 Y 発）→ 12 両として <code>1972H</code> で発車</li>
+            </ul>
+
+            <h3 id="parallel" class="op-major">縦列駐車の基本手順</h3>
+            <p>
+                縦列駐車は <strong>引上線 Y でのみ</strong>発生し、使う進路は <strong>82L</strong> だけです。
+                基本の手順は <a href="#coupling" style="color: var(--accent);">増結の基本手順</a> の Step 1〜3 と同じで、連結はされず、2 本の列車が同じ軌道に縦に並んで停車します。
+            </p>
+            <div class="callout">
+                <strong>増結になるか縦列駐車になるかはシナリオ側で決まっており</strong>、プレイヤーが特別な操作をする必要はありません。
+                ダイヤどおりに列車を所定の位置まで進ませれば、ゲームが自動で正しい結果（連結 or 縦列）になります。
+            </div>
+
+            <h3>縦列駐車が発生する運用（シナリオ別）</h3>
+
+            <p><strong>朝ラッシュ — 引上線 Y で縦列駐車</strong></p>
+            <ul>
+                <li><code>回557H</code> の隣に <code>回659H</code> が縦列駐車</li>
+            </ul>
+
+            <p><strong>夕方ラッシュ — 引上線 Y で縦列駐車</strong></p>
+            <ul>
+                <li><code>回1767</code> と <code>回1863b</code> が縦列駐車</li>
+                <li><code>回1833H</code> に <code>回1723</code> が縦列駐車。<code>回1723</code> が出庫したあと、こんどは <code>回1713</code> が <code>回1833H</code> と縦列駐車（同時に 3 本が並ぶわけではない）</li>
+            </ul>
+        </section>
+
+        <section id="related">
+            <h2>関連ガイド</h2>
+            <ul>
+                <li><a href="../help.html" style="color: var(--accent);">← 遊び方ガイド（共通操作）</a></li>
+                <li><a href="../diagram-view.html" style="color: var(--accent);">ダイヤグラムビューガイド</a> — 折り返し・増結の流れを俯瞰するのに便利</li>
+                <li><a href="keihin-kawata.html" style="color: var(--accent);">京浜川田マップガイド</a></li>
+                <li><a href="heikai-jima.html" style="color: var(--accent);">平海島マップガイド</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>
