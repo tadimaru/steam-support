@@ -343,6 +343,7 @@
                 <li><a href="#signal-handling">信号扱い方式</a></li>
                 <li><a href="#locks">鎖錠の仕組み</a></li>
                 <li><a href="#turnback">折り返し列車</a></li>
+                <li><a href="#scoring-mode">採点モード</a></li>
             </ul>
         </details>
         <details>
@@ -743,6 +744,68 @@
                 折り返し列車には<strong>進行方向が逆になる出発進路</strong>を設定する必要があります。
                 時刻表の矢印方向をよく確認してから進路を設定しましょう。
             </p>
+        </section>
+
+        <section id="scoring-mode">
+            <h2>🏆 採点モード</h2>
+            <p>
+                タイトル画面のシナリオ選択時に <strong>採点モード ON</strong> でプレーすると、
+                運行操作の一つひとつにスコアが付きます。定時運行・適切なタイミングでの発車合図などには加点、
+                遅延・順序の乱れ・誤操作には減点が入り、シナリオ完走時に
+                <strong>合計スコア</strong>と <strong>S / A / B / C / D ランク</strong>で評価されます。
+            </p>
+            <p>
+                採点 OFF（サンドボックスモード）では同じシナリオを自由に練習できます。スコアは付きません。
+            </p>
+
+            <h3>加点項目</h3>
+            <table>
+                <tr><th>項目</th><th>条件</th><th>得点</th></tr>
+                <tr><td>定時発車</td><td>予定時刻 -15秒〜+35秒で発車</td><td>+100</td></tr>
+                <tr><td>定時通過</td><td>予定時刻 -15秒〜+35秒で通過</td><td>+50</td></tr>
+                <tr><td>ベストタイミングの発車合図</td><td>予定発車の -30秒〜-5秒に発車ボタンを押す</td><td>+50</td></tr>
+                <tr><td>通過ボタン押下</td><td>通過列車進入時に選別「通」表示中</td><td>+50</td></tr>
+            </table>
+
+            <h3>減点項目</h3>
+            <table>
+                <tr><th>項目</th><th>条件</th><th>得点</th></tr>
+                <tr><td>遅延発車</td><td>予定 +45秒〜+60秒で発車</td><td>-50</td></tr>
+                <tr><td>大幅遅延発車</td><td>予定 +60秒を超えて発車</td><td>-100</td></tr>
+                <tr><td>順序入れ替わり</td><td>本来の発車順序を崩した</td><td>-200</td></tr>
+                <tr><td>発車ボタン早押しすぎ</td><td>予定 -60秒より前に押下</td><td>-50</td></tr>
+                <tr><td>該当列車不在</td><td>列車がいない番線で発車ボタン押下</td><td>-50</td></tr>
+                <tr><td>接近鎖錠の発動</td><td>接近中の列車がある進路でてこを戻そうとした</td><td>-100</td></tr>
+            </table>
+
+            <div class="callout">
+                <strong>±35秒の遅延許容について：</strong>
+                ドアの再開閉などごく軽微な遅れでスコアが下がらないように、+35秒までは定時扱いです。
+                +35〜+45秒も無罰、+45秒を超えて初めて減点となります。
+            </div>
+
+            <h3>ランク判定</h3>
+            <p>達成率 = 獲得スコア ÷ シナリオ満点 × 100% で計算されます。</p>
+            <table>
+                <tr><th>ランク</th><th>達成率</th></tr>
+                <tr><td><span class="badge badge-blue">S</span></td><td>95% 以上</td></tr>
+                <tr><td><span class="badge badge-green">A</span></td><td>85% 以上</td></tr>
+                <tr><td><span class="badge badge-yellow">B</span></td><td>70% 以上</td></tr>
+                <tr><td><span class="badge badge-orange">C</span></td><td>50% 以上</td></tr>
+                <tr><td><span class="badge badge-red">D</span></td><td>50% 未満</td></tr>
+            </table>
+
+            <h3>ハイスコア・実績</h3>
+            <p>
+                マップ × シナリオごとに最高スコアが自動で保存されます。
+                同じシナリオを繰り返しプレイし、Sランクや<strong>減点ゼロ</strong>を目指してください。
+                Steam 実績にも一部対応しており、初完走・Sランク・減点ゼロ・定時運行満点などで解除されます。
+            </p>
+
+            <div class="callout warn">
+                <strong>進行方式は自由：</strong>
+                保留式・非保留式どちらでも採点モードと併用できます。慣れた操作スタイルでスコアに挑戦してください。
+            </div>
         </section>
 
         <section id="faq">
