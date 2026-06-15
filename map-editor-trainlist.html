@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>運行編集ガイド | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">📋</span>
+    <div>
+        <h1>運行編集ガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-trainlist.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html" class="active">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#overview">概要</a></li>
+        <li><a href="#path-group">経路グループ</a></li>
+        <li><a href="#train-list">列車一覧</a></li>
+        <li><a href="#diagram-row">ダイヤ行</a></li>
+        <li><a href="#tips">運用のコツ</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor.html">マップエディタ入門</a> / 運行編集
+    </div>
+
+    <section id="overview">
+        <h2>🎯 概要</h2>
+        <p>
+            <strong>運行</strong>カテゴリでは、配線・設備が完成したマップに「いつ、どんな種別の列車を、どこから走らせるか」を定義します。
+            シナリオを選択しているときだけ有効です。
+        </p>
+
+        <h3>3 つの編集対象</h3>
+        <table>
+            <tr><th>項目</th><th>役割</th></tr>
+            <tr><td><strong>経路グループ (PathGroup)</strong></td><td>列車の走行ルートを定義する「テンプレート」。出現場所、進路の連なり、駅停車を時系列で記述する</td></tr>
+            <tr><td><strong>列車一覧 (TrainList)</strong></td><td>実際の列車を 1 行ずつ並べたもの。各列車に「列車番号」「列車形式」「どの経路グループに乗るか」を指定する</td></tr>
+            <tr><td><strong>ダイヤ行 (DiagramRow)</strong></td><td>ダイヤグラム上の縦軸に並ぶ行（駅番線・マップ端）の定義</td></tr>
+        </table>
+
+        <h3>編集の流れ</h3>
+        <ol class="step-list">
+            <li>必要に応じて<strong>ダイヤ行</strong>を整える（駅番線とマップ端がダイヤグラムの縦軸として並ぶ）</li>
+            <li><strong>経路グループ</strong>を必要なルートぶん作る（例: 朝の上り 1 番線進入用、夜の引上線折返し用、など）</li>
+            <li><strong>列車一覧</strong>に列車を 1 行ずつ追加し、経路グループ・列車形式・列車番号を指定する</li>
+            <li>保存して<strong>プレビュー</strong>で動作確認する</li>
+        </ol>
+        <div class="callout warn">
+            <strong>こまめに保存：</strong>経路グループや列車一覧の編集はサイドバーの入力フィールドに反映された時点で「編集中」ですが、CSV に書き出されるのは保存ボタンを押したときだけです。
+            ひと通り組み終わるまでに必ず <kbd>Ctrl</kbd>+<kbd>S</kbd> を何度か挟みましょう。
+        </div>
+    </section>
+
+    <section id="path-group">
+        <h2>🛤 経路グループ</h2>
+        <p>
+            <strong>経路グループ</strong>は列車のルート定義です。
+            「ここから出現して、この進路を通って、この駅に停車して、この進路を通って、ここで消える」を時系列に記述します。
+        </p>
+
+        <h3>編集場所</h3>
+        <p>左サイドバーの<strong>運行カテゴリ → 経路グループ</strong>から開きます。</p>
+
+        <h3>経路グループの主な項目</h3>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>経路グループ ID</strong></td><td>内部参照用の名前（例: <code>down_local_morning</code>）</td></tr>
+            <tr><td><strong>進行方向</strong></td><td>列車の進む向き（Right / Left ボタンで選択）。同じ経路グループを使う列車はすべてこの方向で走る</td></tr>
+            <tr><td><strong>出現 TC</strong></td><td>列車がスポーンする軌道回路（「TC を選ぶ」ボタン → マップ上で軌道回路をクリック）</td></tr>
+            <tr><td><strong>出現オフセット秒</strong></td><td>シナリオ開始時刻からの相対秒数。空にすると Connection（折り返し受け継ぎ）扱いとなり、前の運用から自動で受け継がれる</td></tr>
+            <tr><td><strong>発車標方面</strong></td><td>この経路グループの列車を発車標のどの方面に表示するかをボタン選択（自動 / 方面マスタ / 出さない）</td></tr>
+        </table>
+
+        <h3>ステップ（PathStep）の組み立て</h3>
+        <p>
+            経路グループは <strong>ステップ</strong>の連なりで定義します。1 ステップは「次にどの進路を通るか」または「どの駅で停車するか」のどちらかです。
+        </p>
+        <table>
+            <tr><th>ステップ種類</th><th>役割</th></tr>
+            <tr><td><strong>進路ステップ (route)</strong></td><td>指定した進路を通って次の地点へ進む</td></tr>
+            <tr><td><strong>駅停車ステップ (station)</strong></td><td>指定した駅で停車・客扱い。停車時間・発車時刻は別途指定</td></tr>
+        </table>
+        <p>
+            ステップは sequence 順に並びます。出現 → 進路 → 駅停車 → 進路 → 駅停車 → ... → 進路（終端へ）という流れを記述します。
+        </p>
+
+        <h3>発車標方面の選択（ボタン式）</h3>
+        <p>
+            発車標方面の入力は<strong>ボタン選択</strong>で行います（テキスト入力ではありません）。
+            方面マスタに登録した選択肢と、「自動」「発車標に出さない」が並びます。
+        </p>
+        <div class="callout">
+            <strong>複数駅マップでの注意：</strong>方面 ID は経路グループに対してマップ全体で 1 つだけ持ちます。
+            複数の駅にまたがる路線では、すべての駅で同じ方面 ID を使うのが基本です（同じ ID に対して、各駅の方面マスタで違う表示名を割り当てる運用）。
+        </div>
+    </section>
+
+    <section id="train-list">
+        <h2>🚆 列車一覧</h2>
+        <p>
+            <strong>列車一覧</strong>は実際の列車を 1 行ずつ並べたものです。
+            経路グループが「ルートのテンプレート」だとすれば、列車一覧は「そのテンプレートに沿って何時に走らせる、列車番号 1234 の列車」のような具体的なインスタンスです。
+        </p>
+
+        <h3>編集場所</h3>
+        <p>左サイドバーの<strong>運行カテゴリ → 列車一覧</strong>から開きます。</p>
+
+        <h3>列車一覧の主な項目</h3>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>列車番号</strong></td><td>列車を識別する番号（例: <code>1001</code>）</td></tr>
+            <tr><td><strong>列車形式</strong></td><td><a href="map-editor-company.html#train-type">列車形式マスタ</a>から選ぶ（ニックネームで表示）</td></tr>
+            <tr><td><strong>列車種別</strong></td><td><a href="map-editor-company.html#train-class">列車種別マスタ</a>から選ぶ（例: <code>普通</code>, <code>急行</code>）</td></tr>
+            <tr><td><strong>経路グループ</strong></td><td>経路グループマスタから選ぶ（例: <code>down_local_morning</code>）</td></tr>
+            <tr><td><strong>到着時刻 / 通過時刻</strong></td><td>最初の停車駅への到着時刻（<code>HH:MM:SS</code>）。経路グループのステップがすべて通過なら「通過時刻」になる</td></tr>
+            <tr><td><strong>発車時刻</strong></td><td>最初の停車駅からの発車時刻（<code>HH:MM:SS</code>）。通過列車の場合は入力欄が隠れる</td></tr>
+            <tr><td><strong>次の運用</strong></td><td>折り返し列車にする場合、次に乗り継ぐ列車番号を指定（◀▶ ボタンで候補巡回）</td></tr>
+        </table>
+
+        <div class="callout">
+            <strong>自動で決まる項目：</strong>
+            <strong>方向</strong>は選択した経路グループの設定がそのまま引き継がれ、編集は経路グループ側で行います。
+            <strong>番線</strong>も経路グループのステップと番線マスタから自動導出されます（手入力欄なし）。
+        </div>
+
+        <h3>コピー機能</h3>
+        <p>
+            既存の列車をベースに新規列車を作るときは<strong>コピー</strong>ボタンが便利です。
+            列車番号と出現時刻だけ変えれば、同じルート・同じ形式の列車を量産できます。
+        </p>
+
+        <h3>折り返し列車の指定</h3>
+        <p>
+            <strong>次の運用</strong>欄に別の列車番号を指定すると、その列車が今の列車の続きとして同じ車両で運行されます（折り返し運用）。
+            次の運用側の列車は「出現 TC」「出現時刻」を持たず、前の列車が終端駅に着いた時点で受け継がれます。
+        </p>
+        <div class="callout">
+            <strong>折り返し列車の方向：</strong>「次の運用」側の経路グループは方向が反対であることが多いです。
+            終端駅でのホーム停車 → 反対側のホームから出発、という流れを経路グループで組んでください。
+        </div>
+    </section>
+
+    <section id="diagram-row">
+        <h2>📈 ダイヤ行</h2>
+        <p>
+            <strong>ダイヤ行 (DiagramRows)</strong> はダイヤグラム（時刻 × 位置のグラフ）の縦軸に並ぶ行の定義です。
+            駅・番線・引上線・終端などを並べる順序や表示名をここで決めます。
+        </p>
+
+        <h3>編集場所</h3>
+        <p>左サイドバーの<strong>運行カテゴリ → ダイヤ行</strong>から開きます。</p>
+
+        <h3>主な項目</h3>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>種別</strong></td><td><strong>駅番線</strong>（特定の駅・番線に紐づく行）か <strong>マップ端</strong>（駅から伸びる筋の終着点）のどちらかをボタンで選ぶ</td></tr>
+            <tr><td><strong>対象駅・対象番線</strong></td><td>「駅番線」種別の場合に指定（駅マスタ・番線マスタから選択）。表示名はここから自動生成される</td></tr>
+            <tr><td><strong>表示名</strong></td><td>ダイヤ図の左ラベル。「駅番線」種別では対象駅と番線から自動生成。「マップ端」種別では任意の表示名を入力</td></tr>
+            <tr><td><strong>軌道回路</strong></td><td>この行に紐づく軌道回路（複数可）。マップ上で左クリックして追加・削除</td></tr>
+            <tr><td><strong>並び順</strong></td><td>ダイヤ図で上から下に並ぶ順序。一覧画面の ▲▼ ボタンで並び替え</td></tr>
+        </table>
+
+        <h3>軌道回路との紐づけ</h3>
+        <p>
+            ダイヤ行は軌道回路と紐づきます。
+            列車がその軌道回路を通過する時刻が、ダイヤ図上のその行の線として描かれます。
+            紐づけ忘れがあるとダイヤ図に列車線が出なくなるため、保存時の検証メッセージを確認してください。
+        </p>
+
+        <div class="callout tip">
+            <strong>ダイヤ色のフォールバック：</strong>各列車形式に設定された<strong>ダイヤ色</strong>がそのまま使われます。
+            形式側のダイヤ色も空だと暗い色でフォールバックされるので、<a href="map-editor-company.html#train-class">列車形式マスタ</a>側でダイヤ色を設定しておくと見やすくなります。
+        </div>
+    </section>
+
+    <section id="tips">
+        <h2>💡 運用のコツ</h2>
+
+        <h3>少しずつプレビュー</h3>
+        <p>
+            一気にダイヤを組み終わってからプレビューするより、列車を 1〜2 本追加するたびにプレビューで動作確認するほうがバグを見つけやすいです。
+            出現 TC の方向ミス、経路グループのステップ順序の入れ違いなどは、走らせてみるとすぐ気づけます。
+        </p>
+
+        <h3>列車番号は方向で揃える</h3>
+        <p>
+            上り列車は偶数、下り列車は奇数、のように番号付けルールを決めておくと、列車一覧が読みやすくなります（実際の鉄道の慣習）。
+        </p>
+
+        <h3>ダイヤグラムビューで全体を俯瞰</h3>
+        <p>
+            プレビュー実行中に <kbd>F1</kbd> でダイヤグラムビューを開けば、自作ダイヤがどう走るか時刻 × 駅で俯瞰できます。
+            使い方は <a href="diagram-view.html">ダイヤグラムビューガイド</a> を参照してください。
+        </p>
+    </section>
+
+    <section id="related">
+        <h2>📚 関連ガイド</h2>
+        <ul>
+            <li><a href="map-editor.html"><strong>マップエディタ入門</strong></a> — エディタの全体像と保存・プレビュー</li>
+            <li><a href="map-editor-company.html"><strong>会社編集ガイド</strong></a> — 列車形式・列車種別（運行で参照する前提）</li>
+            <li><a href="map-editor-wiring.html"><strong>配線編集ガイド</strong></a> — 軌道回路・駅・ホーム・番線・方面</li>
+            <li><a href="map-editor-equipment.html"><strong>設備編集ガイド</strong></a> — てこ・進路・信号機・出発ボタン</li>
+            <li><a href="diagram-view.html"><strong>ダイヤグラムビューガイド</strong></a> — 自作ダイヤを俯瞰</li>
+            <li><a href="user-maps.html"><strong>ユーザーマップを起動する</strong></a></li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>
