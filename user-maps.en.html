@@ -86,6 +86,7 @@
     <ul>
         <li><a href="#overview">What is a User Map</a></li>
         <li><a href="#open">Launching from the Title</a></li>
+        <li><a href="#bundle-info">Title, Author, Description, Preview</a></li>
         <li><a href="#import">Importing Someone Else's Map</a></li>
         <li><a href="#data-location">Where Maps Are Stored</a></li>
         <li><a href="#workshop">Steam Workshop (planned)</a></li>
@@ -131,6 +132,26 @@
         <div class="callout warn">
             <strong>An empty list?</strong> If you have never created a map in the Map Editor, the list is empty.
             Follow <a href="map-editor.en.html">Map Editor — Getting Started</a> to build one map first, then return here.
+        </div>
+    </section>
+
+    <section id="bundle-info">
+        <h2>🏷 Title, Author, Description, Preview</h2>
+        <p>
+            Each row in the list shows the <strong>title, author, and preview image</strong> set by the map's author.
+            Clicking a row reveals a large preview image and the author's <strong>description</strong> on the right pane.
+        </p>
+        <ul>
+            <li><strong>Bold title</strong>: the display name chosen by the author, independent of the folder name (e.g. "Yokohama Morning Rush"). Falls back to the folder name if not set.</li>
+            <li><strong>Subtitle ("by Author · path")</strong>: author name + path. Without an author, only the path is shown.</li>
+            <li><strong>Thumbnail (80×45 px on the left)</strong>: the <code>preview.png</code> captured by the author. A dark gray placeholder shows up if missing.</li>
+            <li><strong>Large preview on the right pane</strong>: the selected row's thumbnail enlarged (16:9 letterbox).</li>
+            <li><strong>Description</strong>: the author's blurb, displayed below the preview image. Useful for picking maps based on features like "with double crossover / shunting / morning rush".</li>
+        </ul>
+        <div class="callout">
+            <strong>If you're authoring a map:</strong> see
+            <a href="map-editor.en.html#bundle-info">Map Editor — Bundle Info (Public Metadata)</a> for how to set the title, description, author, and preview image on your map.
+            They are saved to <code>&lt;mapFolder&gt;/bundle.json</code> and <code>&lt;mapFolder&gt;/preview.png</code>.
         </div>
     </section>
 

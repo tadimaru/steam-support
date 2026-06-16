@@ -267,6 +267,7 @@
     <ul>
         <li><a href="#overview">ユーザーマップとは</a></li>
         <li><a href="#open">タイトルから起動</a></li>
+        <li><a href="#bundle-info">タイトル・作者・説明・プレビュー</a></li>
         <li><a href="#import">他人のマップを入れる</a></li>
         <li><a href="#data-location">データの保存先</a></li>
         <li><a href="#workshop">Steam Workshop（予定）</a></li>
@@ -313,6 +314,27 @@
         <div class="callout warn">
             <strong>マップ一覧が空の場合：</strong>マップエディタで一度もマップを作成していないと、一覧は空になります。
             まず <a href="map-editor.html">マップエディタ入門</a> を見ながら 1 つマップを作成してから戻ってきてください。
+        </div>
+    </section>
+
+    <section id="bundle-info">
+        <h2>🏷 タイトル・作者・説明・プレビュー</h2>
+        <p>
+            一覧の各マップには、作者が設定した<strong>タイトル・作者名・プレビュー画像</strong>が表示されます。
+            行をクリックすると右ペインに大きなプレビュー画像と、作者が書いた<strong>説明文</strong>も表示されます。
+        </p>
+        <ul>
+            <li><strong>太字のタイトル</strong>：作者が決めた表示名。フォルダ名と独立して付けられます（例：「横浜駅 朝ラッシュ」）。設定されていない場合はフォルダ名がそのまま出ます。</li>
+            <li><strong>副題（by ◯◯ ・ パス）</strong>：作者名とパスの組み合わせ。作者名がない場合はパスのみ表示されます。</li>
+            <li><strong>サムネ画像（左端 80×45 px）</strong>：作者が撮影した <code>preview.png</code>。未設定なら濃いグレーのプレースホルダになります。</li>
+            <li><strong>右ペインのプレビュー大画像</strong>：選択中の行のサムネが大きく表示されます（16:9 レターボックス）。</li>
+            <li><strong>説明文</strong>：作者が書いた紹介文。プレビュー画像の下に表示。「両渡りあり / 入換あり / 朝ラッシュ向け」など、マップの特徴を見て選べます。</li>
+        </ul>
+        <div class="callout">
+            <strong>自作マップの情報を整えたい方へ：</strong>
+            自分のマップにタイトル・説明・作者・プレビュー画像を設定する方法は
+            <a href="map-editor.html#bundle-info">マップエディタ入門 → バンドル情報（公開情報）</a> を参照してください。
+            設定情報は <code>&lt;マップフォルダ&gt;/bundle.json</code> と <code>&lt;マップフォルダ&gt;/preview.png</code> に保存されます。
         </div>
     </section>
 

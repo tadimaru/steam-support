@@ -92,6 +92,7 @@
         <li><a href="#open-map">Opening an Existing Map</a></li>
         <li><a href="#workflow">Editing Workflow</a></li>
         <li><a href="#save-preview">Save and Preview</a></li>
+        <li><a href="#bundle-info">Bundle Info (Public Metadata)</a></li>
         <li><a href="#data-location">Where Maps Are Stored</a></li>
     </ul>
     <div class="section-title">Related</div>
@@ -290,6 +291,53 @@
         <div class="callout warn">
             <strong>Auto-save before preview:</strong> if there are unsaved changes, the editor saves them first when you press ▶ Preview.
             A validation error during this auto-save will also abort the preview attempt.
+        </div>
+    </section>
+
+    <section id="bundle-info">
+        <h2>🏷 Bundle Info (Public Metadata)</h2>
+        <p>
+            <strong>Bundle info</strong> is the set of <em>title / description / author / preview image</em> that other players see when your UGC map is published.
+            It shows up in the title screen's <a href="user-maps.en.html">User Maps</a> list and in the editor's "Open Map" dialog.
+            The map plays fine without it, but if you plan to share, set at least the <strong>title, description, and preview image</strong>.
+        </p>
+        <div class="callout">
+            <strong>Where it's stored:</strong> bundle info lives at <code>&lt;mapFolder&gt;/bundle.json</code>, and the preview image at <code>&lt;mapFolder&gt;/preview.png</code>.
+            Both sit directly under the map folder along with the CSV files, so sharing the folder also shares the metadata.
+        </div>
+
+        <h3>Editing bundle info</h3>
+        <p>
+            Open the dialog from the menu bar: <strong>"File ▼" → "Edit Bundle Info..."</strong>. You can enter:
+        </p>
+        <table>
+            <tr><th>Field</th><th>Description</th></tr>
+            <tr><td><strong>Title</strong></td><td>Large name shown in the list, independent of the folder name (e.g. "Yokohama Morning Rush"). Falls back to the folder name if empty.</td></tr>
+            <tr><td><strong>Description</strong></td><td>Map description. Multiple lines OK. Shown below the preview image on the title screen's User Maps panel. Tip: list features like "with double crossover / shunting / morning rush" so players can pick easily.</td></tr>
+            <tr><td><strong>Author</strong></td><td>Self-declared author name. SNS handles, etc.</td></tr>
+            <tr><td><strong>Version</strong></td><td>Your map's version number (e.g. 1.0.0). Bumping on updates lets recipients tell old from new.</td></tr>
+            <tr><td><strong>Tags</strong></td><td>Search keywords (comma-separated). Planned to feed Steam Workshop search.</td></tr>
+        </table>
+
+        <h3>Capturing the preview image</h3>
+        <p>
+            The preview image appears as a <strong>thumbnail</strong> in the list, and as a <strong>large image on the right pane</strong> when the row is selected.
+            From the menu bar: <strong>"File ▼" → "Capture Preview Image..."</strong> switches to a preview-play screen with no trains spawned, so you can frame the camera.
+        </p>
+        <ol class="step-list">
+            <li>Choose "File ▼" → "Capture Preview Image..."</li>
+            <li>You're taken to the preview-play screen (no trains; a yellow banner appears at the top)</li>
+            <li>Use mouse drag / wheel to frame the shot</li>
+            <li>Click <strong>"Capture Here"</strong> at the top to save <code>preview.png</code> under the map folder</li>
+            <li>To re-shoot, press the same button again to overwrite</li>
+            <li>Click "Return to Editor" to go back</li>
+        </ol>
+        <div class="callout tip">
+            <strong>Framing tips:</strong> the image is saved at 16:9. Since it's also used as a small thumbnail, aim for a frame that captures distinctive elements — switches, stations, or double crossovers.
+            HUD windows (Diagram / Log / Departure Board) are auto-hidden during capture.
+        </div>
+        <div class="callout">
+            <strong>Without bundle info:</strong> the list will use the folder name as the title, the folder path as subtitle, and a gray placeholder for the thumbnail. Setting at least the title and preview image makes the listing much easier to browse.
         </div>
     </section>
 
