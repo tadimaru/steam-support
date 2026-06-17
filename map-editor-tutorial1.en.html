@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on ① Single-track passing | Railway Operation Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Concept diagrams (inline SVG) */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .svg-label { fill: var(--text); font-size: 12px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 10.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        /* Screenshot insertion frame (swap to img once images are ready) */
+        figure.shot { padding: 0; background: none; border: none; }
+        .shot-ph {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            padding: 26px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .shot-ph .cam { font-size: 26px; display: block; margin-bottom: 6px; opacity: 0.7; }
+        .shot-ph .fn { display: inline-block; margin-top: 8px; font-family: 'Consolas', 'Menlo', monospace; font-size: 12px; color: var(--accent); }
+        figure.shot img { max-width: 760px; max-height: min(640px, 78vh); width: auto; height: auto; border-radius: var(--radius); border: 1px solid var(--border); display: block; margin: 0 auto; cursor: zoom-in; transition: opacity 0.15s; }
+        figure.shot img:hover { opacity: 0.85; }
+
+        /* Click to enlarge (lightbox) */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 6px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: none; }
+        .lightbox .lb-close { position: absolute; top: 14px; right: 22px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; opacity: 0.8; }
+        .lightbox .lb-close:hover { opacity: 1; }
+        .lightbox .lb-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        .lvl-badge { display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--green); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🔰</span>
+    <div>
+        <h1>Hands-on ① Single-track passing<span class="lvl-badge">Lv.1</span></h1>
+        <p>Railway Operation Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-tutorial1.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guide</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html" class="active">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html">② Double-track turnaround</a></li>
+    </ul>
+    <div class="section-title">On this page</div>
+    <ul>
+        <li><a href="#goal">Goal and finished result</a></li>
+        <li><a href="#design">Draw a plan first</a></li>
+        <li><a href="#company">STEP 1 Company</a></li>
+        <li><a href="#wiring">STEP 2 Wiring</a></li>
+        <li><a href="#equipment">STEP 3 Equipment</a></li>
+        <li><a href="#operation">STEP 4 Operations</a></li>
+        <li><a href="#done">Done &amp; next level</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">← Your first custom map</a></li>
+        <li><a href="help.en.html">How to Play Guide</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">How to Play Guide</a> / <a href="map-editor-start.en.html">Your first custom map</a> / Hands-on ① Single-track passing
+    </div>
+
+    <section id="goal">
+        <h2>🎯 Goal and finished result</h2>
+        <p>
+            In this Hands-on ①, we'll build the simplest possible map from start to finish: <strong>a station on a single track (one line) where two trains pass each other</strong>.
+            It's that classic scene you see on rural single tracks—an up train and a down train meet at a station and swap places.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-00-goal.png" alt="Finished result: two trains stopped at a passing station on screen">
+            <figcaption>The finished map. At a two-platform, two-track station in the middle of a single line, a right-bound and a left-bound train pass each other.</figcaption>
+        </figure>
+
+        <h3>What you'll learn in this tutorial</h3>
+        <ul>
+            <li>How to create a new map and scenario, and how to work through the editing flow (Company → Wiring → Equipment → Operations)</li>
+            <li>How to draw a station with facing (opposed) platforms (two platforms, two tracks)</li>
+            <li>Setting track circuit lengths and speed limits</li>
+            <li>The basics of levers, routes, signals, and departure buttons</li>
+            <li>Path groups and registering trains, all the way to showing the diagram</li>
+        </ul>
+
+        <div class="callout">
+            <strong>Prerequisite:</strong> This page is the hands-on, build-it chapter. You'll have an easier time if you first get the big picture from <a href="map-editor-start.en.html">Your first custom map</a>, and keep the <a href="glossary.en.html">Glossary</a> open to look up any unfamiliar terms as you go.
+        </div>
+        <div class="callout tip">
+            <strong>When basing a map on a real station:</strong> searching for "○○ station track diagram" or "○○ line track diagram" often turns up fan-made track diagrams. Using those as a reference lets you build a station close to the real thing (the examples in this guide don't use any real station names).
+        </div>
+    </section>
+
+    <section id="design">
+        <h2>✏️ Draw a plan first (the most important step)</h2>
+        <p>
+            Before you touch the editor, we strongly recommend <strong>sketching a simple plan on paper</strong>.
+            If you just start building, you tend to hit rework later: "the track circuit is too short to place a lever," or "I set things up in the wrong order and have to redo it."
+            If you decide the positions of tracks, the station, and levers on paper first, the work goes straight through without backtracking.
+        </p>
+        <p>The station we'll build this time looks like this. This is the map for the whole tutorial.</p>
+        <figure>
+            <svg viewBox="0 0 560 230" role="img" aria-label="Track diagram of a single-track passing station. The single tracks on the left and right split into two tracks via switches, with platforms for Track 1 and Track 2">
+                <!-- Left single track (left-end TC) -->
+                <line x1="20" y1="115" x2="150" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <text x="30" y="135" class="svg-dim">Left single track (left-end TC)</text>
+                <!-- Left switch -->
+                <line x1="150" y1="115" x2="200" y2="85" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="150" y1="115" x2="200" y2="145" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="150" cy="115" r="6" fill="#f59e0b"/>
+                <!-- Track 1 / Track 2 -->
+                <line x1="200" y1="85" x2="360" y2="85" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="200" y1="145" x2="360" y2="145" stroke="#4a90d9" stroke-width="5"/>
+                <text x="365" y="89" class="svg-label">Track 1 (TC001)</text>
+                <text x="365" y="149" class="svg-label">Track 2 (TC002)</text>
+                <!-- Platforms -->
+                <rect x="210" y="70" width="140" height="7" fill="#6ab04c"/>
+                <rect x="210" y="153" width="140" height="7" fill="#6ab04c"/>
+                <text x="210" y="64" class="svg-dim">Platform (Track 1)</text>
+                <text x="210" y="178" class="svg-dim">Platform (Track 2)</text>
+                <!-- Right switch -->
+                <line x1="360" y1="85" x2="410" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="360" y1="145" x2="410" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="410" cy="115" r="6" fill="#f59e0b"/>
+                <!-- Right single track (right-end TC) -->
+                <line x1="410" y1="115" x2="540" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <text x="430" y="135" class="svg-dim">Right single track (right-end TC)</text>
+                <!-- Switch labels -->
+                <text x="150" y="205" text-anchor="middle" class="svg-dim">Single switch</text>
+                <text x="410" y="205" text-anchor="middle" class="svg-dim">Single switch</text>
+            </svg>
+            <figcaption>A single-track passing station. The single tracks at each end split into two via single switches, and Track 1 and Track 2 each get a facing (opposed) platform.</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>Decide your operating rule up front:</strong> to keep this tutorial as simple as possible, we'll build it with the rule that <strong>right-bound trains always use Track 1, and left-bound trains always use Track 2</strong>. With that rule, you need the fewest routes (four in total).
+        </div>
+    </section>
+
+    <section id="company">
+        <h2>🏢 STEP 1　Company (classes and types)</h2>
+        <p>The menu at the top left runs <strong>File → Company → Wiring → Equipment → Operations</strong>. Working through it in that order, left to right, minimizes rework. Let's start with Company.</p>
+
+        <h3>1-1. Create a new map</h3>
+        <ol class="step-list">
+            <li><strong>File → New Map</strong>. Enter a map name and click <strong>Create</strong> (it doesn't have to be a real station name; here we use <code>Passing</code>)</li>
+            <li>Next you'll be asked to create a <strong>scenario</strong>. A scenario is the mechanism that lets one map hold multiple time periods—morning, daytime, night, and so on. If you have no preference, leave it at the default (DayTime), or use something clear like <code>Daytime</code></li>
+        </ol>
+        <div class="callout">
+            <strong>What is a scenario:</strong> it's a set that reuses the same track and station equipment while letting you switch only the diagram (the trains you run) per time period. For details, see the <a href="glossary.en.html#diagram">Glossary</a>.
+        </div>
+
+        <h3>1-2. Trim the train classes down to "just what you use"</h3>
+        <p>
+            <strong>Company → Train Classes</strong>. Eight classes are provided by default, but the trick is to <strong>keep only the ones this map uses and delete the rest</strong>.
+            Our small single-track station only expects local trains to stop, so we keep just two: <strong>"Local"</strong>, plus <strong>"Out of Service"</strong> for non-revenue trains.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-01-class.png" alt="The train classes screen trimmed down to just 'Local' and 'Out of Service'">
+            <figcaption>Keep only the train classes you use. For Lv1, keep just "Local" and "Out of Service".</figcaption>
+        </figure>
+
+        <h3>1-3. Create one train type (rolling stock)</h3>
+        <p>In <strong>Company → Train Types</strong>, define one set of rolling stock to run.</p>
+        <ol class="step-list">
+            <li>Enter the train type <strong>ID</strong> (e.g. <code>1</code>) and a <strong>nickname</strong> (e.g. <code>Series 1</code>)</li>
+            <li>Enter the <strong>number of cars</strong> (e.g. 10 cars) and the <strong>total length</strong> (e.g. 200m; 10 cars is roughly 200m)</li>
+            <li>For the <strong>icon</strong>, choose "Use official bank" → pick a commuter type or similar, and a color you like (e.g. green)</li>
+            <li><strong>Save</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-02-traintype.png" alt="The train type screen with nickname, number of cars, total length, and icon set">
+            <figcaption>Train type: nickname "Series 1", 10 cars, 200m, commuter type from the official bank (green).</figcaption>
+        </figure>
+        <p class="more" style="font-size:13px;">→ For more, see the <a href="map-editor-company.en.html">Company editing guide</a></p>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 STEP 2　Wiring (tracks and station)</h2>
+        <div class="callout tip">
+            <strong>Drawing-order tip:</strong> start drawing track from <strong>the most complex part—the middle of the station—first</strong>. Locking down the complex parts before spreading out to the simple ends actually reduces rework.
+        </div>
+
+        <h3>2-1. Draw the station's Track 1 and Track 2 (facing platforms)</h3>
+        <p>
+            <strong>Wiring → Track Circuit</strong>. Click a start point → click an end point to draw one segment.
+            First draw Track 1, then Track 2 a little below it. <strong>Leave at least about 4 cells of gap between the two tracks</strong> (if they're too close, placing platforms and buttons later becomes awkward).
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-03-2tracks.png" alt="Track 1 and Track 2 track circuits drawn about 4 cells apart">
+            <figcaption>Place Track 1 and Track 2 about 4 cells apart.</figcaption>
+        </figure>
+        <div class="callout warn">
+            <strong>Track cannot be drawn perfectly vertical.</strong> Always tilt it slightly to one side when drawing.
+        </div>
+
+        <h3>2-2. Place switches on both sides of the station</h3>
+        <p>
+            <strong>Wiring → Switch</strong>. Use the <strong>single switch</strong> type. Connect from the straight direction first, then create one switch at each end of the station that splits into Track 1 and Track 2, and <strong>save</strong>.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-04-switches.png" alt="Two single switches placed on both sides of the station">
+            <figcaption>One single switch at each end of the station. This connects the single track to the two tracks.</figcaption>
+        </figure>
+
+        <h3>2-3. Draw the track circuits outside the station (single-track sections)</h3>
+        <p>
+            Draw the <strong>single-track section track circuits, one to the left and one to the right</strong>—that is, outside the switches, extending out from each side of the station.
+            On a real railway there are multiple track circuits between stations, but here we use one each for clarity.
+        </p>
+        <div class="callout tip">
+            <strong>Make the spots where you'll place a "lever" longer:</strong> if a track circuit is only 1 cell, you won't be able to place a lever (the lever that operates a route) there later. For spots where you plan to place a lever, keep a length of <strong>about 3–5 cells</strong>.
+        </div>
+        <p>Once you've gotten this far, run <strong>▶ Preview</strong> once to check the track is drawn correctly. Previewing frequently is the trick to catching mistakes early.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-05-preview-track.png" alt="Preview screen confirming the tracks and switches are connected">
+            <figcaption>Once the track circuits and switches are placed, check once in Preview.</figcaption>
+        </figure>
+
+        <h3>2-4. Set track circuit lengths and speed limits (bulk edit)</h3>
+        <p>
+            In <strong>Wiring → Bulk Edit</strong> mode, set the <strong>length</strong> and <strong>speed limit</strong> of track circuits all at once.
+            If you leave the default length (such as 100m), a 200m train will stick out of the station, so set these properly here.
+        </p>
+        <table>
+            <tr><th>Location</th><th>Guideline length</th><th>Guideline speed limit</th></tr>
+            <tr><td>Station Track 1 / Track 2</td><td><strong>240m</strong> (200m train + 20m front and back)</td><td>80km/h</td></tr>
+            <tr><td>Switch (straight side)</td><td>Short, e.g. 40m</td><td>80km/h</td></tr>
+            <tr><td>Switch (diverging side)</td><td>Short, e.g. 40m</td><td>40–45km/h (slow)</td></tr>
+            <tr><td>Single-track sections outside the station</td><td>Long, e.g. 600m</td><td>80km/h</td></tr>
+        </table>
+        <figure class="shot">
+            <img src="tutorial/lv1-06-bulk-speed.png" alt="Bulk edit screen with length 240m and speed limit set and applied">
+            <figcaption>Set the station track circuits to 240m / 80km/h, and the diverging side of the switches to 40–45km/h.</figcaption>
+        </figure>
+
+        <h3>2-5. Register the station and assign track numbers</h3>
+        <ol class="step-list">
+            <li>In <strong>Wiring → Station</strong>, select the platform track circuits where trains stop (Track 1 and Track 2)</li>
+            <li>Enter a <strong>station name</strong> (e.g. <code>Passing Station</code>) and register</li>
+            <li><strong>Track number assignment</strong> appears: set the upper track circuit (e.g. <code>TC001</code>) as <strong>Track 1</strong>, the lower one (<code>TC002</code>) as <strong>Track 2</strong>, and press <strong>Update</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-07-station-name.png" alt="The screen for registering a station name">
+            <figcaption>Select the platform track circuits and register the station name.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv1-08-track-number.png" alt="Track number assignment screen with TC001 = Track 1, TC002 = Track 2">
+            <figcaption>Assign the upper track circuit to Track 1 and the lower to Track 2, then press "Update".</figcaption>
+        </figure>
+
+        <h3>2-6. Place the platforms</h3>
+        <p>
+            <strong>Wiring → Platform</strong>. Draw a platform by <strong>clicking its four corners</strong> to make a rectangle.
+            Since these are facing platforms, place a platform on the <strong>upper side of Track 1's track circuit</strong> and on the <strong>lower side of Track 2's track circuit</strong>.
+        </p>
+        <p>
+            Each platform lets you write a track number on its top and bottom edges. For example, Track 1's platform is <strong>above</strong> the track circuit, so enter "Track 1" on the platform's <strong>lower side</strong> (think of it as the track number facing the track side).
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-09-platform.png" alt="Screen with Track 1's platform placed and 'Track 1' set on its lower side">
+            <figcaption>Facing platforms: Track 1 above the track circuit, Track 2 below. Enter the track number on the edge facing the track.</figcaption>
+        </figure>
+        <p>Place Track 2's platform the same way, then check the look in <strong>▶ Preview</strong> and save with <kbd>Ctrl</kbd>+<kbd>S</kbd>.</p>
+        <div class="callout tip">
+            <strong>Save and preview often:</strong> saving after each task surfaces a message whenever something is wrong. Fixing those messages as they come up greatly reduces later rework.
+        </div>
+        <p class="more" style="font-size:13px;">→ For more, see the <a href="map-editor-wiring.en.html">Wiring editing guide</a></p>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 STEP 3　Equipment (levers, routes, signals, departure buttons)</h2>
+
+        <h3>3-1. Think about "routes" first</h3>
+        <p>
+            Before placing levers, think about <strong>what routes (the paths trains travel) you need</strong>. This station needs the following four.
+        </p>
+        <ul>
+            <li>A route <strong>into</strong> Track 1 / a route <strong>out of</strong> Track 1</li>
+            <li>A route <strong>into</strong> Track 2 / a route <strong>out of</strong> Track 2</li>
+        </ul>
+        <p>A route is made from a pair of a "start lever (departure side)" and an "end lever (destination side)", so we'll place the levers for these four routes.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-10-routes-plan.png" alt="Diagram showing the four required routes (into/out of Track 1 and Track 2)">
+            <figcaption>First list out the routes you need. Here it's into ×2 and out of ×2, four in total.</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>Recommended naming:</strong> managing <strong>start levers with numbers and end levers with letters</strong> is clear and easy to type. Splitting the number ranges by direction too—right-bound as <code>1, 2</code>, left-bound as <code>11, 12</code>—keeps things organized.
+        </div>
+
+        <h3>3-2. Place the levers</h3>
+        <p>
+            <strong>Equipment → Lever</strong>. Start levers come in "Main Start" and "Shunt Start" varieties, but <strong>just Main Start is fine at first</strong>.
+            Since we decided right-bound = Track 1 and left-bound = Track 2 this time, place them as follows.
+        </p>
+        <table>
+            <tr><th>Route</th><th>Start lever (number)</th><th>End lever (letter)</th></tr>
+            <tr><td>Into Track 1</td><td>1</td><td>A</td></tr>
+            <tr><td>Out of Track 1</td><td>2</td><td>B</td></tr>
+            <tr><td>Into Track 2</td><td>11</td><td>C</td></tr>
+            <tr><td>Out of Track 2</td><td>12</td><td>D</td></tr>
+        </table>
+        <p>Choose the lever's direction (left/right), enter a name, click the coordinate → <strong>Register</strong>. Place the end lever on the track circuit where the route ends.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-11-lever.png" alt="Start lever 1 and end lever A placed">
+            <figcaption>Start lever "1" and end lever "A". This forms the pair for the "into Track 1" route.</figcaption>
+        </figure>
+        <p>Place the remaining levers (2/B, 11/C, 12/D) the same way. When done, check in Preview.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-12-levers-all.png" alt="Preview screen with all levers for the four routes placed">
+            <figcaption>All levers placed. You can't place them on track circuits that are too short, so here's where keeping the lengths long pays off.</figcaption>
+        </figure>
+
+        <h3>3-3. Register the routes</h3>
+        <p>Once the levers are placed, routes are easy. In <strong>Equipment → Route</strong>,</p>
+        <ol class="step-list">
+            <li>Click the <strong>start lever</strong> → click the <strong>end lever</strong> (e.g. 1 → A for route <code>1A</code>)</li>
+            <li>Click the <strong>track circuits it passes through</strong> in order (e.g. the straight side of the switch → Track 1's track circuit)</li>
+            <li>(Optional / advanced) Specify the <strong>approach locking</strong> track circuit (next item)</li>
+            <li><strong>Register</strong>. The route name is auto-generated from start + end (e.g. <code>1A</code>)</li>
+        </ol>
+        <div class="callout">
+            <strong>How to think about the track circuits it passes through:</strong> <strong>don't include</strong> the track circuit where the start lever is; select from the next track circuit through to the one where the end lever is, in order. The track circuit with the start lever becomes the target of the next "approach locking".
+        </div>
+
+        <h3>3-4. (Optional / advanced) Set up approach locking</h3>
+        <div class="callout">
+            <strong>Skip this if it's tricky.</strong> Approach locking (the approach lock) is the mechanism that prevents <strong>a route from being released on its own while a train is right in front of the signal, suddenly turning a green aspect red</strong>.<br>
+            If you select an "approach locking track circuit" when registering a route, then <strong>while a train is on that track circuit, the route can't be released on its own</strong>. Normally you specify the track circuit (right in front of the signal) where the start lever is. For details, also see <a href="glossary.en.html#approach-lock">the Glossary "approach locking"</a>.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv1-13-approach-lock.png" alt="Screen specifying the approach locking track circuit">
+            <figcaption>(Optional) Approach locking: specify the track circuit right in front of the signal.</figcaption>
+        </figure>
+        <p>Once you've registered the four routes (1A, 2B, 11C, 12D) the same way, operate the levers in Preview and confirm that <strong>the switches actually change over</strong>.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-14-route-open.png" alt="Preview screen with a lever operated, the route open, and the switch changed over">
+            <figcaption>Operating a lever opens the route and changes the switch over.</figcaption>
+        </figure>
+
+        <h3>3-5. Place the signals</h3>
+        <p>
+            <strong>Equipment → Signal</strong>. A signal goes <strong>together with a route</strong>—one signal per route. The side where a train <strong>arrives</strong> is the <strong>home signal</strong>, and the side it <strong>departs</strong> from is the <strong>starting signal</strong> (the mechanism is the same).
+        </p>
+        <ol class="step-list">
+            <li>In signal mode, choose the type (home / starting) and click a coordinate on the map</li>
+            <li>Click the <strong>start lever</strong> and <strong>end lever</strong> to specify the route it serves (e.g. 1 → A for the <code>1A</code> signal)</li>
+            <li><strong>Register signal</strong></li>
+        </ol>
+        <p>Place one for each of the four routes (home: 1A, 11C; starting: 2B, 12D).</p>
+        <div class="callout tip">
+            <strong>Place them consistently on the left of the direction of travel:</strong> just like a real railway, placing signals on the left of the direction of travel makes it clear at a glance later "which direction this signal is for".
+        </div>
+
+        <h3>3-6. (Optional / advanced) Enable yellow aspects</h3>
+        <div class="callout">
+            <strong>Skip this if you're not sure.</strong> By default, signals are mostly "green (proceed) / red (stop)", but you can add a condition for <strong>"show yellow (caution) when the next signal is red"</strong>.<br>
+            Click a signal to enter edit mode, then <strong>"Add OR condition"</strong> → specify <strong>the next signal (e.g. beyond 1A is 2B) being red</strong> and save. Now if the next is red the one before shows yellow, and if the one beyond that is green the one before is green too—a realistic three-aspect display.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv1-15-yellow.png" alt="Screen with the yellow-aspect condition (next signal is red) set">
+            <figcaption>(Optional) Add a condition to show yellow when the next signal is red.</figcaption>
+        </figure>
+
+        <h3>3-7. Place the departure buttons</h3>
+        <ol class="step-list">
+            <li><strong>Equipment → Departure Button</strong>. Click a coordinate to place it</li>
+            <li>Choose the <strong>station</strong> it serves and the <strong>departure sound</strong> (bell / buzzer), then <strong>Register button</strong></li>
+            <li>Place one on <strong>both</strong> Track 1 and Track 2, and the equipment is complete</li>
+        </ol>
+        <p class="more" style="font-size:13px;">→ For more, see the <a href="map-editor-equipment.en.html">Equipment editing guide</a></p>
+    </section>
+
+    <section id="operation">
+        <h2>📋 STEP 4　Operations (build the diagram)</h2>
+        <p>The <strong>Operations</strong> category is only available when a scenario is selected. Proceed in order: Path Group → Train → Diagram.</p>
+
+        <h3>4-1. Create a path group</h3>
+        <p>
+            A <strong>path group</strong> is a "template for the path a train travels". Writing out each train one by one is a lot of work, so you group routes together and reuse them. First, create the group for <strong>right-bound (into and out of Track 1)</strong>.
+        </p>
+        <ol class="step-list">
+            <li><strong>Operations → Path Group</strong>. Enter a <strong>path group ID</strong> (e.g. <code>Track 1 arrival</code>)</li>
+            <li>Choose the <strong>direction</strong> (right / left). Right-bound, so "right"</li>
+            <li>Choose the <strong>appearance TC</strong> = the track circuit where the train appears (the left-end single-track TC). The <strong>appearance offset</strong> is how many seconds before the station stop it appears (e.g. 80 seconds)</li>
+            <li>The <strong>station direction</strong> can be left at "Auto (determined from direction)"</li>
+            <li>Register the <strong>steps</strong> in order: <strong>left-click</strong> the track circuit of route <code>1A</code> → <strong><kbd>Shift</kbd>+left-click</strong> the Track 1 track circuit where it stops (station stop) → left-click the track circuit of the departure route <code>2B</code></li>
+            <li>Once the three steps are registered, click <strong>Register</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-16-pathgroup.png" alt="Screen registering the path group steps in order">
+            <figcaption>Stack the steps in the order route → station stop → route. Shift+left-click means "stop at the station".</figcaption>
+        </figure>
+        <p>Create the <strong>left-bound (Track 2)</strong> group the same way (ID e.g. <code>Track 2 departure</code>, direction "left", appearance TC is the right-end single-track TC, steps are <code>11C</code> → stop at Track 2 → <code>12D</code>).</p>
+
+        <h3>4-2. Register the trains</h3>
+        <p>In <strong>Operations → Train List</strong>, register the trains to run. Since they pass each other, create two.</p>
+        <table>
+            <tr><th>Item</th><th>Train 1</th><th>Train 2</th></tr>
+            <tr><td>Train number</td><td>1001</td><td>1002</td></tr>
+            <tr><td>Train type</td><td>Series 1</td><td>Series 1</td></tr>
+            <tr><td>Train class</td><td>Local</td><td>Local</td></tr>
+            <tr><td>Path group</td><td>Track 1 arrival (right-bound)</td><td>Track 2 departure (left-bound)</td></tr>
+            <tr><td>Arrival time</td><td>10:00</td><td>10:00</td></tr>
+            <tr><td>Departure time</td><td>10:01</td><td>10:01</td></tr>
+        </table>
+        <p>If both arrive and depart at the same time, the two trains <strong>pass</strong> at the station. Once saved, run <strong>▶ Preview</strong> to confirm trains appear on the departure indicator and actually appear and depart (try pressing the departure button too).</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-17-train-preview.png" alt="Preview screen with trains appearing and shown on the departure indicator">
+            <figcaption>The two trains appear. Pressing the departure button makes them depart.</figcaption>
+        </figure>
+
+        <h3>4-3. Show the diagram (optional)</h3>
+        <p>
+            At this point the trains move. The last step is the setup to show the <strong>diagram (a time × position graph)</strong>. Feel free to skip it if it's tricky.
+        </p>
+        <p>
+            In <strong>Operations → Diagram Row</strong>, register the rows that line up along the graph's vertical axis, from top to bottom.
+        </p>
+        <ul>
+            <li><strong>Left end (map edge)</strong>: type "map edge", a display name (e.g. <code>Left end</code>), and select the corresponding track circuit</li>
+            <li><strong>Station Track 1 / Track 2</strong>: type "station track", select the station and track number, and register</li>
+            <li><strong>Right end (map edge)</strong>: same as the left end</li>
+        </ul>
+        <p>Lining them up as Left end → Track 1 → Track 2 → Right end—<strong>the edges first and last, the station's tracks in the middle</strong>—draws the diagram.</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-18-diagram.png" alt="Screen with the train lines drawn on the diagram">
+            <figcaption>Once the diagram rows are registered, the train lines appear on the diagram.</figcaption>
+        </figure>
+
+        <h3>4-4. Add more trains (copy)</h3>
+        <p>
+            Once you have one, you can mass-produce similar trains with <strong>Copy</strong> in <strong>Operations → Train List</strong>. Just change the train number and times.
+        </p>
+        <div class="callout warn">
+            <strong>Don't pack a single track too tightly:</strong> if you space trains too closely on a single-track section, they can back up against each other and <strong>get stuck</strong>. Use intervals with enough room to pass (several minutes or more).
+        </div>
+        <p class="more" style="font-size:13px;">→ For more, see the <a href="map-editor-trainlist.en.html">Operations editing guide</a></p>
+    </section>
+
+    <section id="done">
+        <h2>🎉 Done! On to the next level</h2>
+        <p>
+            Nice work. You've now gone full circle through the basics of a custom map: <strong>two trains passing each other on a single track</strong>.
+            If you've got a feel for the Company → Wiring → Equipment → Operations flow and the relationship between levers, routes, and signals, that's a big success.
+        </p>
+
+        <h3>If it doesn't work</h3>
+        <ul>
+            <li><strong>Read the messages when saving:</strong> warnings like "the route doesn't reference a track circuit" are telling you what setup is missing</li>
+            <li><strong>Preview often:</strong> checking one or two trains at a time lets you immediately catch a wrong appearance-TC direction or a mistake in step order</li>
+            <li><strong>Can't place a lever:</strong> that's a sign the track circuit is too short. Redraw it longer (3–5 cells)</li>
+            <li><strong>Trains back up:</strong> check that the spacing on the single track isn't too close</li>
+        </ul>
+
+        <div class="callout tip">
+            <strong>Next is Hands-on ② (in preparation):</strong> you'll take on <strong>turnaround operation</strong> at a double-track station. On top of up and down trains, you'll build trains that turn around at the station using the path group's "next operation".
+        </div>
+
+        <h3>Related guides</h3>
+        <ul>
+            <li><a href="map-editor-start.en.html">Your first custom map</a> — a recap of the concepts</li>
+            <li><a href="map-editor-company.en.html">Company</a> / <a href="map-editor-wiring.en.html">Wiring</a> / <a href="map-editor-equipment.en.html">Equipment</a> / <a href="map-editor-trainlist.en.html">Operations</a> — details on each feature</li>
+            <li><a href="glossary.en.html">Glossary</a> — check terms</li>
+            <li><a href="user-maps.en.html">Playing user maps</a> — play your finished map</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <span class="lb-close" aria-label="Close">&times;</span>
+    <img alt="">
+    <div class="lb-hint">Click or press Esc to close</div>
+</div>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    document.querySelectorAll('figure.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lb.classList.add('open');
+        });
+    });
+    function close() { lb.classList.remove('open'); lbImg.src = ''; }
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support page</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>

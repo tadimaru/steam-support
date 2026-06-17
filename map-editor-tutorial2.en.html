@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on ② Double-track turnaround | Railway Operation Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Concept diagram (inline SVG) */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .svg-label { fill: var(--text); font-size: 12px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 10.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        /* Screenshot insertion frame (swap to img when image is ready) */
+        figure.shot { padding: 0; background: none; border: none; }
+        .shot-ph {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            padding: 26px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .shot-ph .cam { font-size: 26px; display: block; margin-bottom: 6px; opacity: 0.7; }
+        .shot-ph .fn { display: inline-block; margin-top: 8px; font-family: 'Consolas', 'Menlo', monospace; font-size: 12px; color: var(--accent); }
+        figure.shot img { max-width: 760px; max-height: min(640px, 78vh); width: auto; height: auto; border-radius: var(--radius); border: 1px solid var(--border); display: block; margin: 0 auto; cursor: zoom-in; transition: opacity 0.15s; }
+        figure.shot img:hover { opacity: 0.85; }
+
+        /* Click to enlarge (lightbox) */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 6px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: none; }
+        .lightbox .lb-close { position: absolute; top: 14px; right: 22px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; opacity: 0.8; }
+        .lightbox .lb-close:hover { opacity: 1; }
+        .lightbox .lb-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        .lvl-badge { display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--warn); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🔁</span>
+    <div>
+        <h1>Hands-on ② Double-track turnaround<span class="lvl-badge">Lv.2</span></h1>
+        <p>Railway Operation Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-tutorial2.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guide</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html" class="active">② Double-track turnaround</a></li>
+    </ul>
+    <div class="section-title">On this page</div>
+    <ul>
+        <li><a href="#goal">Goal and finished image</a></li>
+        <li><a href="#design">Design (2 platforms / 3 tracks)</a></li>
+        <li><a href="#company">STEP1 Company</a></li>
+        <li><a href="#wiring">STEP2 Wiring</a></li>
+        <li><a href="#equipment">STEP3 Equipment</a></li>
+        <li><a href="#operation">STEP4 Operations (turnaround)</a></li>
+        <li><a href="#done">Done — on to the next level</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">← Hands-on ① Single-track passing</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">Playing Guide</a> / <a href="map-editor-start.en.html">Your First Custom Map</a> / <a href="map-editor-tutorial1.en.html">Hands-on ①</a> / Hands-on ② Double-track turnaround
+    </div>
+
+    <section id="goal">
+        <h2>🔁 Goal and finished image</h2>
+        <p>
+            In Hands-on ②, you'll build a map where <strong>a train turns around at a double-track station (two lines, inbound and outbound)</strong>.
+            It's a <strong>2-platform / 3-track</strong> station with a <strong>"center track" for turnarounds</strong> in the middle.
+            A train arriving from the down direction enters the center track, reverses direction, and departs in the up direction — that's the kind of operation you'll be able to set up.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv2-00-arrive.png" alt="A train arriving on the center track (track 2)">
+            <figcaption>A train arriving from the down direction reaches the turnaround center track (track 2).</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv2-00b-depart.png" alt="The train reversing and departing from the center track in the up direction">
+            <figcaption>The same train reverses direction and departs from the center track in the up direction.</figcaption>
+        </figure>
+
+        <h3>What you'll learn that's new in this tutorial</h3>
+        <ul>
+            <li><strong>Creating a custom train class</strong> (specifying name and color code)</li>
+            <li>Building a double-track station with a center track (<strong>2 platforms / 3 tracks</strong>) and a <strong>single crossover</strong></li>
+            <li>Setting up <strong>through trains</strong></li>
+            <li>Advanced signal logic: <strong>AND conditions</strong> and <strong>two-aspect signals</strong></li>
+            <li><strong>Turnaround operations</strong> (linking two path groups, "Create and register next operation")</li>
+        </ul>
+
+        <div class="callout">
+            <strong>Prerequisite:</strong> This page continues from <a href="map-editor-tutorial1.en.html">Hands-on ① (single-track passing)</a>. The basics of map creation (the Company → Wiring → Equipment → Operations flow, and how to place levers, routes, and signals) are explained in Hands-on ①, so here we'll <strong>keep the repetition brief and explain the new parts in detail</strong>.
+        </div>
+    </section>
+
+    <section id="design">
+        <h2>✏️ Design (2 platforms / 3 tracks, turnaround on the center track)</h2>
+        <p>
+            This station has a <strong>center track for turnarounds</strong> between the two main lines (double track) of the up and down directions.
+            From top to bottom, the tracks are <strong>track 1 (down main line), track 2 (center track), and track 3 (up main line)</strong>.
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 230" role="img" aria-label="Track layout of a 2-platform / 3-track station that turns around on the center track">
+                <defs><marker id="arrow2" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><polygon points="0,0 9,4.5 0,9" fill="#6ab04c"/></marker></defs>
+                <!-- Track 1 (down main line), full length -->
+                <line x1="20" y1="64" x2="540" y2="64" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Track 3 (up main line), full length -->
+                <line x1="20" y1="176" x2="540" y2="176" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Track 2 (center track) stub -->
+                <line x1="235" y1="120" x2="430" y2="120" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Single crossover: down → center, center → up (merging at the left end) -->
+                <line x1="185" y1="64" x2="235" y2="120" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="235" y1="120" x2="185" y2="176" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="185" cy="64" r="6" fill="#f59e0b"/>
+                <circle cx="185" cy="176" r="6" fill="#f59e0b"/>
+                <!-- Turnaround (rounded U-turn arrow) -->
+                <path d="M 322 98 L 388 98 A 9 9 0 0 1 388 116 L 322 116" fill="none" stroke="#6ab04c" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow2)"/>
+                <text x="355" y="90" text-anchor="middle" class="svg-dim">Turnaround</text>
+                <!-- Labels (offset up/down to avoid overlapping the tracks) -->
+                <text x="24" y="54" class="svg-dim">Down line</text>
+                <text x="24" y="198" class="svg-dim">Up line</text>
+                <text x="436" y="54" class="svg-label">Track 1 (down main)</text>
+                <text x="436" y="124" class="svg-label">Track 2 (center / turnaround)</text>
+                <text x="436" y="198" class="svg-label">Track 3 (up main)</text>
+            </svg>
+            <figcaption>2 platforms / 3 tracks. A train that branches off the down line into the center track (track 2) reverses direction (turns around) and exits onto the up line. Tracks 1 and 3 are main lines for passing through or stopping.</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>Route rules (this time):</strong> Down trains (heading right) go to track 1 or the center track; up trains (heading left) go to track 3. The center track (track 2) is a dead end, dedicated to <strong>entering from the down line → turning around → exiting onto the up line</strong>. This gives you <strong>6 routes in total: 3 arrival and 3 departure</strong>.
+        </div>
+    </section>
+
+    <section id="company">
+        <h2>🏢 STEP1　Company (create a custom train class)</h2>
+        <p>Create a new map (e.g. map name <code>Turnaround Station</code>, scenario <code>Day</code>) and start from the Company category. The basics are the same as <a href="map-editor-tutorial1.en.html#company">Hands-on ①</a>, so here we'll focus on the new topic of <strong>"creating a custom train class"</strong>.</p>
+
+        <h3>1-1. Create your own train class (color code)</h3>
+        <p>
+            Beyond just picking from the default bank, <strong>you can create a class by specifying its name and colors yourself</strong>. This time we'll prepare <code>Through Local</code> for the turning-around train and <code>Local</code> for the through train.
+            Colors use a <strong>6-digit color code</strong>, and you can specify three: background color, text color, and diagram color.
+        </p>
+        <table>
+            <tr><th>Color</th><th>Recommended</th><th>Example</th></tr>
+            <tr><td>Text color</td><td>White unless you have a preference</td><td><code>FFFFFF</code></td></tr>
+            <tr><td>Background color</td><td>Dark (makes the badge easy to read)</td><td>Dark green <code>006400</code></td></tr>
+            <tr><td>Diagram color</td><td>Somewhat bright (easy to see on the diagram)</td><td>Lime <code>00FF00</code></td></tr>
+        </table>
+        <div class="callout">
+            <strong>If you leave the diagram color empty:</strong> the background color is used for the diagram color as is. On the diagram, a slightly brighter color makes the line easier to follow, so it's best to specify it separately.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv2-01-class.png" alt="Screen for creating a custom train class (name + color code)">
+            <figcaption>You can create a train class with your own name and colors (background, text, diagram).</figcaption>
+        </figure>
+
+        <h3>1-2. Prepare two train types</h3>
+        <p>Create two vehicles to run (the procedure is the same as <a href="map-editor-tutorial1.en.html#company">Hands-on ①</a>).</p>
+        <ul>
+            <li><strong>Type 10</strong>: 10-car formation, 200m, light blue</li>
+            <li><strong>Type 11</strong>: 8-car formation, 160m, yellow-green</li>
+        </ul>
+        <p class="more" style="font-size:13px;">→ For details, see the <a href="map-editor-company.en.html">Company editing guide</a></p>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 STEP2　Wiring (double track + center track, single crossover)</h2>
+        <p>Drawing from the middle of the station is the same as Hands-on ①. This time the key points are that there are <strong>more tracks</strong> and the <strong>single crossover</strong>.</p>
+
+        <h3>2-1. Draw the station's three tracks</h3>
+        <p>Draw the track circuits for track 1, track 2 (center track), and track 3.</p>
+        <div class="callout tip">
+            <strong>Leave 6 cells between tracks that have a platform:</strong> later, the track-number labels ("Track 1", "Track 2", etc.) sit inside the platforms. If the spacing between tracks is too narrow, the labels overlap and become hard to read, so it's safest to leave about <strong>6 cells where there are platforms</strong> (4 cells is fine where there's no platform).
+        </div>
+
+        <h3>2-2. Build the single crossover (combining single switches)</h3>
+        <p>
+            To connect the center track to the up and down main lines, you need a <strong>single crossover</strong>. A single crossover is made by <strong>combining two single switches</strong> (picture a straight side and a diverging side, two of each).
+        </p>
+        <p>
+            To achieve both "entering the center track from the down line" and "exiting onto the up line from the center track," you combine <strong>at least three single switches</strong> (when making the middle a Y shape), or <strong>sometimes four</strong> (when making a Z shape).
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv2-02-switches.png" alt="A structure combining three single switches to connect to the center track">
+            <figcaption>A single crossover is a combination of single switches. Combine 3 or 4 so the center track can be accessed from both the down and up lines.</figcaption>
+        </figure>
+
+        <h3>2-3. Track circuits outside the station (three sections each for up and down)</h3>
+        <p>
+            Outside the station (the double-track section), place <strong>three track circuits each</strong> for the up and down lines.
+            Splitting into sections makes it easier to <strong>see a train gradually approaching</strong>, and also prevents <strong>approach locking from suddenly kicking in</strong>.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv2-03-preview-track.png" alt="Preview with only the track circuits placed">
+            <figcaption>Outside the station, three sections each for the up and down lines. Once the tracks are drawn, check in the preview.</figcaption>
+        </figure>
+
+        <h3>2-4. Set length and speed limit in bulk</h3>
+        <table>
+            <tr><th>Location</th><th>Length</th><th>Speed limit</th></tr>
+            <tr><td>Station main lines (tracks 1 & 3)</td><td>200m</td><td>80km/h</td></tr>
+            <tr><td>Center track (track 2, dead end)</td><td>200m</td><td>45km/h</td></tr>
+            <tr><td>Switch (shorter side)</td><td>20m</td><td>45km/h</td></tr>
+            <tr><td>Switch (longer side)</td><td>40m</td><td>80km/h</td></tr>
+            <tr><td>Diagonal track circuit just before entering the station</td><td>40m (optional)</td><td>80km/h (optional)</td></tr>
+        </table>
+        <div class="callout">
+            Since the center track is a dead end, keep its speed slow (45km/h). Making the diagonal switch sections short and fast so trains slip through quickly looks "the part," but you don't have to be strict about it here.
+        </div>
+
+        <h3>2-5. Register the station and platforms (all three tracks)</h3>
+        <p>Select the track circuits, register a station name (e.g. <code>Station with a turnaround center track</code>), assign <strong>track 1, track 2, and track 3</strong> from top to bottom, and <strong>update</strong>. Then place the platforms too (the procedure is the same as Hands-on ①).</p>
+        <div class="callout">
+            <strong>Tip for station names:</strong> you don't need to include "Station" in the station name field (e.g. <code>Turnaround center track</code>). The display side tidies it up automatically.
+        </div>
+        <p class="more" style="font-size:13px;">→ For details, see the <a href="map-editor-wiring.en.html">Wiring editing guide</a></p>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 STEP3　Equipment (6 routes, advanced signal logic)</h2>
+
+        <h3>3-1. The six routes and levers you need</h3>
+        <p>There are <strong>3 arrival and 3 departure</strong> routes. As in Hands-on ①, manage levers with <strong>start levers as numbers (right-heading = 1 digit / left-heading = 2 digits) and end levers as letters</strong>.</p>
+        <table>
+            <tr><th>Route</th><th>Meaning</th><th>Start</th><th>End</th></tr>
+            <tr><td><code>1A</code></td><td>Down → arrive on track 1</td><td>1</td><td>A (track 1)</td></tr>
+            <tr><td><code>1B</code></td><td>Down → arrive on track 2 (center track)</td><td>1</td><td>B (track 2)</td></tr>
+            <tr><td><code>11C</code></td><td>Up → arrive on track 3</td><td>11</td><td>C (track 3)</td></tr>
+            <tr><td><code>2D</code></td><td>Track 1 → depart to the down line</td><td>2</td><td>D (down main line)</td></tr>
+            <tr><td><code>12E</code></td><td>Track 2 (center track) → depart to the up line (turnaround)</td><td>12</td><td>E (up main line)</td></tr>
+            <tr><td><code>13E</code></td><td>Track 3 → depart to the up line</td><td>13</td><td>E (up main line)</td></tr>
+        </table>
+        <div class="callout">
+            <strong>Routes and approach locking (recap):</strong> Register a route as "start lever → end lever → track circuits it passes through." The pass-through list does not include the start lever's track circuit; it starts from the next one up to the end lever. Approach locking specifies the start lever's track circuit. For details, see the <a href="glossary.en.html#approach-lock">Glossary, "Approach locking"</a>.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv2-04-levers-routes.png" alt="Levers and all six routes set up">
+            <figcaption>Set up the levers and routes for all 6 routes: 3 arrival and 3 departure.</figcaption>
+        </figure>
+
+        <h3>3-2. Place the signals (home, starting, block)</h3>
+        <p>
+            Home and starting signals are paired with routes. Place them all <strong>on the left side of the direction of travel</strong> for consistency. Since <code>1A</code> and <code>1B</code> are routes that use the same start lever "1," it's clearer to place them <strong>stacked vertically</strong> on screen (track 1 on the left, track 2 on the right from the driver's view).
+        </p>
+        <p>
+            For protection between stations, also place <strong>block signals</strong>. For a block signal, specify the track circuit you want to protect with <strong><kbd>Shift</kbd>+left-click</strong> and place it just before that circuit.
+        </p>
+        <div class="callout warn">
+            <strong>Watch the direction of block signals:</strong> specify the track circuit on the direction-of-travel side (for right-heading, the track circuit to the right of the signal). If you do it the other way around, you won't protect the section you intend to. Also, <strong>don't overlap with the range a starting signal already protects</strong> (being aware of "which track circuit each signal is responsible for" helps you avoid overlap).
+        </div>
+        <div class="callout tip">
+            <strong>Leave yellow conditions for later:</strong> setting the yellow (caution) condition requires the "next signal," so it goes smoothly to <strong>place all the signals first</strong> and then set the yellow conditions.
+        </div>
+
+        <h3>3-3. (Lv2 key point ①) AND condition — just before two conflicting routes</h3>
+        <p>
+            <code>1A</code> (arrive on track 1) and <code>1B</code> (arrive on track 2) are <strong>conflicting routes</strong> that branch from the same down main line. Consider the <strong>yellow condition</strong> of the signal just before these two.
+        </p>
+        <div class="callout warn">
+            <strong>This is AND.</strong> <code>1A</code> and <code>1B</code> can't be opened at the same time (one is always red). If you set "<code>1A</code> is red <strong>OR</strong> <code>1B</code> is red," then <strong>one is always red, so the signal before it stays yellow forever</strong>.<br>
+            The correct setting is "<code>1A</code> is red <strong>AND</strong> <code>1B</code> is red" — make the preceding signal yellow only when both are red.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv2-05-and-condition.png" alt="Screen setting the yellow condition with 1A and 1B as an AND condition">
+            <figcaption>Just before two conflicting routes, use AND. Make it yellow only when both are red.</figcaption>
+        </figure>
+
+        <h3>3-4. (Lv2 key point ②) Two-aspect signal — the dead-end center track</h3>
+        <p>
+            The home signal for <code>1B</code> (arrive on track 2 = center track) has <strong>no next signal</strong> (because the center track is a dead end). If you do nothing, it turns <strong>green</strong> the moment the route is opened.
+        </p>
+        <p>
+            On real railways, when there is no next signal (the way ahead is blocked), a train enters on <strong>yellow</strong>. To reproduce this, use the <strong>two-aspect signal</strong> checkbox, which <strong>limits the maximum aspect to yellow</strong> (it won't go green and stops at yellow = enter with caution).
+        </p>
+        <div class="callout">
+            If this is too difficult, leaving it green causes no operational problem (only a difference in realism from reality). Set it up only if it bothers you.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv2-06-two-aspect.png" alt="Screen setting the 1B signal as a two-aspect signal">
+            <figcaption>Make 1B, which enters the dead-end center track, a two-aspect signal. It's limited to a yellow aspect at most.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv2-07-signals-preview.png" alt="Preview with all signals placed">
+            <figcaption>The state with all signals placed.</figcaption>
+        </figure>
+
+        <h3>3-5. Departure buttons</h3>
+        <p>Place a departure button on each of tracks 1 through 3 (the procedure is the same as Hands-on ①).</p>
+        <p class="more" style="font-size:13px;">→ For details, see the <a href="map-editor-equipment.en.html">Equipment editing guide</a></p>
+    </section>
+
+    <section id="operation">
+        <h2>📋 STEP4　Operations (through and turnaround)</h2>
+        <p>There are more patterns in operations. We'll proceed in order: ① a recap of arrival/departure → ② through trains → ③ <strong>turnaround</strong>.</p>
+
+        <h3>4-1. Recap: a path group that arrives and departs on track 1</h3>
+        <p>
+            <strong>Operations → Path group</strong>. Set the appearance TC (the track circuit where the train appears) and the appearance offset (how many seconds before the station stop it appears), and register the steps in the order <strong>route <code>1A</code> → station stop (<kbd>Shift</kbd>+left-click) → route <code>2D</code></strong> (same as Hands-on ①). The departure board can be set to "auto" for a single line. Create the track-3 arrival/departure the same way.
+        </p>
+
+        <h3>4-2. Create a through train</h3>
+        <p>
+            For a train you want to <strong>pass through</strong> rather than stop, just <strong>change the stop step to "through"</strong>.
+        </p>
+        <ol class="step-list">
+            <li>Create a new path group (e.g. <code>Track 1 through</code>, direction "right")</li>
+            <li>The steps are the same as arrival/departure (<code>1A</code> → station → <code>2D</code>)</li>
+            <li>Press the <strong>"Stop" button on the middle station step and change it to "Through"</strong></li>
+            <li>Register the through train in the train list (e.g. out-of-service train <code>9001</code>, with an appearance offset shorter than a stop, such as 60 seconds). <strong>Be sure to press the "Update" button after editing</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv2-08-through-step.png" alt="Screen with the station stop step changed to through">
+            <figcaption>For a through train, just switch the station step from "Stop" to "Through".</figcaption>
+        </figure>
+
+        <h3>4-3. (Lv2 key point ③) Turnaround operation — linking two path groups</h3>
+        <p>
+            For a train that turns around on the center track (track 2), create <strong>two path groups, "for arrival" and "for departure,"</strong> and <strong>link</strong> them.
+        </p>
+
+        <h4 style="margin:18px 0 8px;color:#fff;font-size:15px;">① The arrival path group</h4>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Track 2 arrival</code>), direction "right"</li>
+            <li>The appearance TC is the leftmost track circuit. Since the center track is slow at 45km/h, set the appearance offset longer than the track-1 arrival (e.g. 105 seconds)</li>
+            <li>Steps: route <code>1B</code> → stop on the track-2 track circuit. At this point, change the stop to <strong>"Turnaround (passenger stop)"</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv2-09-turnback-step.png" alt="Screen setting the station stop step to turnaround (passenger stop)">
+            <figcaption>Set the station step of the arrival group to "Turnaround." This is the switch for the turnaround action.</figcaption>
+        </figure>
+
+        <h4 style="margin:18px 0 8px;color:#fff;font-size:15px;">② The departure path group</h4>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Track 2 departure</code>), with the opposite direction "left"</li>
+            <li>The appearance TC is the <strong>track-2 track circuit</strong> (inheriting the place where the previous operation = arrival ended)</li>
+            <li><strong>Leave the appearance offset blank</strong> (don't specify it for a turnaround inherited from the previous operation)</li>
+            <li>Steps: stop on the track-2 track circuit (this one can stay a normal <strong>"Stop (passenger stop)"</strong>) → depart on route <code>12E</code></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv2-10-departure-group.png" alt="Screen setting up the departure path group (direction left, appearance TC on the center track, appearance offset blank)">
+            <figcaption>The departure group. The key is to set the appearance TC to the center track and leave the appearance offset blank.</figcaption>
+        </figure>
+        <div class="callout">
+            <strong>How they link:</strong> the arrival group enters on <code>1B</code> and performs a <strong>"Turnaround"</strong> at the station step → at that moment it switches to the departure group → it stays stopped until the departure button is pressed → it departs on <code>12E</code>.
+            <strong>The two key points are "make the arrival-side step a turnaround" and "on the departure side, set the appearance TC to the previous operation's location and leave the appearance offset blank."</strong>
+        </div>
+
+        <h3>4-4. Register the train and "Create and register next operation"</h3>
+        <ol class="step-list">
+            <li>Create a train in the train list (e.g. <code>5001</code>, Type 11, Through Local, path group <code>Track 2 arrival</code>, arrival 10:04)</li>
+            <li>For a train whose path group ends with a turnaround, a <strong>"Create and register next operation" button</strong> appears. Press it</li>
+            <li>A train with train number <code>5001_2</code> is created automatically, and the train type is inherited too. <strong>Specify the train class and the path group (<code>Track 2 departure</code>)</strong>, and enter the departure time (e.g. 10:05)</li>
+            <li>Tidy up the times on the arrival side (5001) too, as in "arrive 10:04 / depart 10:05"</li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv2-11-next-operation.png" alt="Where the 'Create and register next operation' button is">
+            <figcaption>For a train that ends with a turnaround, a "Create and register next operation" button appears. This links arrival → turnaround departure into one continuous train.</figcaption>
+        </figure>
+
+        <h3>4-5. Diagram and verification</h3>
+        <p>
+            Since the diagram is for a double track, register the rows in this order: <strong>two on the left end for up and down</strong>, tracks 1–3 of the station, and <strong>two on the right end for up and down</strong> (Hands-on ① was single track with one row on the left end, but this time it's two each).
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv2-12-diagram-rows.png" alt="Screen setting the left-end diagram rows for a double track (up and down)">
+            <figcaption>Since it's a double track, register two rows each on the left and right ends for up and down.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv2-13-diagram-preview.png" alt="Diagram preview">
+            <figcaption>Through trains and arrivals/departures are drawn on the diagram.</figcaption>
+        </figure>
+        <p>Save and preview. You succeed if a <strong>turnaround line</strong> is drawn on the diagram, and the departure board shows the class (Through Local) and train number as <strong>up (left) direction</strong>.</p>
+        <figure class="shot">
+            <img src="tutorial/lv2-14-diagram-departure.png" alt="Screen showing the diagram with the turnaround and the departure board side by side">
+            <figcaption>A turnaround line on the diagram, and the up-direction turnaround train shown on the departure board.</figcaption>
+        </figure>
+    </section>
+
+    <section id="done">
+        <h2>🎉 Done! On to the next level</h2>
+        <p>
+            Nice work. At a double-track station, you can now set up three operation patterns: <strong>through, arrival/departure, and turnaround</strong>.
+            In particular, the idea of <strong>linking two path groups to turn around</strong>, plus <strong>AND conditions and two-aspect signals</strong>, are the high points of Lv2.
+        </p>
+
+        <h3>If it doesn't work</h3>
+        <ul>
+            <li><strong>The preceding signal stays yellow:</strong> is the yellow condition for the two conflicting routes set to OR? (→ change it to AND)</li>
+            <li><strong>The signal into the center track stays green:</strong> did you make the dead-end-side signal two-aspect?</li>
+            <li><strong>It doesn't turn around / the departure side doesn't appear:</strong> did you set the arrival-side step to "Turnaround," set the departure side's appearance TC to track 2, and leave the appearance offset blank?</li>
+            <li><strong>Error when saving:</strong> did you forget to press the <strong>"Update" button</strong> after editing the path group?</li>
+        </ul>
+
+        <div class="callout tip">
+            <strong>Next is Hands-on ③ (in preparation):</strong> you'll take on a <strong>turnaround with an operation change</strong> using a stabling siding. You'll build one step more advanced: arrive as a local train → change to out-of-service and go to the stabling siding → return to the main line.
+        </div>
+
+        <h3>Related guides</h3>
+        <ul>
+            <li><a href="map-editor-tutorial1.en.html">Hands-on ① Single-track passing</a> — a recap of the basics</li>
+            <li><a href="map-editor-equipment.en.html">Equipment</a> / <a href="map-editor-trainlist.en.html">Operations</a> — details on levers, routes, signals, and path groups</li>
+            <li><a href="glossary.en.html">Glossary</a> — check approach locking, conflicting routes, and more</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <span class="lb-close" aria-label="Close">&times;</span>
+    <img alt="">
+    <div class="lb-hint">Click or press Esc to close</div>
+</div>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    document.querySelectorAll('figure.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lb.classList.add('open');
+        });
+    });
+    function close() { lb.classList.remove('open'); lbImg.src = ''; }
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support page</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>
