@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用語集 | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .term { color: #fff; font-weight: bold; white-space: nowrap; }
+        .term .ruby { display: block; font-size: 11px; color: var(--text-dim); font-weight: normal; }
+        td.more a { color: var(--accent); text-decoration: none; font-size: 13px; }
+        td.more a:hover { text-decoration: underline; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">📖</span>
+    <div>
+        <h1>用語集</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="glossary.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html" class="active">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#wiring">線路・駅まわり</a></li>
+        <li><a href="#equipment">信号・進路まわり</a></li>
+        <li><a href="#operation">ダイヤ・運行まわり</a></li>
+        <li><a href="#misc">その他</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="map-editor-start.html">← はじめての自作マップ</a></li>
+        <li><a href="help.html">遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor-start.html">はじめての自作マップ</a> / 用語集
+    </div>
+
+    <section id="intro">
+        <h2>📖 この用語集について</h2>
+        <p>
+            マップ作りで出てくる鉄道・エディタの言葉を、<strong>① ひとことの言い換え → ② ゲーム画面では何か → ③ くわしい解説ページ</strong>の3点でまとめました。
+            読んでいて知らない言葉に出会ったら、ここで確認してください。
+        </p>
+        <div class="callout tip">
+            まったくの初心者の方は、まず <a href="map-editor-start.html">はじめての自作マップ</a> を読むのがおすすめです。絵つきで全体像をつかめます。
+        </div>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 線路・駅まわり</h2>
+        <table>
+            <tr><th style="width:22%;">用語</th><th>ひとことで</th><th>ゲームでは</th><th style="width:18%;">くわしく</th></tr>
+            <tr id="track-circuit">
+                <td><span class="term">軌道回路<span class="ruby">きどうかいろ</span></span></td>
+                <td>線路を<strong>すごろくのマス目のように区切った1マス</strong>。列車がどのマスにいるかで信号や進路を管理する。</td>
+                <td>線路を1本ずつ引いていく基本単位。<code>TC_0001</code> のような ID が自動で付く。</td>
+                <td class="more"><a href="map-editor-wiring.html#track-circuit">配線編集</a></td>
+            </tr>
+            <tr id="switch">
+                <td><span class="term">分岐器<span class="ruby">ぶんきき</span></span></td>
+                <td>線路の<strong>切り替えポイント</strong>。1本の線路が2方向に分かれる（または合流する）ところ。</td>
+                <td>軌道回路どうしをつなぐ分岐点として登録。<code>SW_0001</code> のような ID が付く。</td>
+                <td class="more"><a href="map-editor-wiring.html#switch">配線編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">定位／反位<span class="ruby">ていい／はんい</span></span></td>
+                <td>分岐器で<strong>まっすぐ進む向きが「定位」、分かれて進む向きが「反位」</strong>。要は「まっすぐ」か「曲がる」か。</td>
+                <td>進路を開けるとエディタが自動で向きを決めるので、ふだん意識しなくてよい。</td>
+                <td class="more"><a href="map-editor-wiring.html#switch">配線編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">片開き／両渡り<span class="ruby">かたびらき／りょうわたり</span></span></td>
+                <td>分岐器の種類。<strong>片開き</strong>＝1本が2方向に分かれる標準形。<strong>両渡り</strong>＝2本の線路をたすきがけにつなぐ形。</td>
+                <td>片開きは軌道回路2〜3本、両渡りは4本を組み合わせて登録する。</td>
+                <td class="more"><a href="map-editor-wiring.html#switch">配線編集</a></td>
+            </tr>
+            <tr id="station">
+                <td><span class="term">駅<span class="ruby">えき</span></span></td>
+                <td>列車が止まる<strong>場所のまとまり</strong>。中にホームや線路がぶら下がる。</td>
+                <td>マップ上に四角（駅エリア）を描き、駅名と駅 ID を付ける。</td>
+                <td class="more"><a href="map-editor-wiring.html#station">配線編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">ホーム</span></td>
+                <td>駅の中で<strong>列車に乗り降りする番線</strong>を表す帯。</td>
+                <td>線路の上に矩形を描き、各辺に番線名を割り当てる。</td>
+                <td class="more"><a href="map-editor-wiring.html#platform">配線編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">番線<span class="ruby">ばんせん</span></span></td>
+                <td>駅のホームにつける<strong>番号（1番線・2番線…）</strong>。</td>
+                <td>「番線マスタ」で駅ごとに登録。発車標やホームのラベルに使われる。</td>
+                <td class="more"><a href="map-editor-wiring.html#track-number">配線編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">方面<span class="ruby">ほうめん</span></span></td>
+                <td>発車標の「○○方面」という<strong>行き先の切り替え</strong>。</td>
+                <td>「方面マスタ」で駅ごとに登録。登録しなくても上り／下りの2択で動く。</td>
+                <td class="more"><a href="map-editor-wiring.html#station-direction">配線編集</a></td>
+            </tr>
+        </table>
+        <div class="callout warn">
+            <strong>線路は完全なタテ（垂直）に引けません。</strong>必ず少し横に傾けて配置してください（タテに進みたいときは分岐器を使います）。
+        </div>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 信号・進路まわり</h2>
+        <table>
+            <tr><th style="width:22%;">用語</th><th>ひとことで</th><th>ゲームでは</th><th style="width:18%;">くわしく</th></tr>
+            <tr id="route">
+                <td><span class="term">進路<span class="ruby">しんろ</span></span></td>
+                <td><strong>列車1本が通る道すじ</strong>。軌道回路をいくつかつないだ「ここからここまで」の道。</td>
+                <td>発点てこ→着点てこを指定し、通る軌道回路を順に選んで登録。進路名は自動で付く（例 <code>1LA</code>）。</td>
+                <td class="more"><a href="map-editor-equipment.html#route">設備編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">てこ</span></td>
+                <td>進路を開け閉めする<strong>スイッチ（操作レバー）</strong>。</td>
+                <td>出発側の「発点てこ」と行き先側の「着点てこ」をペアで操作すると進路が開く。</td>
+                <td class="more"><a href="map-editor-equipment.html#lever">設備編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">発点／着点<span class="ruby">はつてん／ちゃくてん</span></span></td>
+                <td>進路の<strong>出発側のてこ＝発点、行き先側のてこ＝着点</strong>。</td>
+                <td>本線用発点（黄）・入換用発点（緑）・着点 の3種類のてこがある。</td>
+                <td class="more"><a href="map-editor-equipment.html#lever">設備編集</a></td>
+            </tr>
+            <tr id="signal">
+                <td><span class="term">信号機<span class="ruby">しんごうき</span></span></td>
+                <td>進める・止まれを知らせる<strong>合図のランプ</strong>。</td>
+                <td>進路の状態に合わせて自動で色が変わる。プレイヤーは直接いじらない。場内・出発・閉塞・入換の4種類。</td>
+                <td class="more"><a href="map-editor-equipment.html#signal">設備編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">現示<span class="ruby">げんじ</span></span></td>
+                <td>信号機が<strong>今出している色（合図）</strong>のこと。</td>
+                <td>自作マップでは<strong>🟢進め・🟡注意・🔴止まれ</strong>の3色だけ。警戒・減速などの細かい現示は扱わない。</td>
+                <td class="more"><a href="map-editor-equipment.html#signal">設備編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">競合進路<span class="ruby">きょうごうしんろ</span></span></td>
+                <td><strong>同時には開けられない、ぶつかり合う2つの進路</strong>。</td>
+                <td>交差する軌道回路を共有する進路どうし。エディタが自動で判定するので手作業は不要。</td>
+                <td class="more"><a href="map-editor-equipment.html#route">設備編集</a></td>
+            </tr>
+            <tr id="approach-lock">
+                <td><span class="term">接近鎖錠<span class="ruby">せっきんさじょう</span></span></td>
+                <td>列車が信号機の<strong>直前まで来たら、その進路を勝手に解除できなくする</strong>しくみ。青信号が急に赤へ変わるのを防ぐ。</td>
+                <td>進路の登録時に「接近鎖錠の軌道回路」を指定。その軌道回路に列車がいる間は、その進路の解除がブロックされる（上級・任意）。</td>
+                <td class="more"><a href="map-editor-tutorial1.html#equipment">実践①</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">出発ボタン</span></td>
+                <td>ホーム端に置く<strong>「発車してよし」の合図ボタン</strong>。</td>
+                <td>自作マップでは「どの駅のどの番線か」を登録し、その番線の列車に発車合図を出す。</td>
+                <td class="more"><a href="map-editor-equipment.html#departure-button">設備編集</a></td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="operation">
+        <h2>📋 ダイヤ・運行まわり</h2>
+        <table>
+            <tr><th style="width:22%;">用語</th><th>ひとことで</th><th>ゲームでは</th><th style="width:18%;">くわしく</th></tr>
+            <tr id="diagram">
+                <td><span class="term">ダイヤ</span></td>
+                <td><strong>時刻表</strong>。何時にどの列車がどこを走るかの予定。</td>
+                <td>「列車一覧」に列車を並べて時刻を決め、ダイヤグラム（時刻×位置のグラフ）で俯瞰できる。</td>
+                <td class="more"><a href="map-editor-trainlist.html">運行編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">シナリオ</span></td>
+                <td>そのマップの<strong>1つの時間帯のダイヤのセット</strong>（例：朝ラッシュ、夕方）。</td>
+                <td>マップの中に複数作れる。運行カテゴリはシナリオを選ぶと編集できる。</td>
+                <td class="more"><a href="map-editor.html#open-map">入門</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">列車種別<span class="ruby">れっしゃしゅべつ</span></span></td>
+                <td>「普通」「急行」などの<strong>列車の種類ラベル</strong>。</td>
+                <td>会社カテゴリで定義。既定バンクから1クリックで追加できる。発車標やダイヤ図の色に使う。</td>
+                <td class="more"><a href="map-editor-company.html#train-class">会社編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">列車形式<span class="ruby">れっしゃけいしき</span></span></td>
+                <td><strong>車両の種類</strong>（両数・全長・マップ上のアイコン）。</td>
+                <td>会社カテゴリで定義。公式アイコンバンクから「形式 × 色」で選ぶ。</td>
+                <td class="more"><a href="map-editor-company.html#train-type">会社編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">経路グループ<span class="ruby">けいろグループ</span></span></td>
+                <td>列車の<strong>走る道すじのテンプレート</strong>（どこから出て、どの進路を通り、どこに停まるか）。</td>
+                <td>運行カテゴリで作る。複数の列車が同じ経路グループを共有できる。</td>
+                <td class="more"><a href="map-editor-trainlist.html#path-group">運行編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">列車一覧<span class="ruby">れっしゃいちらん</span></span></td>
+                <td><strong>実際に走らせる列車を1本ずつ並べた表</strong>。</td>
+                <td>各列車に列車番号・形式・種別・経路グループ・時刻を指定する。</td>
+                <td class="more"><a href="map-editor-trainlist.html#train-list">運行編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">出現 TC<span class="ruby">しゅつげんティーシー</span></span></td>
+                <td>列車が<strong>最初に現れる軌道回路</strong>（TC＝軌道回路の略）。</td>
+                <td>経路グループで「TC を選ぶ」ボタンを押し、マップ上の軌道回路をクリックして指定する。</td>
+                <td class="more"><a href="map-editor-trainlist.html#path-group">運行編集</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">ダイヤ行<span class="ruby">ダイヤぎょう</span></span></td>
+                <td>ダイヤグラム（グラフ）の<strong>縦軸に並ぶ1行（駅番線やマップ端）</strong>。</td>
+                <td>運行カテゴリで定義。紐づけた軌道回路を列車が通る時刻が線として描かれる。</td>
+                <td class="more"><a href="map-editor-trainlist.html#diagram-row">運行編集</a></td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="misc">
+        <h2>📦 その他</h2>
+        <table>
+            <tr><th style="width:22%;">用語</th><th>ひとことで</th><th>ゲームでは</th><th style="width:18%;">くわしく</th></tr>
+            <tr>
+                <td><span class="term">UGC</span></td>
+                <td><strong>ユーザーが作ったマップ</strong>（User-Generated Content）。</td>
+                <td>マップエディタで作るマップはすべて UGC。本編付属の公式マップとは一部機能が異なる。</td>
+                <td class="more"><a href="map-editor.html#overview">入門</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">バンドル情報</span></td>
+                <td>マップを配布するときの<strong>タイトル・説明・作者・プレビュー画像のセット</strong>。</td>
+                <td>「ファイル → バンドル情報を編集」で設定。ユーザーマップ一覧に表示される。</td>
+                <td class="more"><a href="map-editor.html#bundle-info">入門</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">プレビュー</span></td>
+                <td>作りかけのマップを<strong>その場で試遊する</strong>機能。</td>
+                <td>右上の ▶ プレビューで起動。常にサンドボックス（スコアなし）で動く。</td>
+                <td class="more"><a href="map-editor.html#save-preview">入門</a></td>
+            </tr>
+        </table>
+        <div class="callout">
+            <strong>ここに無い言葉は？</strong> 本編の遊び方で出てくる用語は <a href="help.html">遊び方ガイド</a> に、各機能の細かい仕様は左メニューの各ガイドにまとまっています。
+        </div>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

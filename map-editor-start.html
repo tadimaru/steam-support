@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>はじめての自作マップ | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* やさしい入口ページ用：概念図（インライン SVG） */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 480px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .concept { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin: 18px 0; }
+        .concept h3 { margin-top: 0; }
+        .concept .more { font-size: 13px; }
+        .concept .more a { color: var(--accent); text-decoration: none; }
+        .concept .more a:hover { text-decoration: underline; }
+        .svg-label { fill: var(--text); font-size: 13px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 11px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        main a { color: var(--accent); }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚀</span>
+    <div>
+        <h1>はじめての自作マップ</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-start.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html" class="active">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#what">何ができる？</a></li>
+        <li><a href="#concepts">5分でわかる鉄道のしくみ</a></li>
+        <li><a href="#big-picture">作る順番の全体像</a></li>
+        <li><a href="#practice">実際に作ってみる</a></li>
+        <li><a href="#next">次に読む</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / はじめての自作マップ
+    </div>
+
+    <section id="what">
+        <h2>🚀 このツールで何ができる？</h2>
+        <p>
+            <strong>マップエディタ</strong>を使うと、<strong>自分だけの駅と時刻表（ダイヤ）を作って、本編とまったく同じ操作で遊べます</strong>。
+            線路を引いて、駅を置いて、列車を走らせる時刻を決める——それだけで、あなたの「運行管理シミュレーター」が1つ完成します。
+        </p>
+        <div class="callout">
+            <strong>このページの読み方：</strong>このページは<strong>鉄道もこのゲームも初めて</strong>という人のための入口です。
+            まず「鉄道のしくみ」をたとえ話でつかみ、次に「作る順番」を知り、最後に<strong>1駅だけの小さなマップを最後まで完成</strong>させます。
+            細かい操作は各ガイド（左メニュー）にまとめてあるので、まずはここで全体像をつかんでください。
+        </div>
+        <div class="callout tip">
+            <strong>専門用語が出てきたら：</strong>知らない言葉が出てきたら <a href="glossary.html">用語集</a> を開きながら読むと迷いません。
+            このページでも、むずかしい言葉は初めて出てくるときに「やさしい言い換え」を必ず付けています。
+        </div>
+    </section>
+
+    <section id="concepts">
+        <h2>🧠 5分でわかる鉄道のしくみ</h2>
+        <p>
+            マップを作るには、ほんの少しだけ鉄道の言葉を知っておくとラクです。
+            むずかしく考えなくて大丈夫。<strong>6つのキーワード</strong>を、たとえ話と絵でサッと見ておきましょう。
+        </p>
+
+        <div class="concept">
+            <h3>① 線路 ＝「軌道回路（きどうかいろ）」</h3>
+            <p>
+                線路は、ひとつながりの長い棒ではなく、<strong>すごろくのマス目のように短く区切って</strong>管理します。
+                その1マスが<strong>軌道回路</strong>です。
+                「いま列車がどのマスにいるか」がわかることで、信号の色を変えたり、列車どうしがぶつからないように管理できます。
+            </p>
+            <figure>
+                <svg viewBox="0 0 480 90" role="img" aria-label="1本の線路を4つの軌道回路に区切った図">
+                    <!-- レール（全体） -->
+                    <line x1="20" y1="50" x2="460" y2="50" stroke="#4a90d9" stroke-width="6"/>
+                    <!-- 区切り -->
+                    <line x1="130" y1="38" x2="130" y2="62" stroke="#0f1117" stroke-width="4"/>
+                    <line x1="240" y1="38" x2="240" y2="62" stroke="#0f1117" stroke-width="4"/>
+                    <line x1="350" y1="38" x2="350" y2="62" stroke="#0f1117" stroke-width="4"/>
+                    <!-- 列車 -->
+                    <rect x="150" y="40" width="70" height="20" rx="4" fill="#6ab04c"/>
+                    <text x="185" y="55" text-anchor="middle" fill="#0f1117" style="font-size:11px;font-weight:bold;">列車</text>
+                    <!-- ラベル -->
+                    <text x="75" y="82" text-anchor="middle" class="svg-dim">1マス目</text>
+                    <text x="185" y="82" text-anchor="middle" class="svg-dim">2マス目</text>
+                    <text x="295" y="82" text-anchor="middle" class="svg-dim">3マス目</text>
+                    <text x="405" y="82" text-anchor="middle" class="svg-dim">4マス目</text>
+                </svg>
+                <figcaption>1本の線路を4つの軌道回路（マス）に区切ったところ。列車は「2マス目にいる」とわかる。</figcaption>
+            </figure>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#track-circuit">用語集「軌道回路」</a> / <a href="map-editor-wiring.html#track-circuit">配線編集ガイド</a></p>
+        </div>
+
+        <div class="concept">
+            <h3>② 駅とホーム</h3>
+            <p>
+                <strong>駅</strong>は列車が止まる場所、<strong>ホーム</strong>はその駅でお客さんが乗り降りする番線（1番線・2番線…）です。
+                マップ作りでは、駅を表す四角を置き、その上にホームの帯をのせていきます。
+            </p>
+            <figure>
+                <svg viewBox="0 0 480 110" role="img" aria-label="駅の四角の中にホームと線路がある図">
+                    <!-- 駅エリア -->
+                    <rect x="40" y="15" width="400" height="80" rx="6" fill="none" stroke="#9ca3af" stroke-dasharray="6 4" stroke-width="2"/>
+                    <text x="60" y="33" class="svg-dim">駅（富津駅）</text>
+                    <!-- 線路 -->
+                    <line x1="55" y1="55" x2="425" y2="55" stroke="#4a90d9" stroke-width="5"/>
+                    <line x1="55" y1="80" x2="425" y2="80" stroke="#4a90d9" stroke-width="5"/>
+                    <!-- ホーム帯 -->
+                    <rect x="120" y="46" width="240" height="6" fill="#6ab04c"/>
+                    <rect x="120" y="71" width="240" height="6" fill="#6ab04c"/>
+                    <text x="380" y="52" class="svg-dim" style="font-size:10px;">1番線</text>
+                    <text x="380" y="77" class="svg-dim" style="font-size:10px;">2番線</text>
+                </svg>
+                <figcaption>駅の四角（点線）の中に、線路（青）とホーム（緑の帯）。番線ごとに名前を付ける。</figcaption>
+            </figure>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#station">用語集「駅・ホーム・番線」</a> / <a href="map-editor-wiring.html#station">配線編集ガイド</a></p>
+        </div>
+
+        <div class="concept">
+            <h3>③ 分岐器（ぶんきき）＝ 線路の切り替えポイント</h3>
+            <p>
+                線路が2方向に分かれるところには<strong>分岐器</strong>（ポイント）があります。
+                <strong>まっすぐ進む向きを「定位（ていい）」、分かれて進む向きを「反位（はんい）」</strong>と呼びます。
+                言葉はむずかしそうですが、要は「まっすぐ」か「曲がる」かの2択です。
+            </p>
+            <figure>
+                <svg viewBox="0 0 480 120" role="img" aria-label="分岐器で線路が2方向に分かれる図">
+                    <!-- 本線 -->
+                    <line x1="20" y1="60" x2="220" y2="60" stroke="#4a90d9" stroke-width="6"/>
+                    <!-- 定位（まっすぐ） -->
+                    <line x1="220" y1="60" x2="460" y2="60" stroke="#4a90d9" stroke-width="6"/>
+                    <!-- 反位（分かれる） -->
+                    <line x1="220" y1="60" x2="440" y2="105" stroke="#4a90d9" stroke-width="6"/>
+                    <!-- 分岐点 -->
+                    <circle cx="220" cy="60" r="7" fill="#f59e0b"/>
+                    <text x="360" y="48" text-anchor="middle" class="svg-label">定位（まっすぐ）</text>
+                    <text x="360" y="100" text-anchor="middle" class="svg-label">反位（曲がる）</text>
+                </svg>
+                <figcaption>分岐器（オレンジの点）で線路が2方向に。まっすぐ＝定位、曲がる＝反位。</figcaption>
+            </figure>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#switch">用語集「分岐器・定位・反位」</a> / <a href="map-editor-wiring.html#switch">配線編集ガイド</a></p>
+        </div>
+
+        <div class="concept">
+            <h3>④ 信号 ＝ 3色の合図</h3>
+            <p>
+                信号機の色は、車の信号とほぼ同じです。
+                このゲームの自作マップでは<strong>「🟢進め・🟡注意・🔴止まれ」の3色だけ</strong>を覚えればOK。
+                信号の色は、進路（次で説明）が開いているかどうかで<strong>自動で変わります</strong>。プレイヤーが色を直接いじることはありません。
+            </p>
+            <figure>
+                <svg viewBox="0 0 480 110" role="img" aria-label="進め・注意・止まれの3色の信号">
+                    <circle cx="100" cy="45" r="26" fill="#2bbf4e"/>
+                    <text x="100" y="92" text-anchor="middle" class="svg-label">進め</text>
+                    <circle cx="240" cy="45" r="26" fill="#f5c542"/>
+                    <text x="240" y="92" text-anchor="middle" class="svg-label">注意</text>
+                    <circle cx="380" cy="45" r="26" fill="#e0463e"/>
+                    <text x="380" y="92" text-anchor="middle" class="svg-label">止まれ</text>
+                </svg>
+                <figcaption>自作マップの信号は3色だけ。進路の状態に合わせて自動で切り替わる。</figcaption>
+            </figure>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#signal">用語集「信号機・現示」</a> / <a href="map-editor-equipment.html#signal">設備編集ガイド</a></p>
+        </div>
+
+        <div class="concept">
+            <h3>⑤ 進路（しんろ）と「てこ」</h3>
+            <p>
+                <strong>進路</strong>とは、<strong>列車1本が通る道すじ</strong>のこと（軌道回路をいくつかつないだ「ここからここまで」の道）。
+                そして、その道を開けるスイッチが<strong>「てこ」</strong>です。
+                <strong>出発側のてこ（発点＝はつてん）と、行き先側のてこ（着点＝ちゃくてん）の2本をペアで操作すると、道が1本つながって信号が青になります。</strong>
+            </p>
+            <figure>
+                <svg viewBox="0 0 480 120" role="img" aria-label="発点てこから着点てこまでの進路">
+                    <!-- 軌道回路の連なり -->
+                    <line x1="60" y1="60" x2="420" y2="60" stroke="#2e3250" stroke-width="10"/>
+                    <line x1="150" y1="50" x2="150" y2="70" stroke="#0f1117" stroke-width="3"/>
+                    <line x1="240" y1="50" x2="240" y2="70" stroke="#0f1117" stroke-width="3"/>
+                    <line x1="330" y1="50" x2="330" y2="70" stroke="#0f1117" stroke-width="3"/>
+                    <!-- 進路（開いた道） -->
+                    <line x1="60" y1="60" x2="408" y2="60" stroke="#6ab04c" stroke-width="4"/>
+                    <polygon points="408,52 424,60 408,68" fill="#6ab04c"/>
+                    <!-- てこ -->
+                    <circle cx="60" cy="60" r="9" fill="#f59e0b"/>
+                    <text x="60" y="95" text-anchor="middle" class="svg-label">発点てこ</text>
+                    <text x="60" y="110" text-anchor="middle" class="svg-dim">（出発側）</text>
+                    <circle cx="420" cy="60" r="9" fill="#4a90d9"/>
+                    <text x="420" y="95" text-anchor="middle" class="svg-label">着点てこ</text>
+                    <text x="420" y="110" text-anchor="middle" class="svg-dim">（行き先側）</text>
+                </svg>
+                <figcaption>発点てこ（橙）と着点てこ（青）をペアで操作すると、間の軌道回路がつながって進路（緑）が開く。</figcaption>
+            </figure>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#route">用語集「進路・てこ」</a> / <a href="map-editor-equipment.html#route">設備編集ガイド</a></p>
+        </div>
+
+        <div class="concept">
+            <h3>⑥ ダイヤ ＝ 時刻表</h3>
+            <p>
+                <strong>ダイヤ</strong>は「何時に、どの列車が、どこを走るか」の予定表（時刻表）です。
+                自作マップでは、走らせたい列車を1本ずつ並べて、出発時刻などを決めていきます。
+            </p>
+            <p class="more">→ もっと詳しく：<a href="glossary.html#diagram">用語集「ダイヤ・列車一覧」</a> / <a href="map-editor-trainlist.html">運行編集ガイド</a></p>
+        </div>
+    </section>
+
+    <section id="big-picture">
+        <h2>🗺 作る順番の全体像</h2>
+        <p>
+            マップエディタの左メニューは、<strong>会社 → 配線 → 設備 → 運行</strong>の4つに分かれています。
+            <strong>この順番（上から下）に進めるだけ</strong>でOK。あとのカテゴリは前のカテゴリで作ったものを使うので、上から順にやると手戻りが少なくて済みます。
+        </p>
+        <figure>
+            <svg viewBox="0 0 480 96" role="img" aria-label="会社・配線・設備・運行の順に進める流れ図">
+                <g>
+                    <rect x="8" y="30" width="96" height="40" rx="6" fill="#22263a" stroke="#4a90d9"/>
+                    <text x="56" y="55" text-anchor="middle" class="svg-label">会社</text>
+                    <rect x="128" y="30" width="96" height="40" rx="6" fill="#22263a" stroke="#4a90d9"/>
+                    <text x="176" y="55" text-anchor="middle" class="svg-label">配線</text>
+                    <rect x="248" y="30" width="96" height="40" rx="6" fill="#22263a" stroke="#4a90d9"/>
+                    <text x="296" y="55" text-anchor="middle" class="svg-label">設備</text>
+                    <rect x="368" y="30" width="96" height="40" rx="6" fill="#22263a" stroke="#4a90d9"/>
+                    <text x="416" y="55" text-anchor="middle" class="svg-label">運行</text>
+                    <polygon points="106,50 124,50 120,44 128,50 120,56 124,50" fill="#6ab04c"/>
+                    <polygon points="226,50 244,50 240,44 248,50 240,56 244,50" fill="#6ab04c"/>
+                    <polygon points="346,50 364,50 360,44 368,50 360,56 364,50" fill="#6ab04c"/>
+                </g>
+            </svg>
+            <figcaption>左メニューを上から順に。前で作ったものを次で使う、という流れになっている。</figcaption>
+        </figure>
+        <table>
+            <tr><th>順番</th><th>カテゴリ</th><th>ここで作るもの</th></tr>
+            <tr><td>①</td><td><strong>会社</strong></td><td>列車の種類（「普通」「急行」など）と車両（アイコン）</td></tr>
+            <tr><td>②</td><td><strong>配線</strong></td><td>線路（軌道回路）・分岐器・駅・ホーム</td></tr>
+            <tr><td>③</td><td><strong>設備</strong></td><td>てこ・進路・信号機・出発ボタン</td></tr>
+            <tr><td>④</td><td><strong>運行</strong></td><td>走らせる列車と時刻（ダイヤ）</td></tr>
+        </table>
+        <div class="callout">
+            <strong>「運行」はシナリオが必要：</strong>運行カテゴリ（列車のダイヤ）は、<strong>シナリオ</strong>（時間帯ごとのダイヤのセット。例：朝ラッシュ）を1つ作ってからでないと編集できません。
+            新規マップを作ると「シナリオを作成しますか？」と聞かれるので、そこで1つ作っておきましょう。
+        </div>
+    </section>
+
+    <section id="practice">
+        <h2>🛠 実際に作ってみる（実践チュートリアル）</h2>
+        <p>
+            全体像がつかめたら、あとは手を動かすのがいちばんの近道です。
+            <strong>画面のスクリーンショットを1枚ずつ追いながら</strong>、実際に動くマップを最初から最後まで作る「実践チュートリアル」を用意しています。
+        </p>
+        <ul>
+            <li><strong><a href="map-editor-tutorial1.html">実践① 単線で行き違い</a></strong> — 単線の駅で2本の列車がすれ違う、いちばんシンプルなマップ。会社 → 配線 → 設備 → 運行の一周をまるごと体験できます。</li>
+            <li><strong>実践②</strong>（準備中）— 複線の駅で折り返し運用</li>
+            <li><strong>実践③</strong>（準備中）— 引上線を使った、運用変更つきの折り返し</li>
+        </ul>
+        <div class="callout tip">
+            <strong>まずは実践①から。</strong>このページで覚えた言葉（軌道回路・進路・てこ・信号）が、実際の操作のどこに出てくるのかが分かります。むずかしい所は飛ばしてOK。まずは1本、列車を走らせてみましょう。
+        </div>
+    </section>
+
+    <section id="next">
+        <h2>📚 次に読む</h2>
+        <p>全体像がつかめたら、各カテゴリの詳しい操作ガイドへ進みましょう（左メニューの順＝作る順）。</p>
+        <ul>
+            <li><a href="map-editor.html"><strong>マップエディタ入門</strong></a> — 画面の見方・保存・プレビュー・マップの公開情報</li>
+            <li><strong>①</strong> <a href="map-editor-company.html">会社編集ガイド</a> — 列車種別・列車形式</li>
+            <li><strong>②</strong> <a href="map-editor-wiring.html">配線編集ガイド</a> — 軌道回路・分岐器・駅・ホーム</li>
+            <li><strong>③</strong> <a href="map-editor-equipment.html">設備編集ガイド</a> — てこ・進路・信号機・出発ボタン</li>
+            <li><strong>④</strong> <a href="map-editor-trainlist.html">運行編集ガイド</a> — 経路グループ・列車一覧・ダイヤ行</li>
+            <li>📖 <a href="glossary.html">用語集</a> — 鉄道・エディタの言葉をまとめて確認</li>
+            <li>⛳ <a href="user-maps.html">ユーザーマップを起動する</a> — 完成したマップをタイトル画面から遊ぶ</li>
+        </ul>
+        <p>
+            本編そのものの遊び方は <a href="help.html">遊び方ガイド</a> をどうぞ。プレビューで自作マップを動かす操作は本編と同じです。
+        </p>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>
