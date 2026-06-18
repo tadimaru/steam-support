@@ -176,6 +176,22 @@
             You do not type a route name yourself.
         </div>
 
+        <h3>Which track circuits go into a route (important)</h3>
+        <p>
+            The track circuits you chain together form the area that the route's signal (home / starting / shunting) protects. While any of those track circuits is occupied, the signal stays <strong>red</strong>, blocking further trains from entering.
+        </p>
+        <p>
+            Therefore, <strong>do not include the track circuit where the start lever or the signal itself is placed</strong>. If you do, the moment the train reaches that lever/signal position, the signal protects its own location, turns red, and the train stops right there.
+        </p>
+        <div class="callout callout-warn">
+            <strong>Rule of thumb:</strong> a route's first track circuit must be the one <strong>past</strong> the start lever and signal, not the one they sit on.
+            <br>
+            When wiring, decide which track circuit "handles" the signal, place the lever and signal on the <strong>near side</strong> of that boundary, and let the route's chained circuits begin on the <strong>far side</strong>.
+        </div>
+        <p>
+            Example: if the layout is <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> and you mount the start lever and the home signal on <code>TC_A</code>, the route should chain <code>TC_B</code>, <code>TC_C</code>, … — <code>TC_A</code> itself is excluded.
+        </p>
+
         <h3>Conflicting routes</h3>
         <p>
             Two routes that share a crossing track circuit <strong>cannot be opened at the same time</strong>.
