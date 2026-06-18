@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践① 単線で行き違い | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 概念図（インライン SVG） */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .svg-label { fill: var(--text); font-size: 12px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 10.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        /* スクリーンショット差し込み枠（画像ができたら img に差し替え） */
+        figure.shot { padding: 0; background: none; border: none; }
+        .shot-ph {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            padding: 26px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .shot-ph .cam { font-size: 26px; display: block; margin-bottom: 6px; opacity: 0.7; }
+        .shot-ph .fn { display: inline-block; margin-top: 8px; font-family: 'Consolas', 'Menlo', monospace; font-size: 12px; color: var(--accent); }
+        figure.shot img { max-width: 760px; max-height: min(640px, 78vh); width: auto; height: auto; border-radius: var(--radius); border: 1px solid var(--border); display: block; margin: 0 auto; cursor: zoom-in; transition: opacity 0.15s; }
+        figure.shot img:hover { opacity: 0.85; }
+
+        /* クリックで拡大表示（ライトボックス） */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 6px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: none; }
+        .lightbox .lb-close { position: absolute; top: 14px; right: 22px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; opacity: 0.8; }
+        .lightbox .lb-close:hover { opacity: 1; }
+        .lightbox .lb-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        .lvl-badge { display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--green); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🔰</span>
+    <div>
+        <h1>実践① 単線で行き違い<span class="lvl-badge">Lv.1</span></h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-tutorial1.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html" class="active">① 単線で行き違い</a></li>
+        <li><a href="map-editor-tutorial2.html">② 複線駅で折り返し</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#goal">ゴールと完成イメージ</a></li>
+        <li><a href="#design">まず設計図を描く</a></li>
+        <li><a href="#company">STEP1 会社</a></li>
+        <li><a href="#wiring">STEP2 配線</a></li>
+        <li><a href="#equipment">STEP3 設備</a></li>
+        <li><a href="#operation">STEP4 運行</a></li>
+        <li><a href="#done">完成・次のレベルへ</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="map-editor-start.html">← はじめての自作マップ</a></li>
+        <li><a href="help.html">遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor-start.html">はじめての自作マップ</a> / 実践① 単線で行き違い
+    </div>
+
+    <section id="goal">
+        <h2>🎯 ゴールと完成イメージ</h2>
+        <p>
+            この実践①では、<strong>単線（線路が1本）の駅で、2本の列車がすれ違う（行き違う）</strong>、いちばんシンプルなマップを最初から最後まで作ります。
+            田舎の単線にある、上下の列車が駅で待ち合わせて入れ替わる——あの光景です。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-00-goal.png" alt="完成イメージ：行き違い駅に2本の列車が停車している画面">
+            <figcaption>完成形。単線の途中にある2面2線の駅で、右行き列車と左行き列車が行き違う。</figcaption>
+        </figure>
+
+        <h3>このチュートリアルで学べること</h3>
+        <ul>
+            <li>マップの新規作成とシナリオ、編集の進め方（会社→配線→設備→運行）</li>
+            <li>対向式ホーム（2面2線）の駅の描き方</li>
+            <li>軌道回路の長さ・制限速度の設定</li>
+            <li>てこ・進路・信号機・出発ボタンの基本</li>
+            <li>経路グループと列車の登録、ダイヤグラム表示まで</li>
+        </ul>
+
+        <div class="callout">
+            <strong>前提：</strong>このページは手を動かす実践編です。先に <a href="map-editor-start.html">はじめての自作マップ</a> で全体像をつかみ、知らない言葉が出たら <a href="glossary.html">用語集</a> を開きながら進めると迷いません。
+        </div>
+        <div class="callout tip">
+            <strong>実在の駅をモチーフにするときは：</strong>作りたい駅の「○○駅 配線図」「○○線 配線図」で検索すると、有志の配線図が見つかることが多いです。それを参考にすると現実に近い駅が作れます（このガイドの例は実在の駅名は使いません）。
+        </div>
+    </section>
+
+    <section id="design">
+        <h2>✏️ まず設計図を描く（いちばん大事）</h2>
+        <p>
+            エディタを触る前に、<strong>紙に簡単な設計図を描く</strong>のを強くおすすめします。
+            いきなり作り始めると、あとから「軌道回路が短すぎて、てこが置けない」「順番を間違えて設定し直し」といった手戻りが起きがちです。
+            紙の上で線路・駅・てこの位置まで決めておくと、作業が一直線に進みます。
+        </p>
+        <p>今回作る駅の構成はこんな形です。これがこのチュートリアル全体の地図になります。</p>
+        <figure>
+            <svg viewBox="0 0 560 230" role="img" aria-label="単線の行き違い駅の配線図。左右の単線が分岐器で2線に分かれ、1番線・2番線のホームがある">
+                <!-- 左の単線（左端TC） -->
+                <line x1="20" y1="115" x2="150" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <text x="30" y="135" class="svg-dim">左の単線（左端TC）</text>
+                <!-- 左分岐器 -->
+                <line x1="150" y1="115" x2="200" y2="85" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="150" y1="115" x2="200" y2="145" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="150" cy="115" r="6" fill="#f59e0b"/>
+                <!-- 1番線・2番線 -->
+                <line x1="200" y1="85" x2="360" y2="85" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="200" y1="145" x2="360" y2="145" stroke="#4a90d9" stroke-width="5"/>
+                <text x="365" y="89" class="svg-label">1番線（TC001）</text>
+                <text x="365" y="149" class="svg-label">2番線（TC002）</text>
+                <!-- ホーム -->
+                <rect x="210" y="70" width="140" height="7" fill="#6ab04c"/>
+                <rect x="210" y="153" width="140" height="7" fill="#6ab04c"/>
+                <text x="210" y="64" class="svg-dim">ホーム（1番線）</text>
+                <text x="210" y="178" class="svg-dim">ホーム（2番線）</text>
+                <!-- 右分岐器 -->
+                <line x1="360" y1="85" x2="410" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="360" y1="145" x2="410" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="410" cy="115" r="6" fill="#f59e0b"/>
+                <!-- 右の単線（右端TC） -->
+                <line x1="410" y1="115" x2="540" y2="115" stroke="#4a90d9" stroke-width="5"/>
+                <text x="430" y="135" class="svg-dim">右の単線（右端TC）</text>
+                <!-- 分岐器ラベル -->
+                <text x="150" y="205" text-anchor="middle" class="svg-dim">片開き分岐器</text>
+                <text x="410" y="205" text-anchor="middle" class="svg-dim">片開き分岐器</text>
+            </svg>
+            <figcaption>単線の行き違い駅。両端の単線が片開き分岐器で2線に分かれ、1番線・2番線にそれぞれ対向式のホームを置く。</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>運転のルールを決めておく：</strong>このチュートリアルでは、いちばん簡単にするため<strong>右へ行く列車は必ず1番線、左へ行く列車は必ず2番線</strong>に入る、と決めて作ります。こう決めると進路の数が最小（合計4本）で済みます。
+        </div>
+    </section>
+
+    <section id="company">
+        <h2>🏢 STEP1　会社（種別と形式）</h2>
+        <p>左上のメニューは <strong>ファイル → 会社 → 配線 → 設備 → 運行</strong> の並び。この順に左から進めると手戻りが少なくなります。まずは会社から。</p>
+
+        <h3>1-1. マップを新規作成する</h3>
+        <ol class="step-list">
+            <li><strong>ファイル → 新規マップ</strong>。マップ名を入れて<strong>作成</strong>（実在の駅名でなくてOK。ここでは <code>行き違い</code> としています）</li>
+            <li>続けて<strong>シナリオ</strong>の作成を聞かれます。シナリオは同じマップに朝・昼・夜など複数の時間帯を持たせるしくみ。こだわりがなければ既定（DayTime）のまま、分かりやすく <code>昼</code> などでもOK</li>
+        </ol>
+        <div class="callout">
+            <strong>シナリオとは：</strong>同じ線路・駅の設備を使い回しながら、ダイヤ（走らせる列車）だけを時間帯ごとに切り替えられるセットです。詳しくは <a href="glossary.html#diagram">用語集</a> へ。
+        </div>
+
+        <h3>1-2. 列車種別を「使うものだけ」に絞る</h3>
+        <p>
+            <strong>会社 → 列車種別</strong>。既定で8種類用意されていますが、<strong>このマップで使うものだけ残して、あとは消す</strong>のがコツ。
+            今回の単線の小駅は普通電車だけが停まる想定なので、<strong>「普通」</strong>と、回送列車用に<strong>「回送」</strong>の2つだけ残します。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-01-class.png" alt="列車種別を「普通」「回送」の2つだけに絞った画面">
+            <figcaption>列車種別は使うものだけに。Lv1では「普通」と「回送」だけ残す。</figcaption>
+        </figure>
+
+        <h3>1-3. 列車形式（車両）を1つ作る</h3>
+        <p><strong>会社 → 列車形式</strong>で、走らせる車両を1つ定義します。</p>
+        <ol class="step-list">
+            <li>列車形式 <strong>ID</strong>（例 <code>1</code>）と<strong>ニックネーム</strong>（例 <code>1系</code>）を入力</li>
+            <li><strong>両数</strong>（例 10両）と<strong>全長</strong>（例 200m。10両なら約200m）を入力</li>
+            <li><strong>アイコン</strong>は「公式バンクを使う」→ 通勤型などを選び、好きな色（例：緑）を選択</li>
+            <li><strong>保存</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-02-traintype.png" alt="ニックネーム・両数・全長・アイコンを設定した列車形式の画面">
+            <figcaption>列車形式：ニックネーム「1系」、10両、200m、公式バンクの通勤型（緑）。</figcaption>
+        </figure>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-company.html">会社編集ガイド</a></p>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 STEP2　配線（線路と駅）</h2>
+        <div class="callout tip">
+            <strong>描く順番のコツ：</strong>線路は<strong>いちばん複雑な「駅の真ん中」から</strong>描き始めます。複雑な所を先に固めてから端の単純な所へ広げると、結果的に手戻りが減ります。
+        </div>
+
+        <h3>2-1. 駅の1番線・2番線を引く（対向式ホーム）</h3>
+        <p>
+            <strong>配線 → 軌道回路</strong>。始点をクリック → 終点をクリックで1本引けます。
+            まず1番線を1本、続けて少し下に2番線を1本。<strong>2本の線路は最低でも4マスほど間隔を空けて</strong>ください（近すぎると、あとでホームやボタンの操作がしにくくなります）。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-03-2tracks.png" alt="1番線・2番線の軌道回路を4マス空けて引いたところ">
+            <figcaption>1番線と2番線を、4マスほど間隔を空けて配置。</figcaption>
+        </figure>
+        <div class="callout warn">
+            <strong>線路は完全なタテ（垂直）に引けません。</strong>必ず少し横に傾けて引いてください。
+        </div>
+
+        <h3>2-2. 駅の両側に分岐器を置く</h3>
+        <p>
+            <strong>配線 → 分岐器</strong>。種類は<strong>片開き</strong>を使います。まず直進方向からつなぎ、1番線・2番線へ分かれる分岐器を駅の両端に1つずつ作って<strong>保存</strong>します。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-04-switches.png" alt="駅の両側に片開き分岐器を2つ設置したところ">
+            <figcaption>駅の両端に片開き分岐器を1つずつ。これで単線↔2線がつながる。</figcaption>
+        </figure>
+
+        <h3>2-3. 駅の外（単線部）の軌道回路を引く</h3>
+        <p>
+            分岐器の外側、つまり駅の左右へ伸びる<strong>単線部の軌道回路を、左右に1本ずつ</strong>引きます。
+            実際の鉄道では駅間に複数の軌道回路がありますが、今回は分かりやすさ優先で1本ずつにします。
+        </p>
+        <div class="callout tip">
+            <strong>あとで「てこ」を置く所は長めに：</strong>軌道回路が1マスしかないと、あとでてこ（進路を操作するレバー）が置けません。てこを置く予定の所は<strong>3〜5マス程度</strong>の長さを確保しておきましょう。
+        </div>
+        <p>ここまでできたら、いったん <strong>▶ プレビュー</strong> で線路が正しく引けているか確認します。こまめなプレビューが失敗を早く見つけるコツです。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-05-preview-track.png" alt="プレビューで線路と分岐がつながっているのを確認した画面">
+            <figcaption>軌道回路と分岐器を置いたらプレビューで一度確認。</figcaption>
+        </figure>
+
+        <h3>2-4. 軌道回路の長さと制限速度を決める（軌道一括）</h3>
+        <p>
+            <strong>配線 → 軌道一括（一括編集）</strong>モードで、軌道回路の<strong>長さ</strong>と<strong>制限速度</strong>をまとめて設定します。
+            既定の長さ（100m など）のままだと、200mの列車が駅からはみ出してしまうので、ここはきちんと決めます。
+        </p>
+        <table>
+            <tr><th>場所</th><th>長さの目安</th><th>制限速度の目安</th></tr>
+            <tr><td>駅の1番線・2番線</td><td><strong>240m</strong>（200mの列車＋前後20m）</td><td>80km/h</td></tr>
+            <tr><td>分岐器（直進側）</td><td>40m など短め</td><td>80km/h</td></tr>
+            <tr><td>分岐器（分岐側）</td><td>40m など短め</td><td>40〜45km/h（遅め）</td></tr>
+            <tr><td>駅の外の単線部</td><td>600m など長め</td><td>80km/h</td></tr>
+        </table>
+        <figure class="shot">
+            <img src="tutorial/lv1-06-bulk-speed.png" alt="軌道一括で長さ240m・制限速度を設定して適用した画面">
+            <figcaption>駅の軌道回路は240m・80km/h、分岐の分岐側は40〜45km/hに。</figcaption>
+        </figure>
+
+        <h3>2-5. 駅を登録して番線を割り当てる</h3>
+        <ol class="step-list">
+            <li><strong>配線 → 駅</strong>で、列車が止まるホームの軌道回路（1番線・2番線）を選ぶ</li>
+            <li><strong>駅名</strong>を入力（例 <code>行き違い駅</code>）して登録</li>
+            <li><strong>番線割り当て</strong>が出るので、上の軌道回路（例 <code>TC001</code>）を<strong>1番線</strong>、下の軌道回路（<code>TC002</code>）を<strong>2番線</strong>に設定し、<strong>更新</strong>を押す</li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-07-station-name.png" alt="駅名を登録する画面">
+            <figcaption>ホームの軌道回路を選んで駅名を登録。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv1-08-track-number.png" alt="TC001=1番線・TC002=2番線の番線割り当て画面">
+            <figcaption>上の軌道回路を1番線、下を2番線に割り当てて「更新」。</figcaption>
+        </figure>
+
+        <h3>2-6. ホームを置く</h3>
+        <p>
+            <strong>配線 → ホーム</strong>。ホームは<strong>4つの角をクリック</strong>して矩形を描きます。
+            対向式なので、<strong>1番線の軌道回路の上側</strong>と、<strong>2番線の軌道回路の下側</strong>にホームを置きます。
+        </p>
+        <p>
+            各ホームには上辺・下辺それぞれに番線名を書けます。たとえば1番線のホームは軌道回路の<strong>上</strong>にあるので、ホームの<strong>下側</strong>に「1番線」と入れます（線路に面した側に番線名がくるイメージ）。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv1-09-platform.png" alt="1番線のホームを置き、下側に「1番線」を設定した画面">
+            <figcaption>対向式ホーム：1番線は軌道回路の上、2番線は下に。線路側の辺に番線名を入れる。</figcaption>
+        </figure>
+        <p>2番線のホームも同じように置いたら、<strong>▶ プレビュー</strong>で見た目を確認し、<kbd>Ctrl</kbd>+<kbd>S</kbd>で保存。</p>
+        <div class="callout tip">
+            <strong>こまめに保存・プレビュー：</strong>1作業ごとに保存すると、問題がある時にメッセージが出ます。そのメッセージを都度直すと、後々の手戻りがぐっと減ります。
+        </div>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-wiring.html">配線編集ガイド</a></p>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 STEP3　設備（てこ・進路・信号・出発ボタン）</h2>
+
+        <h3>3-1. 先に「進路」を考える</h3>
+        <p>
+            てこを置く前に、<strong>どんな進路（列車が通る道すじ）が必要か</strong>を考えます。この駅で必要なのは次の4つ。
+        </p>
+        <ul>
+            <li>1番線に<strong>入る</strong>進路 / 1番線から<strong>出る</strong>進路</li>
+            <li>2番線に<strong>入る</strong>進路 / 2番線から<strong>出る</strong>進路</li>
+        </ul>
+        <p>進路は「発点てこ（出発側）」と「着点てこ（行き先側）」のペアで作るので、この4進路ぶんのてこを置いていきます。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-10-routes-plan.png" alt="必要な4つの進路（1・2番線の入る/出る）を示した図">
+            <figcaption>まず必要な進路を洗い出す。ここでは入る×2・出る×2の合計4本。</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>名前の付け方のおすすめ：</strong><strong>発点てこは数字、着点てこはアルファベット</strong>で管理すると分かりやすく入力もラク。さらに左右で番号帯を分け、右行きは <code>1, 2</code>、左行きは <code>11, 12</code> のようにすると整理できます。
+        </div>
+
+        <h3>3-2. てこを置く</h3>
+        <p>
+            <strong>設備 → てこ</strong>。発点には「本線用」と「入換用」がありますが、<strong>初めは本線用だけ</strong>でOK。
+            今回は右行き＝1番線、左行き＝2番線と決めたので、次のように置きます。
+        </p>
+        <table>
+            <tr><th>進路</th><th>発点てこ（数字）</th><th>着点てこ（アルファベット）</th></tr>
+            <tr><td>1番線に入る</td><td>1</td><td>A</td></tr>
+            <tr><td>1番線から出る</td><td>2</td><td>B</td></tr>
+            <tr><td>2番線に入る</td><td>11</td><td>C</td></tr>
+            <tr><td>2番線から出る</td><td>12</td><td>D</td></tr>
+        </table>
+        <p>てこの向き（左右）を選び、名前を入れて座標をクリック→<strong>登録</strong>。着点てこは進路の終わる軌道回路の上に置きます。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-11-lever.png" alt="発点1・着点Aを置いたところ">
+            <figcaption>発点てこ「1」と着点てこ「A」。これで「1番線に入る」進路のペアができる。</figcaption>
+        </figure>
+        <p>同じ要領で残りのてこ（2/B、11/C、12/D）も置いていきます。置き終えたらプレビューで確認。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-12-levers-all.png" alt="4進路ぶんのてこをすべて置いてプレビューした画面">
+            <figcaption>てこを全部設置。短すぎる軌道回路だと置けないので、長さを確保しておいた意味がここで分かる。</figcaption>
+        </figure>
+
+        <h3>3-3. 進路を登録する</h3>
+        <p>てこが置けたら進路は簡単です。<strong>設備 → 進路</strong>で、</p>
+        <ol class="step-list">
+            <li><strong>発点てこ</strong>をクリック → <strong>着点てこ</strong>をクリック（例：1 → A で進路 <code>1A</code>）</li>
+            <li><strong>経由する軌道回路</strong>を順にクリック（例：分岐の直進側 → 1番線の軌道回路）</li>
+            <li>（任意・上級）<strong>接近鎖錠</strong>の軌道回路を指定（次項）</li>
+            <li><strong>登録</strong>。進路名は発点＋着点で自動命名（<code>1A</code> など）</li>
+        </ol>
+        <div class="callout">
+            <strong>経由する軌道回路の考え方：</strong>発点てこのある軌道回路は<strong>経由には含めず</strong>、その次の軌道回路から着点てこのある軌道回路までを順に選びます。発点のある軌道回路は次の「接近鎖錠」の対象になります。
+        </div>
+        <p>
+            進路として連ねた軌道回路は、その進路を守る信号機（場内・出発・入換）が「ここから先は自分の管理範囲」と宣言する区間になります。信号機は管理範囲内に列車が在線している間は<strong>赤</strong>を示し、列車を進入させません。
+        </p>
+        <p>
+            このため、<strong>発点てこ・信号機が置かれている軌道回路は、進路に含めません</strong>。含めてしまうと、列車がてこ・信号機の位置に達した瞬間に信号機が自分自身を守って赤になり、列車がその場で立ち往生します。
+        </p>
+        <div class="callout warn">
+            <strong>原則：</strong>進路の最初の軌道回路は、発点てこ・信号機より<strong>進行方向の先</strong>にある軌道回路です。<br>
+            発点てこと信号機をどこに置くかで、進路に含めるべき軌道回路の範囲が変わります。配線時に「ここの軌道回路で信号を扱う」と決め、てこと信号機をその<strong>手前側</strong>、進路の連ねを<strong>その先</strong>から開始するのが基本形になります。
+        </div>
+        <p>
+            実例: 軌道回路 <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> と並んでおり、<code>TC_A</code> に発点てこを置き、<code>TC_A</code> と <code>TC_B</code> の境界に場内信号機を置き、<code>TC_C</code> に着点てこを置く場合、進路には <code>TC_B</code>, <code>TC_C</code> を連ねます。<code>TC_A</code> は進路に含めません。<strong>着点てこのある <code>TC_C</code> は進路に含めます</strong>（着点てこは進路の終端を示す目印で、その軌道回路は進路範囲の内側です）。
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 180" role="img" aria-label="進路に含める軌道回路の範囲を示す図。発点てこのある TC_A は進路に含めず、場内信号機を TC_A と TC_B の境界に置き、着点てこのある TC_C も含めて進路は TC_B と TC_C を連ねる。">
+                <!-- 列車の進行方向矢印 -->
+                <text x="280" y="22" text-anchor="middle" class="svg-dim">列車の進行方向 →</text>
+
+                <!-- 線路（3 つの TC を横に並べる） -->
+                <line x1="40"  y1="90" x2="200" y2="90" stroke="#4a90d9" stroke-width="6"/>
+                <line x1="200" y1="90" x2="370" y2="90" stroke="#6ab04c" stroke-width="6"/>
+                <line x1="370" y1="90" x2="540" y2="90" stroke="#6ab04c" stroke-width="6"/>
+
+                <!-- TC 境界の縦線 -->
+                <line x1="200" y1="78" x2="200" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+                <line x1="370" y1="78" x2="370" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+
+                <!-- TC ラベル -->
+                <text x="120" y="115" text-anchor="middle" class="svg-label">TC_A</text>
+                <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
+                <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
+
+                <!-- 発点てこ on TC_A（ゲーム表記: 右向き三角） -->
+                <polygon points="80,80 102,90 80,100" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+                <text x="90" y="64" text-anchor="middle" class="svg-dim">発点てこ</text>
+
+                <!-- 場内信号機 ちょうど TC_A / TC_B の境界 (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">場内信号機</text>
+
+                <!-- 着点てこ on TC_C（ゲーム表記: 白抜き丸） -->
+                <circle cx="500" cy="90" r="9" fill="#fff" stroke="#4a90d9" stroke-width="3"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">着点てこ</text>
+
+                <!-- 進路範囲ブラケット（TC_B 〜 TC_C 下に緑線で示す）-->
+                <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">この範囲を進路に含める（着点てこのある TC_C も含む）</text>
+
+                <!-- 含めない印（TC_A に × マーク）-->
+                <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× 含めない</text>
+            </svg>
+            <figcaption>発点てこのある <code>TC_A</code> は進路に含めず、場内信号機の先 <code>TC_B</code> から、着点てこのある <code>TC_C</code> までを進路として連ねる。</figcaption>
+        </figure>
+
+        <h3>3-4.（任意・上級）接近鎖錠を設定する</h3>
+        <div class="callout">
+            <strong>むずかしければ飛ばしてOK。</strong>接近鎖錠（接近ロック）は、<strong>列車が信号機の直前まで来ているのに進路が勝手に解除されて、青信号が急に赤になる</strong>のを防ぐしくみです。<br>
+            進路登録時に「接近鎖錠の軌道回路」を選ぶと、<strong>その軌道回路に列車がいる間は、その進路を勝手に解除できなく</strong>なります。通常は発点てこのある（信号機直前の）軌道回路を指定します。くわしくは <a href="glossary.html#approach-lock">用語集「接近鎖錠」</a> も参照。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv1-13-approach-lock.png" alt="接近鎖錠の軌道回路を指定している画面">
+            <figcaption>（任意）接近鎖錠：信号機直前の軌道回路を指定しておく。</figcaption>
+        </figure>
+        <p>4つの進路（1A・2B・11C・12D）を同じ要領で登録したら、プレビューでてこを操作し、<strong>分岐がちゃんと切り替わる</strong>ことを確認します。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-14-route-open.png" alt="プレビューでてこを操作し、進路開通＋分岐が切り替わった画面">
+            <figcaption>てこを操作すると進路が開通し、分岐器が切り替わる。</figcaption>
+        </figure>
+
+        <h3>3-5. 信号機を置く</h3>
+        <p>
+            <strong>設備 → 信号機</strong>。信号機は<strong>進路とセット</strong>で、進路1本につき信号機1本を置きます。列車が<strong>到着</strong>する側が<strong>場内信号機</strong>、<strong>出発</strong>する側が<strong>出発信号機</strong>です（しくみは同じ）。
+        </p>
+        <ol class="step-list">
+            <li>信号機モードで種類（場内 / 出発）を選び、マップ上の座標をクリック</li>
+            <li><strong>発点てこ</strong>と<strong>着点てこ</strong>をクリックして担当進路を指定（例：1 → A で <code>1A</code> の信号機）</li>
+            <li><strong>信号機登録</strong></li>
+        </ol>
+        <p>4進路ぶん（場内：1A・11C、出発：2B・12D）置いていきます。</p>
+        <div class="callout tip">
+            <strong>置く位置は進行方向の左に統一：</strong>実際の鉄道と同じく信号機は進行方向の左に置くと、後から見ても「どっち向きの信号か」が一目で分かります。
+        </div>
+
+        <h3>3-6.（任意・上級）黄色信号を出せるようにする</h3>
+        <div class="callout">
+            <strong>分からなければ飛ばしてOK。</strong>初期状態では信号は「青（進行）／赤（停止）」が中心ですが、<strong>「次の信号機が赤のときは黄色（注意）を出す」</strong>条件を足せます。<br>
+            信号機をクリックして編集モードに入り、<strong>「OR条件を追加」</strong>→ <strong>次の信号機（例：1A の先は 2B）が赤</strong>を指定して保存。これで先が赤なら手前は黄色、さらにその先が青なら手前も青、と現実的な3色現示になります。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv1-15-yellow.png" alt="黄色現示の条件（次の信号機が赤）を設定した画面">
+            <figcaption>（任意）次の信号機が赤のとき黄色を出す条件を追加。</figcaption>
+        </figure>
+
+        <h3>3-7. 出発ボタンを置く</h3>
+        <ol class="step-list">
+            <li><strong>設備 → 出発ボタン</strong>。座標をクリックして配置</li>
+            <li>担当する<strong>駅</strong>と、<strong>発車音</strong>（ベル / ブザー）を選んで<strong>ボタン登録</strong></li>
+            <li>1番線・2番線の<strong>両方</strong>に置けば設備は完成</li>
+        </ol>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-equipment.html">設備編集ガイド</a></p>
+    </section>
+
+    <section id="operation">
+        <h2>📋 STEP4　運行（ダイヤを組む）</h2>
+        <p><strong>運行</strong>カテゴリはシナリオを選んでいるときだけ使えます。経路グループ → 列車 → ダイヤグラム、の順で進めます。</p>
+
+        <h3>4-1. 経路グループを作る</h3>
+        <p>
+            <strong>経路グループ</strong>は「列車が通る道すじのテンプレート」。列車1本ずつ書くと大変なので、ルートをグループにまとめて使い回します。まず<strong>右行き（1番線に入って出る）</strong>のグループを作ります。
+        </p>
+        <ol class="step-list">
+            <li><strong>運行 → 経路グループ</strong>。<strong>経路グループID</strong>（例 <code>1番線到着</code>）を入力</li>
+            <li><strong>方向</strong>（右 / 左）を選ぶ。右行きなので「右」</li>
+            <li><strong>出現TC</strong>＝列車が現れる軌道回路（左端の単線TC）を選ぶ。<strong>出現オフセット</strong>は駅停車の何秒前に出すか（例 80秒）</li>
+            <li><strong>発車標</strong>は「自動（方向から決定）」でOK</li>
+            <li><strong>ステップ</strong>を順に登録：進路 <code>1A</code> の軌道回路を<strong>左クリック</strong> → 停まる1番線の軌道回路を<strong><kbd>Shift</kbd>+左クリック</strong>（駅停車） → 出発する進路 <code>2B</code> の軌道回路を左クリック</li>
+            <li>3ステップ登録できたら<strong>登録</strong></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv1-16-pathgroup.png" alt="経路グループのステップを順に登録していく画面">
+            <figcaption>進路→駅停車→進路の順にステップを積む。Shift+左クリックが「駅に停車」。</figcaption>
+        </figure>
+        <p>同じ要領で<strong>左行き（2番線）</strong>のグループも作ります（ID 例 <code>2番線発</code>、方向「左」、出現TCは右端の単線TC、ステップは <code>11C</code> → 2番線停車 → <code>12D</code>）。</p>
+
+        <h3>4-2. 列車を登録する</h3>
+        <p><strong>運行 → 列車一覧</strong>で、走らせる列車を登録します。行き違いさせるので2本作ります。</p>
+        <table>
+            <tr><th>項目</th><th>1本目</th><th>2本目</th></tr>
+            <tr><td>列車番号</td><td>1001</td><td>1002</td></tr>
+            <tr><td>列車形式</td><td>1系</td><td>1系</td></tr>
+            <tr><td>列車種別</td><td>普通</td><td>普通</td></tr>
+            <tr><td>経路グループ</td><td>1番線到着（右行き）</td><td>2番線発（左行き）</td></tr>
+            <tr><td>到着時刻</td><td>10:00</td><td>10:00</td></tr>
+            <tr><td>発車時刻</td><td>10:01</td><td>10:01</td></tr>
+        </table>
+        <p>同じ時刻に到着・発車させると、2本が駅で<strong>行き違い</strong>します。保存したら<strong>▶ プレビュー</strong>で、発車標に列車が出て、実際に出現・発車するか確認しましょう（出発ボタンも押してみる）。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-17-train-preview.png" alt="プレビューで列車が出現し、発車標にも表示された画面">
+            <figcaption>2本の列車が出現。出発ボタンを押すと発車する。</figcaption>
+        </figure>
+
+        <h3>4-3. ダイヤグラムを表示する（任意）</h3>
+        <p>
+            ここまでで列車は動きます。最後に<strong>ダイヤグラム（時刻×位置のグラフ）</strong>を表示する設定です。むずかしければ飛ばしてもOK。
+        </p>
+        <p>
+            <strong>運行 → ダイヤ行</strong>で、グラフの縦軸に並ぶ行を上から順に登録します。
+        </p>
+        <ul>
+            <li><strong>左端（マップ端）</strong>：種別「マップ端」、表示名（例 <code>左端</code>）、対応する軌道回路を選ぶ</li>
+            <li><strong>駅の1番線・2番線</strong>：種別「駅番線」、駅と番線を選んで登録</li>
+            <li><strong>右端（マップ端）</strong>：左端と同様に</li>
+        </ul>
+        <p>左端 → 1番線 → 2番線 → 右端、のように<strong>端を最初と最後、駅の番線を真ん中</strong>に並べるとダイヤが描かれます。</p>
+        <figure class="shot">
+            <img src="tutorial/lv1-18-diagram.png" alt="ダイヤグラムに列車の筋が描かれた画面">
+            <figcaption>ダイヤ行を登録すると、ダイヤグラムに列車の筋が表示される。</figcaption>
+        </figure>
+
+        <h3>4-4. 列車を増やす（コピー）</h3>
+        <p>
+            1本できたら、<strong>運行 → 列車一覧</strong>の<strong>コピー</strong>で同じような列車を量産できます。列車番号と時刻だけ変えればOK。
+        </p>
+        <div class="callout warn">
+            <strong>単線は詰めすぎ注意：</strong>単線区間で列車の間隔を詰めすぎると、列車どうしがつかえて<strong>スタック</strong>することがあります。行き違いできる余裕を持った間隔（数分以上）にしましょう。
+        </div>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-trainlist.html">運行編集ガイド</a></p>
+    </section>
+
+    <section id="done">
+        <h2>🎉 完成！　次のレベルへ</h2>
+        <p>
+            おつかれさまでした。これで<strong>単線で2本の列車が行き違う</strong>、自作マップの基本が一周できました。
+            会社→配線→設備→運行という流れと、てこ・進路・信号の関係がつかめていれば大成功です。
+        </p>
+
+        <h3>うまく動かないときは</h3>
+        <ul>
+            <li><strong>保存時のメッセージを読む：</strong>「進路が軌道回路を参照していない」などの警告は、足りない設定を教えてくれています</li>
+            <li><strong>こまめにプレビュー：</strong>1〜2本ずつ確認すると、出現TCの向き違いやステップ順のミスにすぐ気づけます</li>
+            <li><strong>てこが置けない：</strong>軌道回路が短すぎる合図。長め（3〜5マス）に引き直す</li>
+            <li><strong>列車が詰まる：</strong>単線で間隔が近すぎないか確認</li>
+        </ul>
+
+        <div class="callout tip">
+            <strong>次は実践②（準備中）：</strong>複線の駅で<strong>折り返し運用</strong>に挑戦します。上り・下りに加えて、駅で折り返す列車を、経路グループの「次の運用」を使って組み立てます。
+        </div>
+
+        <h3>関連ガイド</h3>
+        <ul>
+            <li><a href="map-editor-start.html">はじめての自作マップ</a> — 概念のおさらい</li>
+            <li><a href="map-editor-company.html">会社編集</a> / <a href="map-editor-wiring.html">配線編集</a> / <a href="map-editor-equipment.html">設備編集</a> / <a href="map-editor-trainlist.html">運行編集</a> — 各機能の詳細</li>
+            <li><a href="glossary.html">用語集</a> — 言葉の確認</li>
+            <li><a href="user-maps.html">ユーザーマップを起動する</a> — 完成したマップで遊ぶ</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <span class="lb-close" aria-label="閉じる">&times;</span>
+    <img alt="">
+    <div class="lb-hint">クリックまたは Esc キーで閉じる</div>
+</div>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    document.querySelectorAll('figure.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lb.classList.add('open');
+        });
+    });
+    function close() { lb.classList.remove('open'); lbImg.src = ''; }
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マップエディタ入門 | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin: 10px 0;
+            display: block;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🛠</span>
+    <div>
+        <h1>マップエディタ入門</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html" class="active">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+        <li><a href="map-editor-tutorial2.html">② 複線駅で折り返し</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#overview">概要</a></li>
+        <li><a href="#open-editor">エディタを開く</a></li>
+        <li><a href="#screen-layout">画面構成</a></li>
+        <li><a href="#file-menu">ファイルメニュー</a></li>
+        <li><a href="#new-map">新規マップを作る</a></li>
+        <li><a href="#open-map">既存マップを開く</a></li>
+        <li><a href="#workflow">編集の流れ</a></li>
+        <li><a href="#save-preview">保存とプレビュー</a></li>
+        <li><a href="#bundle-info">バンドル情報（公開情報）</a></li>
+        <li><a href="#data-location">データの保存先</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">← 遊び方ガイド</a> / マップエディタ入門
+    </div>
+
+    <section id="overview">
+        <h2>🎯 概要</h2>
+        <p>
+            <strong>マップエディタ</strong>は、ゲーム内で自分だけの駅マップ（路線配線・列車ダイヤ・発車標設定）を作るためのツールです。
+            完成したマップはタイトル画面の<strong>「ユーザーマップ」</strong>から起動して、本編と同じ操作で遊べます。
+        </p>
+
+        <h3>公式マップとの違い</h3>
+        <p>マップエディタで作る UGC マップは、本編付属の公式マップと比べて一部機能が制限されています。</p>
+        <ul>
+            <li><strong>増結・解結はできません</strong>（複数編成の連結・分割運用）</li>
+            <li><strong>縦列停車はできません</strong>（同一ホームに複数列車を同時停車させる運用）</li>
+            <li><strong>信号現示の設定は基本のみ</strong>です。警戒・減速といった現示の細かな使い分けはできません</li>
+            <li><strong>出発ボタンは番線ベース</strong>で動作します。公式マップで使われている選別表示と連動した発車制御は採用しません</li>
+        </ul>
+        <p>
+            基本的な信号扱い・進路設定・ダイヤ運行は UGC でひととおり再現できますので、まずはエディタで実際に作ってみることをおすすめします。
+        </p>
+
+        <h3>編集と「保存」の関係</h3>
+        <div class="callout warn">
+            <strong>こまめに保存してください。</strong>
+            サイドバーの「登録」「更新」などのボタンを押しても、その操作はエディタの<strong>編集中の状態</strong>を更新するだけです。
+            画面右上の <strong>保存 (Ctrl+S)</strong> を押さない限り、CSV ファイル（ディスク上の実データ）には書き出されません。
+            作業の節目ごとに <kbd>Ctrl</kbd>+<kbd>S</kbd> で保存する習慣をつけましょう。
+        </div>
+
+        <h3>本記事の位置づけ</h3>
+        <div class="callout">
+            マップエディタ全体の入門編です。「どこから開くのか」「画面のどこに何があるのか」「どう保存して遊ぶのか」をまず把握できる構成にしています。
+            個別の編集機能（配線・進路・列車一覧など）の詳しい使い方は、本記事の最後 <a href="#next">次に読む</a> で案内するガイドに分けて掲載しています。
+        </div>
+    </section>
+
+    <section id="open-editor">
+        <h2>🚪 エディタを開く</h2>
+        <p>マップエディタはタイトル画面から起動します。</p>
+        <ol class="step-list">
+            <li>ゲームを起動してタイトル画面を表示する</li>
+            <li>画面下部の <strong>「マップエディタ」</strong> ボタンをクリック</li>
+            <li>マップ未選択の状態でエディタが開く（このときはまだ何も配置されていない）</li>
+        </ol>
+        <p>
+            エディタ起動直後は<strong>「新規マップ」</strong>か<strong>「マップを開く」</strong>のどちらかを選んで、編集対象のマップを決める必要があります。
+            これらは画面左上の<strong>ファイルメニュー</strong>から実行します（後述）。
+        </p>
+    </section>
+
+    <section id="screen-layout">
+        <h2>🖥 画面構成</h2>
+        <p>マップエディタの画面は大きく次のエリアに分かれています。</p>
+
+        <h3>① 上部メニューバー</h3>
+        <p>画面最上段に常時表示されるバーです。</p>
+        <table>
+            <tr><th>位置</th><th>項目</th><th>役割</th></tr>
+            <tr><td>左端</td><td><strong>ファイル ▾</strong></td><td>新規マップ / 開く / 再読込 / すべてクリア / タイトルへ戻る などのメニューを開く</td></tr>
+            <tr><td>中央</td><td>マップ名表示</td><td>現在編集中のマップ（例: <code>[CustomMaps/富津駅] 富津駅/富津駅/DayTime</code>）</td></tr>
+            <tr><td>右側</td><td><strong>▶ プレビュー</strong></td><td>編集中のマップを実際に試遊する</td></tr>
+            <tr><td>右端</td><td><strong>保存 (Ctrl+S)</strong></td><td>編集内容を CSV へ書き出す</td></tr>
+        </table>
+
+        <h3>② 左サイドバー（カテゴリ・モード切替）</h3>
+        <p>編集対象のカテゴリと、その中の編集モードを選ぶ場所です。カテゴリは 4 つあります。</p>
+        <table>
+            <tr><th>カテゴリ</th><th>含まれる編集モード</th><th>主な用途</th></tr>
+            <tr><td><strong>会社</strong></td><td>列車形式マスタ / 列車種別マスタ</td><td>列車のアイコンや種別ラベルを定義する</td></tr>
+            <tr><td><strong>配線</strong></td><td>軌道回路 / 分岐器 / 一括編集 / 駅 / ホーム</td><td>線路と駅構内を描く</td></tr>
+            <tr><td><strong>設備</strong></td><td>てこ / 進路 / 信号機 / 出発ボタン</td><td>信号設備と進路を配置する</td></tr>
+            <tr><td><strong>運行</strong></td><td>経路グループ / 列車一覧 / ダイヤ行</td><td>列車のダイヤを組む（シナリオ選択時のみ有効）</td></tr>
+        </table>
+        <div class="callout">
+            <strong>運行カテゴリについて：</strong>運行系の編集モードは、シナリオが選ばれているマップでのみ表示されます。
+            新規マップ作成直後はシナリオが空のため、まず「シナリオを作成」プロンプトに従ってシナリオを 1 つ作るとカテゴリが有効になります。
+        </div>
+
+        <h3>③ 中央ワークスペース</h3>
+        <p>
+            選択中のモードに応じて、線路を引いたり、駅の四角を描いたり、てこを配置したりするメイン作業エリアです。
+            <strong>右クリック + ドラッグでマップを移動</strong>、<strong><kbd>Ctrl</kbd>+ホイール</strong> または <kbd>+</kbd>/<kbd>-</kbd> で拡大縮小ができます（本編と同じ操作）。
+        </p>
+
+        <h3>④ ステータスバー / 保存メッセージ</h3>
+        <p>
+            画面上部にメッセージが一時的に表示される枠があります。保存成功・検証エラー・操作の警告などが 5 秒ほど表示されます。
+            たとえば「保存しました」「進路 X が軌道回路を参照していません」「appearanceTrackId が空の運用があります」などのメッセージが出ます。
+        </p>
+    </section>
+
+    <section id="file-menu">
+        <h2>📂 ファイルメニュー</h2>
+        <p>画面左上の <strong>ファイル ▾</strong> ボタンをクリックすると、以下の項目が出てきます。</p>
+        <table>
+            <tr><th>項目</th><th>ショートカット</th><th>動作</th></tr>
+            <tr><td><strong>新規マップ</strong></td><td><kbd>Ctrl</kbd>+<kbd>N</kbd></td><td>新しい UGC マップをマップ名 1 入力で作成</td></tr>
+            <tr><td><strong>マップを開く</strong></td><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>既存の UGC マップ一覧から選んで開く</td></tr>
+            <tr><td><strong>前回のマップ</strong></td><td>—</td><td>最後に開いたマップを 1 クリックで開く（履歴がある場合のみ表示）</td></tr>
+            <tr><td><strong>再読込</strong></td><td><kbd>F5</kbd></td><td>未保存変更を破棄して、ディスクから現マップを読み直す</td></tr>
+            <tr><td><strong>すべてクリア</strong></td><td>—</td><td>編集中のデータを空にする（保存前の確認ダイアログあり）</td></tr>
+            <tr><td><strong>タイトルへ戻る</strong></td><td>—</td><td>タイトル画面へ戻る（未保存変更があれば確認ダイアログ）</td></tr>
+        </table>
+    </section>
+
+    <section id="new-map">
+        <h2>🆕 新規マップを作る</h2>
+        <p>ファイルメニューから <strong>新規マップ</strong> を選ぶと、マップ名 1 入力のシンプルなダイアログが開きます。</p>
+        <ol class="step-list">
+            <li><strong>マップ名</strong>を入力する（例: <code>富津駅</code>）</li>
+            <li><strong>作成</strong>ボタンをクリック</li>
+            <li>同名マップが既にある場合、自動的に <code>_2</code> や <code>_3</code> が付加される（例: <code>富津駅_2</code>）</li>
+            <li>作成と同時にエディタが新マップに切り替わり、続けて「シナリオを作成しますか？」プロンプトが出る</li>
+            <li>シナリオ名を入れて作成すると、運行カテゴリ（列車一覧など）が編集できる状態になる</li>
+        </ol>
+        <div class="callout">
+            <strong>使えない文字：</strong><code>\ / : * ? &quot; &lt; &gt; |</code> および末尾のピリオド、相対参照 <code>..</code> は使えません。
+            日本語のマップ名・スペース・ハイフン・アンダースコアは使えます。
+        </div>
+    </section>
+
+    <section id="open-map">
+        <h2>📁 既存マップを開く</h2>
+        <p>
+            ファイルメニューから <strong>マップを開く</strong> を選ぶと、
+            ローカルに保存されている UGC マップが一覧表示されます。マップを 1 つ選び、その中のシナリオを開いてください。
+        </p>
+        <h3>シナリオの追加・削除</h3>
+        <ul>
+            <li>右側ペインの<strong>「新規シナリオ名」入力欄</strong>に名前を入れて <strong>作成</strong> を押すと、そのマップに新しいシナリオを追加できる</li>
+            <li>各シナリオ行の <strong>削除</strong> ボタンは 2 段階クリック式（1 回目で確認モード、5 秒以内に再クリックで実行）</li>
+        </ul>
+        <div class="callout">
+            <strong>シナリオなしのマップ：</strong>「シナリオなしで開く」ボタンを使えば、配線や設備だけを編集できます。
+            運行カテゴリ（列車一覧など）は無効化されますが、配線編集だけ進める使い方には便利です。
+        </div>
+    </section>
+
+    <section id="workflow">
+        <h2>📋 編集の流れ</h2>
+        <div class="callout tip">
+            <strong>左サイドバーのカテゴリを左から順に進めるのがおすすめです。</strong>
+            会社 → 配線 → 設備 → 運行 と上から（=左から）下りていくと、参照関係が自然に揃って手戻りが少なく済みます。
+            それぞれの詳細手順は各カテゴリのガイド記事を参照してください。
+        </div>
+        <ol class="step-list">
+            <li><strong>会社</strong> — 列車形式・列車種別を準備する（既定バンクから追加するだけでも OK）。<a href="map-editor-company.html">会社編集ガイド</a></li>
+            <li><strong>配線</strong> — 軌道回路・分岐器・駅・ホームを配置する。番線・方面マスタも駅編集内で整備。<a href="map-editor-wiring.html">配線編集ガイド</a></li>
+            <li><strong>設備</strong> — てこ・進路・信号機・出発ボタンを配置する。<a href="map-editor-equipment.html">設備編集ガイド</a></li>
+            <li><strong>運行</strong> — 経路グループ・列車一覧・ダイヤ行を編集する（シナリオ選択時のみ有効）。<a href="map-editor-trainlist.html">運行編集ガイド</a></li>
+            <li>保存して<strong>プレビュー</strong>で動作確認する</li>
+        </ol>
+        <div class="callout">
+            <strong>保存時の自動検証：</strong>保存ボタンを押すたびに整合性チェックが走り、「進路が軌道回路を参照していない」「列車に出現 TC が設定されていない」などの問題があれば警告が出ます。
+            こまめに保存しながら進めると、問題を早めに発見できます。
+        </div>
+    </section>
+
+    <section id="save-preview">
+        <h2>💾 保存とプレビュー</h2>
+
+        <h3>保存（CSV 書き出し）</h3>
+        <p>画面右上の<strong>「保存 (Ctrl+S)」</strong>ボタン、または <kbd>Ctrl</kbd>+<kbd>S</kbd> で保存できます。</p>
+        <p>保存時に整合性チェックが走り、編集中のデータが <code>CustomMaps/&lt;マップ名&gt;/</code> 以下の CSV ファイル群に書き出されます。</p>
+        <div class="callout">
+            <strong>検証エラー：</strong>致命的な問題があると保存は中断され、上部メッセージに最初の数件が表示されます。
+            メッセージに従って該当箇所を修正してから再度保存してください。
+        </div>
+        <div class="callout warn">
+            <strong>警告つき保存：</strong>致命的でない問題（例: Initial 運用なのに出現 TC が空欄）は<strong>保存は成功</strong>しますが、
+            上部メッセージに「警告つきで保存しました」と該当列車番号付きで表示されます。
+            プレビュー前に列車一覧をチェックしてください。
+        </div>
+
+        <h3>プレビュー（試遊）</h3>
+        <p>
+            保存ボタンの左隣にある <strong>▶ プレビュー</strong> ボタンで、編集中のマップをそのまま試遊できます。
+            プレビューは常にサンドボックスモード（スコアなし）で起動します。
+        </p>
+        <p>
+            プレビュー実行中は画面上部に <strong>「編集に戻る」</strong> オーバーレイが表示されます。
+            これをクリックするとエディタへ戻り、編集中だったマップが自動で再読込されます。
+        </p>
+        <div class="callout warn">
+            <strong>未保存だとプレビュー前に自動保存されます：</strong>未保存変更があるまま ▶ プレビューを押すと、
+            内部で先に保存を走らせてからプレビューに入ります。検証エラーで保存が止まる場合はプレビューも中断されます。
+        </div>
+    </section>
+
+    <section id="bundle-info">
+        <h2>🏷 バンドル情報（公開情報）</h2>
+        <p>
+            <strong>バンドル情報</strong>は、ユーザーマップとして公開されたときに他の人に見せる「タイトル・説明文・作者名・プレビュー画像」のセットです。
+            タイトル画面の <a href="user-maps.html">ユーザーマップ</a> 一覧や、エディタの「マップを開く」一覧に表示されます。
+            設定しなくても遊べますが、配布するなら<strong>タイトル・説明・プレビュー画像</strong>の 3 つは入れておくのがおすすめです。
+        </p>
+        <div class="callout">
+            <strong>保存先：</strong>バンドル情報は <code>&lt;マップフォルダ&gt;/bundle.json</code> に、プレビュー画像は <code>&lt;マップフォルダ&gt;/preview.png</code> に保存されます。
+            CSV と同じくマップフォルダ直下にあるので、フォルダごと共有すれば情報も一緒に渡せます。
+        </div>
+        <div class="callout tip">
+            <strong>将来の予定：</strong>このバンドル情報は、今後の Steam Workshop 連携アップデート（V1.7.x 以降を予定）で、Workshop に投稿する自作マップのタイトル・説明・サムネとしてそのまま利用される予定です。今のうちに整えておくと、Workshop が来たときに再入力なしで公開できます。
+        </div>
+
+        <h3>バンドル情報を編集</h3>
+        <p>
+            メニューバーの <strong>「ファイル ▼」 → 「バンドル情報を編集...」</strong> でダイアログを開きます。次の項目を入力できます。
+        </p>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>タイトル</strong></td><td>一覧に大きく出る名前。フォルダ名と独立して付けられます（例：「横浜駅 朝ラッシュ」など）。空ならフォルダ名がそのまま使われます。</td></tr>
+            <tr><td><strong>説明</strong></td><td>マップの紹介文。複数行 OK。タイトル画面のユーザーマップ画面でプレビュー画像の下に表示されます。「両渡りあり / 入換あり / 朝ラッシュ向け」などの特徴を書くと選びやすくなります。</td></tr>
+            <tr><td><strong>作者</strong></td><td>自己申告の作者名。SNS のハンドル名などを入れてください。</td></tr>
+            <tr><td><strong>バージョン</strong></td><td>自作マップのバージョン番号（例：1.0.0）。更新したら上げる運用にすると、もらった側が新旧を見分けられます。</td></tr>
+            <tr><td><strong>タグ</strong></td><td>検索用キーワード（カンマ区切り）。Steam Workshop 連携時に検索性に使われる予定です。</td></tr>
+        </table>
+
+        <h3>プレビュー画像を撮影</h3>
+        <p>
+            プレビュー画像は一覧で<strong>サムネ</strong>として、選択時には<strong>右ペインに大きく表示</strong>されます。
+            メニューバーの <strong>「ファイル ▼」 → 「プレビュー画像を撮影...」</strong> でプレビュー再生画面に切り替わり、列車のいない状態でカメラを構図合わせします。
+        </p>
+        <ol class="step-list">
+            <li>「ファイル ▼」→「プレビュー画像を撮影...」を選ぶ</li>
+            <li>プレビュー再生画面に遷移する（列車スポーンなし・上部に黄色いバーが出る）</li>
+            <li>マウスドラッグ・ホイールでカメラを動かして<strong>見栄えのいい構図</strong>に合わせる</li>
+            <li>上部の <strong>「ここで撮影」</strong> ボタンを押すと <code>preview.png</code> がマップフォルダ直下に保存される</li>
+            <li>撮り直したい場合は同じボタンをもう一度押せば上書き</li>
+            <li>「編集に戻る」ボタンでエディタに戻る</li>
+        </ol>
+        <div class="callout tip">
+            <strong>撮影のコツ：</strong>画像は 16:9 で保存されます。一覧でサムネとして縮小されることを意識して、<strong>マップの特徴的な分岐・駅・両渡り</strong>などが収まる構図がおすすめ。
+            HUD（ダイヤ・ログ・発車標ウィンドウ）は撮影中は自動的に非表示になります。
+        </div>
+        <div class="callout">
+            <strong>未設定時の表示：</strong>バンドル情報を入れていないマップは、一覧で「タイトル＝フォルダ名」「副題＝フォルダパス」「サムネ＝グレーのプレースホルダ」になります。配布するなら最低限タイトルとプレビュー画像は入れるとぐっと選びやすくなります。
+        </div>
+    </section>
+
+    <section id="data-location">
+        <h2>📦 データの保存先</h2>
+        <p>
+            UGC マップは Windows の<strong>ユーザー保存領域</strong>に CSV テキストとして保存されます。
+            場所は次のとおりです（Windows）。
+        </p>
+        <p>
+            <code>%USERPROFILE%\AppData\LocalLow\DefaultCompany\RailSim260127\CustomMaps\&lt;マップ名&gt;\</code>
+        </p>
+        <p>
+            各マップフォルダの中には <code>Data/&lt;会社名&gt;/&lt;マップ名&gt;/</code> 配下に
+            <code>TrackCircuits.csv</code> や <code>Routes.csv</code> などの CSV ファイル群が並びます。
+            シナリオごとのファイル（<code>TrainList.csv</code> 等）は <code>Scenarios/&lt;シナリオ名&gt;/</code> 配下にまとめて入ります。
+        </p>
+        <div class="callout">
+            <strong>バックアップ：</strong>CSV テキストなのでバックアップは簡単です。マップフォルダごと別の場所にコピーしておけば、誤って破壊してもすぐ復元できます。
+        </div>
+        <div class="callout tip">
+            <strong>共有：</strong>マップフォルダを丸ごと圧縮して友人に渡せば、同じ場所に展開するだけで遊んでもらえます。
+            Steam Workshop 連携（V1.7.x で予定）が実装されましたら、もっと手軽に配布できるようになります。
+        </div>
+        <div class="callout warn">
+            <strong>共有・配布にあたっての免責：</strong>
+            ユーザーが作成・共有するマップ（UGC）について、開発元では内容の検証・サポートを行いません。
+            自作マップを配布した結果や、第三者から入手したマップを導入した結果に起因する不具合・データ損失・その他のトラブルについて、開発元は<strong>一切の責任を負いません</strong>。
+            導入は必ず信頼できる入手元から、自己責任でお願いします。
+        </div>
+    </section>
+
+    <section id="next">
+        <h2>📚 次に読む</h2>
+        <p>本記事はマップエディタの<strong>入口</strong>を紹介しました。各カテゴリの詳しい操作方法は以下のガイドをどうぞ（左サイドバーのメニュー順 = 編集の推奨順）。</p>
+        <ul>
+            <li><strong>①</strong> <a href="map-editor-company.html">会社編集ガイド</a> — 列車形式・列車種別</li>
+            <li><strong>②</strong> <a href="map-editor-wiring.html">配線編集ガイド</a> — 軌道回路・分岐器・駅・ホーム・番線・方面</li>
+            <li><strong>③</strong> <a href="map-editor-equipment.html">設備編集ガイド</a> — てこ・進路・信号機・出発ボタン</li>
+            <li><strong>④</strong> <a href="map-editor-trainlist.html">運行編集ガイド</a> — 経路グループ・列車一覧・ダイヤ行</li>
+            <li>⛳ <a href="user-maps.html">ユーザーマップを起動する</a> — 完成したマップをタイトル画面から遊ぶ手順</li>
+        </ul>
+        <p>
+            本編の遊び方は <a href="help.html">遊び方ガイド</a> を参照してください。
+            プレビューで自作マップを動かす際の操作は本編と同じです。
+        </p>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

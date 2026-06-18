@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment | Railway Operation Sim</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --accent: #4a90d9; --text: #e8eaf6; --text-dim: #9ca3af; --border: #2e3250; --green: #6ab04c; --warn: #f59e0b; --radius: 8px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.75; }
+        header { background: var(--surface2); border-bottom: 2px solid var(--accent); padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+        .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+        nav { width: 240px; min-width: 220px; padding: 28px 16px; position: sticky; top: 65px; align-self: flex-start; max-height: calc(100vh - 65px); overflow-y: auto; }
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+        nav a { display: block; padding: 6px 12px; color: var(--text-dim); text-decoration: none; font-size: 13px; border-radius: var(--radius); transition: background 0.15s, color 0.15s; }
+        nav a:hover, nav a.active { background: var(--surface2); color: var(--accent); }
+        nav .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); padding: 16px 12px 4px; font-weight: bold; }
+        main { flex: 1; padding: 36px 28px; min-width: 0; max-width: 820px; }
+        .breadcrumb { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        @media (max-width: 800px) { nav { display: none; } main { padding: 20px 16px; } }
+        section { margin-bottom: 48px; }
+        h2 { font-size: 22px; font-weight: bold; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        h3 { font-size: 16px; font-weight: bold; color: var(--text); margin: 24px 0 10px; }
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+        main ul, main ol { padding-left: 1.5em; margin: 8px 0; }
+        main ul li, main ol li { margin-bottom: 4px; }
+        code { background: var(--surface2); color: var(--text); padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Consolas', 'Menlo', monospace; }
+        kbd { background: var(--surface2); color: var(--text); padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; font-size: 12px; font-family: 'Consolas', 'Menlo', monospace; }
+        .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: var(--text-dim); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th { background: var(--surface2); padding: 10px 14px; text-align: left; color: var(--text-dim); font-weight: bold; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .step-list { list-style: none; counter-reset: step; margin: 12px 0; padding-left: 0; }
+        .step-list li { counter-increment: step; position: relative; padding-left: 36px; margin-bottom: 10px; }
+        .step-list li::before { content: counter(step); position: absolute; left: 0; top: 2px; background: var(--accent); color: #fff; font-weight: bold; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        figure { margin: 14px 0; padding: 14px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { margin-top: 8px; color: var(--text-dim); font-size: 12.5px; text-align: center; }
+        .svg-label { fill: var(--text); font-size: 13px; font-family: 'Noto Sans', sans-serif; }
+        .svg-dim   { fill: var(--text-dim); font-size: 11.5px; font-family: 'Noto Sans', sans-serif; }
+        footer { background: #1a1a2e; color: #aaa; text-align: center; padding: 32px 20px; font-size: 0.9rem; }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚦</span>
+    <div>
+        <h1>Equipment</h1>
+        <p>Railway Operation Sim</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-equipment.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guides</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html" class="active">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html">② Double-track turnaround</a></li>
+    </ul>
+    <div class="section-title">On This Page</div>
+    <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#lever">Lever</a></li>
+        <li><a href="#route">Route</a></li>
+        <li><a href="#signal">Signal</a></li>
+        <li><a href="#departure-button">Departure Button</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="help.en.html">← Help Guide</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">Help Guide</a> / <a href="map-editor.en.html">Map Editor — Getting Started</a> / Equipment
+    </div>
+
+    <section id="overview">
+        <h2>🎯 Overview</h2>
+        <p>
+            The <strong>Equipment</strong> category covers the devices required for signal operation.
+            Tackle this category after <a href="map-editor-wiring.en.html">Wiring</a> is finished — track circuits, stations and platforms need to be in place first.
+        </p>
+        <p>Sub-modes available under the <strong>Equipment</strong> category:</p>
+        <ul>
+            <li><strong>Lever</strong> — switches the signal operator uses (three sub-modes)</li>
+            <li><strong>Route</strong> — the path from a start lever to an end lever</li>
+            <li><strong>Signal</strong> — Home / Starting / Block / Shunting</li>
+            <li><strong>Departure Button</strong> — the button placed at a platform edge</li>
+        </ul>
+    </section>
+
+    <section id="lever">
+        <h2>🎚 Lever</h2>
+        <p>
+            <strong>Levers</strong> are the switches the signal operator (= the player) flips.
+            The combination of a start lever and an end lever sets a route.
+            For the in-game side, see the <a href="help.en.html#lever">levers chapter of the help guide</a>.
+        </p>
+
+        <h3>Three lever sub-modes</h3>
+        <p>Lever mode has three sub-modes that you switch between as you place levers.</p>
+        <table>
+            <tr><th>Sub-mode</th><th>Role</th><th>Selected color</th></tr>
+            <tr><td><strong>Main Start</strong></td><td>The start lever for a main-line route</td><td>Yellow</td></tr>
+            <tr><td><strong>Shunt Start</strong></td><td>The start lever for a shunting route</td><td>Green</td></tr>
+            <tr><td><strong>End</strong></td><td>The end lever of a route (shared between main and shunt)</td><td>—</td></tr>
+        </table>
+        <div class="callout">
+            <strong>Terminology:</strong> "Main Start" = the start lever for a main-line route. "Shunt Start" = the start lever for a shunting route.
+            The "End" lever is shared by both — whether it acts as a main-line or shunting endpoint depends on which start lever is paired with it when the route is registered.
+        </div>
+
+        <h3>Placing a lever</h3>
+        <ol class="step-list">
+            <li>Enter Lever mode and pick one of the three sub-modes (Main Start / Shunt Start / End)</li>
+            <li>Click on a track circuit where you want the lever to sit</li>
+            <li>In the sidebar, confirm or tweak the lever name (e.g. <code>1L</code>, <code>A</code>), then click <strong>Register</strong></li>
+            <li>The lever can then be referenced as the start or end of a route</li>
+        </ol>
+    </section>
+
+    <section id="route">
+        <h2>🛤 Route</h2>
+        <p>
+            A <strong>route</strong> is one path from a chosen start lever to a chosen end lever, expressed as a sequence of track circuits.
+            When the player operates two levers in turn, the editor matches them against registered routes — and if there is a match, the route opens.
+        </p>
+
+        <h3>Steps to register a route</h3>
+        <ol class="step-list">
+            <li>Enter Route mode</li>
+            <li>Pick the starting <strong>start lever</strong> (main or shunt is fine)</li>
+            <li>Pick the destination <strong>end lever</strong></li>
+            <li>Click the <strong>track circuits</strong> the route should pass through, in order</li>
+            <li>Press <strong>Register</strong> in the sidebar to commit the route — then <kbd>Ctrl</kbd>+<kbd>S</kbd> to save</li>
+        </ol>
+
+        <div class="callout">
+            <strong>The route name is auto-generated:</strong> the route's identifier is built by concatenating the start lever's name with the end lever's name.
+            For example, with start lever <code>1L</code> and end lever <code>A</code>, the route becomes <code>1LA</code>.
+            You do not type a route name yourself.
+        </div>
+
+        <h3>Which track circuits go into a route (important)</h3>
+        <p>
+            The track circuits you chain together form the area that the route's signal (home / starting / shunting) protects. While any of those track circuits is occupied, the signal stays <strong>red</strong>, blocking further trains from entering.
+        </p>
+        <p>
+            Therefore, <strong>do not include the track circuit where the start lever or the signal itself is placed</strong>. If you do, the moment the train reaches that lever/signal position, the signal protects its own location, turns red, and the train stops right there.
+        </p>
+        <div class="callout warn">
+            <strong>Rule of thumb:</strong> a route's first track circuit must be the one <strong>past</strong> the start lever and signal, not the one they sit on.
+            <br>
+            When wiring, decide which track circuit "handles" the signal, place the lever and signal on the <strong>near side</strong> of that boundary, and let the route's chained circuits begin on the <strong>far side</strong>.
+        </div>
+        <p>
+            Example: if the layout is <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> with the start lever on <code>TC_A</code>, the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>, the route should chain <code>TC_B</code> and <code>TC_C</code>. <code>TC_A</code> is excluded. <strong>The end lever's track circuit <code>TC_C</code> is included</strong> (the end lever marks where the route terminates, and its track circuit sits inside the route's protected range).
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 180" role="img" aria-label="Diagram showing which track circuits to include in a route: TC_A (start lever) is excluded; the home signal sits at the TC_A/TC_B boundary; the route chains TC_B and TC_C, and TC_C (which holds the end lever) is included.">
+                <!-- Direction of travel -->
+                <text x="280" y="22" text-anchor="middle" class="svg-dim">Train direction →</text>
+
+                <!-- Tracks for 3 TCs -->
+                <line x1="40"  y1="90" x2="200" y2="90" stroke="#4a90d9" stroke-width="6"/>
+                <line x1="200" y1="90" x2="370" y2="90" stroke="#6ab04c" stroke-width="6"/>
+                <line x1="370" y1="90" x2="540" y2="90" stroke="#6ab04c" stroke-width="6"/>
+
+                <!-- TC boundary marks -->
+                <line x1="200" y1="78" x2="200" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+                <line x1="370" y1="78" x2="370" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+
+                <!-- TC labels -->
+                <text x="120" y="115" text-anchor="middle" class="svg-label">TC_A</text>
+                <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
+                <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
+
+                <!-- Start lever on TC_A (game UI: right-pointing triangle) -->
+                <polygon points="80,80 102,90 80,100" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+                <text x="90" y="64" text-anchor="middle" class="svg-dim">Start lever</text>
+
+                <!-- Home signal exactly at TC_A / TC_B boundary (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">Home signal</text>
+
+                <!-- End lever on TC_C (game UI: hollow circle, white center) -->
+                <circle cx="500" cy="90" r="9" fill="#fff" stroke="#4a90d9" stroke-width="3"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">End lever</text>
+
+                <!-- Route bracket (TC_B to TC_C) -->
+                <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">Include this range (TC_C with the end lever is included)</text>
+
+                <!-- Excluded marker on TC_A -->
+                <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× Excluded</text>
+            </svg>
+            <figcaption>The start lever sits on <code>TC_A</code> (excluded), the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>. The route chains <code>TC_B</code> through <code>TC_C</code>.</figcaption>
+        </figure>
+
+        <h3>Conflicting routes</h3>
+        <p>
+            Two routes that share a crossing track circuit <strong>cannot be opened at the same time</strong>.
+            The editor computes conflict relationships automatically, and at runtime the game logs "a conflicting route is already open" as needed.
+            You do not have to maintain a conflict list by hand.
+        </p>
+    </section>
+
+    <section id="signal">
+        <h2>🚥 Signal</h2>
+        <p>
+            A <strong>signal</strong> changes its aspect automatically based on the state of the routes it governs.
+            The player never operates a signal directly — opening a route flips the signal to a proceed aspect.
+        </p>
+
+        <h3>Signal kinds</h3>
+        <table>
+            <tr><th>Kind</th><th>Role</th></tr>
+            <tr><td><strong>Home Signal</strong></td><td>Controls entry into a station area</td></tr>
+            <tr><td><strong>Starting Signal</strong></td><td>Controls departure from a station</td></tr>
+            <tr><td><strong>Block Signal</strong></td><td>Controls entry into a block section between stations</td></tr>
+            <tr><td><strong>Shunting Signal</strong></td><td>Controls shunting movements in the yard</td></tr>
+        </table>
+
+        <h3>Placing a signal (Home / Starting / Shunting)</h3>
+        <p>
+            Home, Starting, and Shunting signals need a <strong>governing route</strong> — the route whose aspect this signal mirrors.
+            The governing route is identified by picking a <strong>start lever</strong> and an <strong>end lever</strong>, just like when registering a route.
+        </p>
+        <ol class="step-list">
+            <li>Enter Signal mode and pick the kind (Home / Starting / Shunting)</li>
+            <li>Click on the map to decide where the signal sits</li>
+            <li>In the sidebar, pick a <strong>start lever</strong> and an <strong>end lever</strong></li>
+            <li>The editor finds the matching route automatically and ties it to the signal as the governing route</li>
+            <li>Press <strong>Register</strong> to apply, then <kbd>Ctrl</kbd>+<kbd>S</kbd> to save</li>
+        </ol>
+
+        <h3>Placing a signal (Block)</h3>
+        <p>
+            A block signal has no governing route. Instead, you directly specify the <strong>protected track circuits</strong> (multiple allowed).
+        </p>
+        <div class="callout">
+            <strong><kbd>Shift</kbd> + click:</strong> protected track circuits for a block signal are picked by clicking while holding <kbd>Shift</kbd> (multi-select supported).
+            A plain click does not switch into selection mode, so the editor shows a yellow hint to remind first-time users.
+        </div>
+
+        <h3>Aspect limits (UGC maps)</h3>
+        <p>
+            UGC maps support the basic three-aspect signaling — <strong>Proceed (green/blue), Caution (yellow), Stop (red)</strong> — automatically.
+            Detailed aspect distinctions such as caution-restrictive (YY) or restricted-speed-deceleration (YG) cannot be configured from the editor.
+        </p>
+    </section>
+
+    <section id="departure-button">
+        <h2>🛑 Departure Button</h2>
+        <p>
+            A <strong>departure button</strong> is the button placed at a platform edge that the player presses to give the departure signal.
+        </p>
+
+        <h3>Track-number-based behavior (UGC maps)</h3>
+        <p>
+            In UGC maps, the departure button operates on a <strong>track-number basis</strong>.
+            Each button records which station and which track number it serves; pressing it gives the departure signal to whichever train is currently at that track.
+        </p>
+
+        <h3>Placement and registration</h3>
+        <ol class="step-list">
+            <li>Enter Departure Button mode</li>
+            <li>Click at the platform-edge position where the button should sit</li>
+            <li>In the sidebar, pick the <strong>station</strong>, then pick the <strong>track number</strong> on that station (track numbers come from the track number master)</li>
+            <li>Press <strong>Register</strong> to apply, then <kbd>Ctrl</kbd>+<kbd>S</kbd> to save</li>
+        </ol>
+
+        <div class="callout">
+            <strong>Difference from official maps:</strong> official maps tie departure buttons directly to specific routes and sorting devices.
+            UGC simplifies this to just station × track-number, with the editor handling the rest automatically.
+        </div>
+    </section>
+
+    <section id="related">
+        <h2>📚 Related Guides</h2>
+        <ul>
+            <li><a href="map-editor.en.html"><strong>Map Editor — Getting Started</strong></a> — the editor at a glance, save and preview</li>
+            <li><a href="map-editor-wiring.en.html"><strong>Wiring guide</strong></a> — track circuits through stations and platforms (do this first)</li>
+            <li><a href="map-editor-trainlist.en.html"><strong>Operations guide</strong></a> — build a timetable with path groups and the train list (the next step after Equipment)</li>
+            <li><a href="help.en.html#lever-types"><strong>Lever types</strong></a> — the advanced section of the help guide</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / tadimaru LLC
+</footer>
+
+</body>
+</html>

@@ -185,26 +185,26 @@
 
         .step-list li {
             counter-increment: step;
-            display: flex;
-            gap: 12px;
+            position: relative;
+            padding-left: 36px;
             margin-bottom: 10px;
-            align-items: flex-start;
         }
 
         .step-list li::before {
             content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
             background: var(--accent);
             color: #fff;
             font-weight: bold;
             font-size: 12px;
-            min-width: 24px;
+            width: 24px;
             height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 2px;
-            flex-shrink: 0;
         }
 
         .callout {
@@ -332,6 +332,26 @@
             <summary>Diagram View</summary>
             <ul>
                 <li><a href="diagram-view.en.html">Using the Diagram View</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Map Editor</summary>
+            <ul>
+                <li><a href="map-editor-start.en.html">Start Here (Your First Map)</a></li>
+                <li><a href="map-editor-tutorial1.en.html">Hands-on ① Single-track passing</a></li>
+                <li><a href="map-editor-tutorial2.en.html">Hands-on ② Double-track turnaround</a></li>
+                <li><a href="map-editor.en.html">Getting Started</a></li>
+                <li><a href="map-editor-company.en.html">Company</a></li>
+                <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+                <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+                <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+                <li><a href="glossary.en.html">Glossary</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>User Maps</summary>
+            <ul>
+                <li><a href="user-maps.en.html">Playing User Maps</a></li>
             </ul>
         </details>
         <details>

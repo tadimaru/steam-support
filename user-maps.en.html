@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playing User Maps | Railway Operation Sim</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --accent: #4a90d9; --text: #e8eaf6; --text-dim: #9ca3af; --border: #2e3250; --green: #6ab04c; --warn: #f59e0b; --radius: 8px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.75; }
+        header { background: var(--surface2); border-bottom: 2px solid var(--accent); padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+        .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+        nav { width: 240px; min-width: 220px; padding: 28px 16px; position: sticky; top: 65px; align-self: flex-start; max-height: calc(100vh - 65px); overflow-y: auto; }
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+        nav a { display: block; padding: 6px 12px; color: var(--text-dim); text-decoration: none; font-size: 13px; border-radius: var(--radius); transition: background 0.15s, color 0.15s; }
+        nav a:hover, nav a.active { background: var(--surface2); color: var(--accent); }
+        nav .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); padding: 16px 12px 4px; font-weight: bold; }
+        main { flex: 1; padding: 36px 28px; min-width: 0; max-width: 820px; }
+        .breadcrumb { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        @media (max-width: 800px) { nav { display: none; } main { padding: 20px 16px; } }
+        section { margin-bottom: 48px; }
+        h2 { font-size: 22px; font-weight: bold; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        h3 { font-size: 16px; font-weight: bold; color: var(--text); margin: 24px 0 10px; }
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+        main ul, main ol { padding-left: 1.5em; margin: 8px 0; }
+        main ul li, main ol li { margin-bottom: 4px; }
+        code { background: var(--surface2); color: var(--text); padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Consolas', 'Menlo', monospace; }
+        kbd { background: var(--surface2); color: var(--text); padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; font-size: 12px; font-family: 'Consolas', 'Menlo', monospace; }
+        .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: var(--text-dim); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th { background: var(--surface2); padding: 10px 14px; text-align: left; color: var(--text-dim); font-weight: bold; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .step-list { list-style: none; counter-reset: step; margin: 12px 0; padding-left: 0; }
+        .step-list li { counter-increment: step; position: relative; padding-left: 36px; margin-bottom: 10px; }
+        .step-list li::before { content: counter(step); position: absolute; left: 0; top: 2px; background: var(--accent); color: #fff; font-weight: bold; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        footer { background: #1a1a2e; color: #aaa; text-align: center; padding: 32px 20px; font-size: 0.9rem; }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">📦</span>
+    <div>
+        <h1>Playing User Maps</h1>
+        <p>Railway Operation Sim</p>
+    </div>
+    <div class="lang-switch"><a href="user-maps.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guides</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html" class="active">Playing User Maps</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html">② Double-track turnaround</a></li>
+    </ul>
+    <div class="section-title">On This Page</div>
+    <ul>
+        <li><a href="#overview">What is a User Map</a></li>
+        <li><a href="#open">Launching from the Title</a></li>
+        <li><a href="#bundle-info">Title, Author, Description, Preview</a></li>
+        <li><a href="#import">Importing Someone Else's Map</a></li>
+        <li><a href="#data-location">Where Maps Are Stored</a></li>
+        <li><a href="#workshop">Steam Workshop (planned)</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="help.en.html">← Help Guide</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">Help Guide</a> / Playing User Maps
+    </div>
+
+    <section id="overview">
+        <h2>🎯 What is a User Map</h2>
+        <p>
+            A <strong>user map</strong> is a UGC map made with the Map Editor.
+            User maps are kept separate from the official maps and are launched from a dedicated screen on the title menu.
+        </p>
+        <div class="callout">
+            <strong>Before you play:</strong> for how to make a map of your own, follow the <a href="map-editor.en.html">Map Editor — Getting Started</a> guide and the related editor guides.
+        </div>
+    </section>
+
+    <section id="open">
+        <h2>🚪 Launching from the Title</h2>
+        <p>Open the dedicated screen from the <strong>User Maps</strong> button on the title screen.</p>
+        <ol class="step-list">
+            <li>Start the game and reach the title screen</li>
+            <li>Click the <strong>User Maps</strong> button at the bottom of the screen</li>
+            <li>The locally stored UGC maps are listed</li>
+            <li>Pick the map you want to play</li>
+            <li>Pick one of that map's <strong>scenarios</strong> from the dropdown</li>
+            <li>Click <strong>Start</strong></li>
+        </ol>
+        <div class="callout warn">
+            <strong>An empty list?</strong> If you have never created a map in the Map Editor, the list is empty.
+            Follow <a href="map-editor.en.html">Map Editor — Getting Started</a> to build one map first, then return here.
+        </div>
+    </section>
+
+    <section id="bundle-info">
+        <h2>🏷 Title, Author, Description, Preview</h2>
+        <p>
+            Each row in the list shows the <strong>title, author, and preview image</strong> set by the map's author.
+            Clicking a row reveals a large preview image and the author's <strong>description</strong> on the right pane.
+        </p>
+        <ul>
+            <li><strong>Bold title</strong>: the display name chosen by the author, independent of the folder name (e.g. "Yokohama Morning Rush"). Falls back to the folder name if not set.</li>
+            <li><strong>Subtitle ("by Author · path")</strong>: author name + path. Without an author, only the path is shown.</li>
+            <li><strong>Thumbnail (80×45 px on the left)</strong>: the <code>preview.png</code> captured by the author. A dark gray placeholder shows up if missing.</li>
+            <li><strong>Large preview on the right pane</strong>: the selected row's thumbnail enlarged (16:9 letterbox).</li>
+            <li><strong>Description</strong>: the author's blurb, displayed below the preview image. Useful for picking maps based on features like "with double crossover / shunting / morning rush".</li>
+        </ul>
+        <div class="callout">
+            <strong>If you're authoring a map:</strong> see
+            <a href="map-editor.en.html#bundle-info">Map Editor — Bundle Info (Public Metadata)</a> for how to set the title, description, author, and preview image on your map.
+            They are saved to <code>&lt;mapFolder&gt;/bundle.json</code> and <code>&lt;mapFolder&gt;/preview.png</code>.
+        </div>
+        <div class="callout tip">
+            <strong>Steam Workshop (planned):</strong> this bundle info is planned to be reused as the title, description, and thumbnail when uploading to Steam Workshop in a future update. Authors who fill these in ahead of time will be able to publish smoothly once Workshop support lands.
+        </div>
+    </section>
+
+    <section id="import">
+        <h2>📥 Importing Someone Else's Map</h2>
+        <p>
+            To play a map made by someone else, the current approach is to <strong>copy their map folder into the right place</strong>.
+        </p>
+        <ol class="step-list">
+            <li>Obtain the map folder (containing <code>Data/</code> and <code>Scenarios/</code>); extract if it is zipped</li>
+            <li>Open the path below in <a href="#data-location">Where Maps Are Stored</a></li>
+            <li>Drop the obtained folder, as a whole, directly under the <code>CustomMaps</code> folder</li>
+            <li>Restart the game (or reopen the User Maps screen on the title) — the new map appears in the list</li>
+        </ol>
+        <div class="callout warn">
+            <strong>Use third-party maps at your own risk.</strong>
+            The developer does not validate or provide support for the contents of user-created maps (UGC).
+            We accept <strong>no responsibility whatsoever</strong> for malfunctions, data loss, or other troubles that arise from installing them.
+            Please install maps only from sources you trust. If you observe odd behavior, move the suspect map folder somewhere else for the time being.
+        </div>
+    </section>
+
+    <section id="data-location">
+        <h2>📁 Where Maps Are Stored</h2>
+        <p>
+            User maps live in the Windows user-save area at:
+        </p>
+        <p>
+            <code>%USERPROFILE%\AppData\LocalLow\DefaultCompany\RailSim260127\CustomMaps\</code>
+        </p>
+        <p>
+            Each map has its own folder under this directory (e.g. <code>Futtsu\</code>).
+            Inside, <code>Data/</code> holds wiring/equipment/masters, and per-scenario data sits under <code>Scenarios/</code>.
+        </p>
+
+        <h3>Backup and sharing</h3>
+        <ul>
+            <li>Zip the entire map folder for a simple backup — restore by unzipping it back</li>
+            <li>Hand the same zip to a friend; they can drop it into the same path and play</li>
+            <li>The Map Editor's "Open Map" dialog uses the same list</li>
+        </ul>
+    </section>
+
+    <section id="workshop">
+        <h2>🛒 Steam Workshop (planned)</h2>
+        <p>
+            <strong>Steam Workshop integration</strong> is planned for a future update in the V1.7.x series.
+            Once it ships, you will be able to subscribe to and publish maps in one click — no more manual folder copies.
+        </p>
+        <div class="callout tip">
+            <strong>Until then:</strong> map-folder ZIP sharing and screenshot exchanges on social media (e.g. X) are the easiest way to interact with other players.
+        </div>
+    </section>
+
+    <section id="related">
+        <h2>📚 Related Guides</h2>
+        <ul>
+            <li><a href="help.en.html"><strong>Help Guide</strong></a> — the basic gameplay</li>
+            <li><a href="map-editor.en.html"><strong>Map Editor — Getting Started</strong></a> — make your own maps</li>
+            <li><a href="map-editor-company.en.html"><strong>Company guide</strong></a></li>
+            <li><a href="map-editor-wiring.en.html"><strong>Wiring guide</strong></a></li>
+            <li><a href="map-editor-equipment.en.html"><strong>Equipment guide</strong></a></li>
+            <li><a href="map-editor-trainlist.en.html"><strong>Operations guide</strong></a></li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 tadimaru / tadimaru LLC
+</footer>
+
+</body>
+</html>

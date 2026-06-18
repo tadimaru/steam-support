@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設備編集ガイド | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --accent: #4a90d9; --text: #e8eaf6; --text-dim: #9ca3af; --border: #2e3250; --green: #6ab04c; --warn: #f59e0b; --radius: 8px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; font-size: 15px; line-height: 1.75; }
+        header { background: var(--surface2); border-bottom: 2px solid var(--accent); padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+        .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+        nav { width: 240px; min-width: 220px; padding: 28px 16px; position: sticky; top: 65px; align-self: flex-start; max-height: calc(100vh - 65px); overflow-y: auto; }
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+        nav a { display: block; padding: 6px 12px; color: var(--text-dim); text-decoration: none; font-size: 13px; border-radius: var(--radius); transition: background 0.15s, color 0.15s; }
+        nav a:hover, nav a.active { background: var(--surface2); color: var(--accent); }
+        nav .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); padding: 16px 12px 4px; font-weight: bold; }
+        main { flex: 1; padding: 36px 28px; min-width: 0; max-width: 820px; }
+        .breadcrumb { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        @media (max-width: 800px) { nav { display: none; } main { padding: 20px 16px; } }
+        section { margin-bottom: 48px; }
+        h2 { font-size: 22px; font-weight: bold; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        h3 { font-size: 16px; font-weight: bold; color: var(--text); margin: 24px 0 10px; }
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+        main ul, main ol { padding-left: 1.5em; margin: 8px 0; }
+        main ul li, main ol li { margin-bottom: 4px; }
+        code { background: var(--surface2); color: var(--text); padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Consolas', 'Menlo', monospace; }
+        kbd { background: var(--surface2); color: var(--text); padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; font-size: 12px; font-family: 'Consolas', 'Menlo', monospace; }
+        .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: var(--text-dim); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th { background: var(--surface2); padding: 10px 14px; text-align: left; color: var(--text-dim); font-weight: bold; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .step-list { list-style: none; counter-reset: step; margin: 12px 0; padding-left: 0; }
+        .step-list li { counter-increment: step; position: relative; padding-left: 36px; margin-bottom: 10px; }
+        .step-list li::before { content: counter(step); position: absolute; left: 0; top: 2px; background: var(--accent); color: #fff; font-weight: bold; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        figure { margin: 14px 0; padding: 14px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { margin-top: 8px; color: var(--text-dim); font-size: 12.5px; text-align: center; }
+        .svg-label { fill: var(--text); font-size: 13px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim   { fill: var(--text-dim); font-size: 11.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        footer { background: #1a1a2e; color: #aaa; text-align: center; padding: 32px 20px; font-size: 0.9rem; }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚦</span>
+    <div>
+        <h1>設備編集ガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-equipment.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html" class="active">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+        <li><a href="map-editor-tutorial2.html">② 複線駅で折り返し</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#overview">概要</a></li>
+        <li><a href="#lever">てこ</a></li>
+        <li><a href="#route">進路</a></li>
+        <li><a href="#signal">信号機</a></li>
+        <li><a href="#departure-button">出発ボタン</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor.html">マップエディタ入門</a> / 設備編集
+    </div>
+
+    <section id="overview">
+        <h2>🎯 概要</h2>
+        <p>
+            <strong>設備</strong>カテゴリでは、信号扱いに必要な装置を配置します。
+            <a href="map-editor-wiring.html">配線編集</a>が完了し、軌道回路・駅・ホームが揃ったあとに進めるカテゴリです。
+        </p>
+        <p>左サイドバーの<strong>設備カテゴリ</strong>にある子モードは次のとおりです。</p>
+        <ul>
+            <li><strong>てこ</strong> — 信号扱い係が操作するスイッチ（3 種類）</li>
+            <li><strong>進路</strong> — 発点てこから着点てこまでの 1 本の道筋</li>
+            <li><strong>信号機</strong> — 場内・出発・閉塞・入換の 4 種類</li>
+            <li><strong>出発ボタン</strong> — ホーム端に置く発車合図ボタン</li>
+        </ul>
+    </section>
+
+    <section id="lever">
+        <h2>🎚 てこ</h2>
+        <p>
+            <strong>てこ</strong>は信号扱い係（プレイヤー）が操作するスイッチで、発点てこと着点てこの組合せで進路を開通させます。
+            遊び方の詳細は <a href="help.html#lever">遊び方ガイドのてこの章</a> を参照してください。
+        </p>
+
+        <h3>てこの 3 種類</h3>
+        <p>てこモードは 3 種類のサブモードを切り替えながら配置します。</p>
+        <table>
+            <tr><th>サブモード</th><th>役割</th><th>選択時の色</th></tr>
+            <tr><td><strong>本線用発点</strong></td><td>本線の進路を開通させる発点てこ</td><td>黄色</td></tr>
+            <tr><td><strong>入換用発点</strong></td><td>構内入換進路の発点てこ</td><td>緑色</td></tr>
+            <tr><td><strong>着点</strong></td><td>進路の終点（本線・入換ともに共通）</td><td>—</td></tr>
+        </table>
+        <div class="callout">
+            <strong>用語の対応：</strong>本線用発点は「本線進路の発点てこ」、入換用発点は「入換進路の発点てこ」を指します。
+            着点てこは本線用と入換用で共通で、進路登録時にどちらの発点てこと組み合わさるかで意味が決まります。
+        </div>
+
+        <h3>配置方法</h3>
+        <ol class="step-list">
+            <li>てこモード（本線用発点・入換用発点・着点 のいずれかのサブモード）を選ぶ</li>
+            <li>軌道回路上のてこを置きたい位置をクリック</li>
+            <li>右側サイドバーでてこの名称（例: <code>1L</code>, <code>A</code>）を確認・微調整 → <strong>登録</strong></li>
+            <li>進路を組むときに「この発点てこから、この着点てこへ」というペアで参照される</li>
+        </ol>
+    </section>
+
+    <section id="route">
+        <h2>🛤 進路</h2>
+        <p>
+            <strong>進路</strong>は「ある発点てこから、ある着点てこまで」の 1 本の道筋を、通過する軌道回路の連なりとして登録したものです。
+            プレイヤーがてこを 2 つ操作したとき、この進路定義に合致するものがあれば開通します。
+        </p>
+
+        <h3>進路の登録手順</h3>
+        <ol class="step-list">
+            <li>進路モードに入る</li>
+            <li>始点となる<strong>発点てこ</strong>を選択（本線用・入換用どちらでも可）</li>
+            <li>終点となる<strong>着点てこ</strong>を選択</li>
+            <li>進路が通過する<strong>軌道回路</strong>を順にクリックして連ねる</li>
+            <li>サイドバーの<strong>登録</strong>ボタンで進路を確定 → <kbd>Ctrl</kbd>+<kbd>S</kbd> で保存</li>
+        </ol>
+
+        <div class="callout">
+            <strong>進路名は自動生成：</strong>進路の名前（ID）は、発点てこ名と着点てこ名を連結して自動的に決まります。
+            たとえば発点てこ <code>1L</code> と着点てこ <code>A</code> から登録した進路は <code>1LA</code> という ID になります。
+            ユーザーが進路名を手入力する必要はありません。
+        </div>
+
+        <h3>進路に含める軌道回路の選び方（重要）</h3>
+        <p>
+            進路として連ねた軌道回路は、その進路を守る信号機（場内・出発・入換）が「ここから先は自分の管理範囲」と宣言する区間になります。
+            信号機は管理範囲内に列車が在線している間は<strong>赤</strong>を示し、列車を進入させません。
+        </p>
+        <p>
+            このため、<strong>発点てこ・信号機が置かれている軌道回路は、進路に含めません</strong>。含めてしまうと、列車がてこ・信号機の位置に達した瞬間に信号機が自分自身を守って赤になり、列車がその場で立ち往生します。
+        </p>
+        <div class="callout warn">
+            <strong>原則：</strong>進路の最初の軌道回路は、発点てこ・信号機より<strong>進行方向の先</strong>にある軌道回路です。
+            <br>
+            発点てこと信号機をどこに置くかで、進路に含めるべき軌道回路の範囲が変わります。配線時に「ここの軌道回路で信号を扱う」と決め、てこと信号機をその<strong>手前側</strong>、進路の連ねを<strong>その先</strong>から開始するのが基本形になります。
+        </div>
+        <p>
+            実例: 軌道回路 <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> と並んでおり、<code>TC_A</code> に発点てこを置き、<code>TC_A</code> と <code>TC_B</code> の境界に場内信号機を置き、<code>TC_C</code> に着点てこを置く場合、進路には <code>TC_B</code>, <code>TC_C</code> を連ねます。<code>TC_A</code> は進路に含めません。<strong>着点てこのある <code>TC_C</code> は進路に含めます</strong>（着点てこは進路の終端を示す目印で、その軌道回路は進路範囲の内側です）。
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 180" role="img" aria-label="進路に含める軌道回路の範囲を示す図。発点てこのある TC_A は進路に含めず、場内信号機を TC_A と TC_B の境界に置き、着点てこのある TC_C も含めて進路は TC_B と TC_C を連ねる。">
+                <!-- 列車の進行方向矢印 -->
+                <text x="280" y="22" text-anchor="middle" class="svg-dim">列車の進行方向 →</text>
+
+                <!-- 線路（3 つの TC を横に並べる） -->
+                <line x1="40"  y1="90" x2="200" y2="90" stroke="#4a90d9" stroke-width="6"/>
+                <line x1="200" y1="90" x2="370" y2="90" stroke="#6ab04c" stroke-width="6"/>
+                <line x1="370" y1="90" x2="540" y2="90" stroke="#6ab04c" stroke-width="6"/>
+
+                <!-- TC 境界の縦線 -->
+                <line x1="200" y1="78" x2="200" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+                <line x1="370" y1="78" x2="370" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+
+                <!-- TC ラベル -->
+                <text x="120" y="115" text-anchor="middle" class="svg-label">TC_A</text>
+                <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
+                <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
+
+                <!-- 発点てこ on TC_A（ゲーム表記: 右向き三角） -->
+                <polygon points="80,80 102,90 80,100" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+                <text x="90" y="64" text-anchor="middle" class="svg-dim">発点てこ</text>
+
+                <!-- 場内信号機 ちょうど TC_A / TC_B の境界 (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">場内信号機</text>
+
+                <!-- 着点てこ on TC_C（ゲーム表記: 白抜き丸） -->
+                <circle cx="500" cy="90" r="9" fill="#fff" stroke="#4a90d9" stroke-width="3"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">着点てこ</text>
+
+                <!-- 進路範囲ブラケット（TC_B 〜 TC_C 下に緑線で示す）-->
+                <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">この範囲を進路に含める（着点てこのある TC_C も含む）</text>
+
+                <!-- 含めない印（TC_A に × マーク）-->
+                <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× 含めない</text>
+            </svg>
+            <figcaption>発点てこのある <code>TC_A</code> は進路に含めず、場内信号機の先 <code>TC_B</code> から、着点てこのある <code>TC_C</code> までを進路として連ねる。</figcaption>
+        </figure>
+
+        <h3>競合進路</h3>
+        <p>
+            交差する軌道回路を共有する 2 つの進路は<strong>同時に開通できません</strong>。エディタが自動的に競合関係を計算し、ゲーム実行時に「先に開通している進路がある」とログ表示します。
+            ユーザーが競合一覧を手書きで定義する必要はありません。
+        </p>
+    </section>
+
+    <section id="signal">
+        <h2>🚥 信号機</h2>
+        <p>
+            <strong>信号機</strong>は進路の状態に応じて自動で現示を変える表示装置です。
+            プレイヤーが信号機を直接操作することはなく、進路を開通させると進行現示に切り替わります。
+        </p>
+
+        <h3>信号機の種類</h3>
+        <table>
+            <tr><th>種類</th><th>役割</th></tr>
+            <tr><td><strong>場内信号機</strong></td><td>駅構内への進入を制御</td></tr>
+            <tr><td><strong>出発信号機</strong></td><td>駅からの出発を制御</td></tr>
+            <tr><td><strong>閉塞信号機</strong></td><td>駅間の閉塞区間（駅と駅の間）への進入を制御</td></tr>
+            <tr><td><strong>入換信号機</strong></td><td>構内入換用</td></tr>
+        </table>
+
+        <h3>設置方法（場内・出発・入換）</h3>
+        <p>
+            場内・出発・入換信号機は、その信号機が「どの進路の現示を制御するか」を <strong>担当進路</strong>として指定する必要があります。
+            担当進路は、進路登録時と同じく<strong>発点てこ → 着点てこ</strong>のペアで自動検索されます。
+        </p>
+        <ol class="step-list">
+            <li>信号機モードに入り、種類（場内 / 出発 / 入換）を選ぶ</li>
+            <li>マップ上をクリックして信号機の位置を決める</li>
+            <li>サイドバーで<strong>発点てこ</strong>と<strong>着点てこ</strong>を 1 つずつ選ぶ</li>
+            <li>エディタが該当する進路を自動検索して「担当進路」として紐づける</li>
+            <li>登録ボタンで反映 → <kbd>Ctrl</kbd>+<kbd>S</kbd> で保存</li>
+        </ol>
+
+        <h3>設置方法（閉塞信号機）</h3>
+        <p>
+            閉塞信号機は担当進路を持たず、代わりに<strong>防護する軌道回路（複数可）</strong>を直接指定します。
+        </p>
+        <div class="callout">
+            <strong><kbd>Shift</kbd> を押しながらクリック：</strong>閉塞信号機の防護軌道回路は <kbd>Shift</kbd> を押しながらクリックで選択します（複数選択も可）。
+            通常クリックでは選択モードが切り替わらず、初見で気づきにくいのでエディタ側でも黄色いヒントが出ます。
+        </div>
+
+        <h3>現示の制限（UGC マップ）</h3>
+        <p>
+            UGC マップでは信号現示は<strong>青（進行）・黄（注意）・赤（停止）</strong>の自動切替が基本です。
+            警戒・減速・抑速といった現示の細かな使い分けはエディタ側では設定できません。
+        </p>
+    </section>
+
+    <section id="departure-button">
+        <h2>🛑 出発ボタン</h2>
+        <p>
+            <strong>出発ボタン</strong>はホーム端に置く、プレイヤーが押すボタンです。押すと該当列車が発車合図を受けて動き出します。
+        </p>
+
+        <h3>番線ベース動作（UGC マップ）</h3>
+        <p>
+            UGC マップでは出発ボタンは<strong>番線</strong>を基準に動作します。
+            ボタンに「どの駅のどの番線を担当するか」を登録しておくと、その番線に在線中の列車に発車合図を出します。
+        </p>
+
+        <h3>配置と登録</h3>
+        <ol class="step-list">
+            <li>出発ボタンモードに入る</li>
+            <li>ホーム端の位置をクリックして配置</li>
+            <li>右側サイドバーで担当する<strong>駅</strong>を選び、続いてその駅の<strong>番線</strong>を選ぶ（番線一覧は番線マスタから自動生成）</li>
+            <li><strong>登録</strong>ボタンで反映、<kbd>Ctrl</kbd>+<kbd>S</kbd> で CSV へ保存</li>
+        </ol>
+
+        <div class="callout">
+            <strong>公式マップとの違い：</strong>公式マップでは出発ボタンに進路名や選別装置 ID を直接結びつける方式を採用していますが、UGC では駅×番線の指定だけで動く番線ベースに簡略化されています。
+        </div>
+    </section>
+
+    <section id="related">
+        <h2>📚 関連ガイド</h2>
+        <ul>
+            <li><a href="map-editor.html"><strong>マップエディタ入門</strong></a> — エディタの全体像と保存・プレビュー</li>
+            <li><a href="map-editor-wiring.html"><strong>配線編集ガイド</strong></a> — 軌道回路から駅・ホームまで（設備の前提）</li>
+            <li><a href="map-editor-trainlist.html"><strong>運行編集ガイド</strong></a> — 経路グループと列車一覧でダイヤを組む（設備が揃ったら次はこちら）</li>
+            <li><a href="help.html#lever-types"><strong>てこの種類</strong></a> — 遊び方ガイドの上級者向け解説</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

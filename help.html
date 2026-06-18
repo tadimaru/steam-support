@@ -185,26 +185,26 @@
 
         .step-list li {
             counter-increment: step;
-            display: flex;
-            gap: 12px;
+            position: relative;
+            padding-left: 36px;
             margin-bottom: 10px;
-            align-items: flex-start;
         }
 
         .step-list li::before {
             content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
             background: var(--accent);
             color: #fff;
             font-weight: bold;
             font-size: 12px;
-            min-width: 24px;
+            width: 24px;
             height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 2px;
-            flex-shrink: 0;
         }
 
         .callout {
@@ -332,6 +332,26 @@
             <summary>ダイヤグラムビュー</summary>
             <ul>
                 <li><a href="diagram-view.html">ダイヤグラムビューの使い方</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>マップエディタ</summary>
+            <ul>
+                <li><a href="map-editor-start.html">はじめての自作マップ</a></li>
+                <li><a href="map-editor-tutorial1.html">実践① 単線で行き違い</a></li>
+                <li><a href="map-editor-tutorial2.html">実践② 複線駅で折り返し</a></li>
+                <li><a href="map-editor.html">マップエディタ入門</a></li>
+                <li><a href="map-editor-company.html">会社編集</a></li>
+                <li><a href="map-editor-wiring.html">配線編集</a></li>
+                <li><a href="map-editor-equipment.html">設備編集</a></li>
+                <li><a href="map-editor-trainlist.html">運行編集</a></li>
+                <li><a href="glossary.html">用語集</a></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>ユーザーマップ</summary>
+            <ul>
+                <li><a href="user-maps.html">ユーザーマップを起動する</a></li>
             </ul>
         </details>
         <details>

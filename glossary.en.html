@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary | Railway Operation Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .term { color: #fff; font-weight: bold; white-space: nowrap; }
+        .term .ruby { display: block; font-size: 11px; color: var(--text-dim); font-weight: normal; }
+        td.more a { color: var(--accent); text-decoration: none; font-size: 13px; }
+        td.more a:hover { text-decoration: underline; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">📖</span>
+    <div>
+        <h1>Glossary</h1>
+        <p>Railway Operation Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="glossary.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guide</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="glossary.en.html" class="active">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html">② Double-track turnaround</a></li>
+    </ul>
+    <div class="section-title">On this page</div>
+    <ul>
+        <li><a href="#wiring">Track &amp; stations</a></li>
+        <li><a href="#equipment">Signals &amp; routes</a></li>
+        <li><a href="#operation">Timetable &amp; operations</a></li>
+        <li><a href="#misc">Other</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">← Your First Custom Map</a></li>
+        <li><a href="help.en.html">How to Play Guide</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">How to Play Guide</a> / <a href="map-editor-start.en.html">Your First Custom Map</a> / Glossary
+    </div>
+
+    <section id="intro">
+        <h2>📖 About this glossary</h2>
+        <p>
+            For each railway and editor term that comes up while building a map, we cover three points: <strong>① a one-line paraphrase → ② what it is on the game screen → ③ a detailed explanation page</strong>.
+            Whenever you run into a word you don't know, check it here.
+        </p>
+        <div class="callout tip">
+            If you're a complete beginner, we recommend reading <a href="map-editor-start.en.html">Your First Custom Map</a> first. With illustrations, it gives you the big picture.
+        </div>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 Track &amp; stations</h2>
+        <table>
+            <tr><th style="width:22%;">Term</th><th>In one line</th><th>In the game</th><th style="width:18%;">More</th></tr>
+            <tr id="track-circuit">
+                <td><span class="term">Track circuit</span></td>
+                <td>A single square of track, as if you'd <strong>divided the line into cells like a board game</strong>. Which cell a train is in is used to manage signals and routes.</td>
+                <td>The basic unit you lay down one line at a time. An ID like <code>TC_0001</code> is assigned automatically.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#track-circuit">Wiring</a></td>
+            </tr>
+            <tr id="switch">
+                <td><span class="term">Switch</span></td>
+                <td>A <strong>track-changing point</strong>. The spot where one line splits into two directions (or two lines merge).</td>
+                <td>Registered as a junction connecting track circuits to each other. An ID like <code>SW_0001</code> is assigned.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#switch">Wiring</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Normal / Reverse</span></td>
+                <td>At a switch, <strong>the straight-through direction is "Normal," and the diverging direction is "Reverse."</strong> In short, "straight" or "turn."</td>
+                <td>When you open a route, the editor decides the orientation automatically, so you normally don't need to think about it.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#switch">Wiring</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Single switch / Double crossover</span></td>
+                <td>Types of switch. <strong>Single switch</strong> = the standard form where one line splits into two directions. <strong>Double crossover</strong> = a form that connects two lines in a crisscross.</td>
+                <td>A single switch is registered by combining 2–3 track circuits; a double crossover combines 4.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#switch">Wiring</a></td>
+            </tr>
+            <tr id="station">
+                <td><span class="term">Station</span></td>
+                <td>A <strong>grouping of locations</strong> where trains stop. Platforms and tracks hang inside it.</td>
+                <td>Draw a rectangle (the station area) on the map and give it a station name and station ID.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#station">Wiring</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Platform</span></td>
+                <td>A band representing a <strong>track number where passengers board and alight</strong> within a station.</td>
+                <td>Draw a rectangle over the track and assign a track number to each side.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#platform">Wiring</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Track number</span></td>
+                <td>The <strong>number assigned to a station platform (Track 1, Track 2, …)</strong>.</td>
+                <td>Registered per station in the "Track Number Master." Used on departure boards and platform labels.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#track-number">Wiring</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Station direction</span></td>
+                <td>The <strong>destination switch</strong> shown as "For ○○" on the departure board.</td>
+                <td>Registered per station in the "Station Direction Master." Even without registering, it works with the two choices of inbound / outbound.</td>
+                <td class="more"><a href="map-editor-wiring.en.html#station-direction">Wiring</a></td>
+            </tr>
+        </table>
+        <div class="callout warn">
+            <strong>Track cannot be laid perfectly vertical.</strong> Always place it tilted slightly to the side (when you want to go vertically, use a switch).
+        </div>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 Signals &amp; routes</h2>
+        <table>
+            <tr><th style="width:22%;">Term</th><th>In one line</th><th>In the game</th><th style="width:18%;">More</th></tr>
+            <tr id="route">
+                <td><span class="term">Route</span></td>
+                <td>The <strong>path a single train travels</strong>. A "from here to there" path made by joining several track circuits.</td>
+                <td>Specify a start lever → an end lever, then select the track circuits it passes through in order to register it. The route name is assigned automatically (e.g. <code>1LA</code>).</td>
+                <td class="more"><a href="map-editor-equipment.en.html#route">Equipment</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Lever</span></td>
+                <td>The <strong>switch (operating lever)</strong> that opens and closes a route.</td>
+                <td>Operate the "start lever" on the departure side and the "end lever" on the destination side as a pair, and the route opens.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#lever">Equipment</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Start lever / End lever</span></td>
+                <td>A route's <strong>departure-side lever = start lever, destination-side lever = end lever</strong>.</td>
+                <td>There are three kinds of lever: main-line start (yellow), shunting start (green), and end.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#lever">Equipment</a></td>
+            </tr>
+            <tr id="signal">
+                <td><span class="term">Signal</span></td>
+                <td>A <strong>signaling lamp</strong> that tells you go or stop.</td>
+                <td>The color changes automatically according to the route's state. The player doesn't operate it directly. Four kinds: Home, Starting, Block, and Shunting signal.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#signal">Equipment</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Aspect</span></td>
+                <td>The <strong>color (signal) a signal is currently showing</strong>.</td>
+                <td>In custom maps there are only three colors: <strong>🟢 Proceed, 🟡 Caution, 🔴 Stop</strong>. Finer aspects such as restricted or reduced speed are not handled.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#signal">Equipment</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Conflicting route</span></td>
+                <td><strong>Two clashing routes that cannot be opened at the same time</strong>.</td>
+                <td>Routes that share crossing track circuits. The editor judges this automatically, so no manual work is needed.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#route">Equipment</a></td>
+            </tr>
+            <tr id="approach-lock">
+                <td><span class="term">Approach locking</span></td>
+                <td>A mechanism that, <strong>once a train comes right up to a signal, prevents that route from being released arbitrarily</strong>. It stops a green signal from suddenly turning red.</td>
+                <td>When registering a route, specify the "approach-locking track circuit." While a train is on that track circuit, releasing that route is blocked (advanced, optional).</td>
+                <td class="more"><a href="map-editor-tutorial1.en.html#equipment">Hands-on ①</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Departure button</span></td>
+                <td>A <strong>"clear to depart" signal button</strong> placed at the platform end.</td>
+                <td>In custom maps you register "which track number at which station," and it gives the departure signal to the train at that track.</td>
+                <td class="more"><a href="map-editor-equipment.en.html#departure-button">Equipment</a></td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="operation">
+        <h2>📋 Timetable &amp; operations</h2>
+        <table>
+            <tr><th style="width:22%;">Term</th><th>In one line</th><th>In the game</th><th style="width:18%;">More</th></tr>
+            <tr id="diagram">
+                <td><span class="term">Timetable</span></td>
+                <td>The <strong>schedule</strong>. The plan of which train runs where and when.</td>
+                <td>Line up trains in the "Train List" and set their times; you can get an overview with the diagram (a time × position graph).</td>
+                <td class="more"><a href="map-editor-trainlist.en.html">Operations</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Scenario</span></td>
+                <td>A <strong>set of timetables for one time period</strong> of that map (e.g. morning rush, evening).</td>
+                <td>You can create several within a map. The Operations category can be edited once you select a scenario.</td>
+                <td class="more"><a href="map-editor.en.html#open-map">Getting Started</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Train class</span></td>
+                <td>A <strong>train type label</strong> such as "Local" or "Express."</td>
+                <td>Defined in the Company category. You can add one from the preset bank with a single click. Used for colors on departure boards and the diagram.</td>
+                <td class="more"><a href="map-editor-company.en.html#train-class">Company</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Train type</span></td>
+                <td>The <strong>kind of rolling stock</strong> (car count, total length, the icon on the map).</td>
+                <td>Defined in the Company category. Choose by "type × color" from the official icon bank.</td>
+                <td class="more"><a href="map-editor-company.en.html#train-type">Company</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Path group</span></td>
+                <td>A <strong>template for the path a train travels</strong> (where it starts, which routes it passes, where it stops).</td>
+                <td>Created in the Operations category. Multiple trains can share the same path group.</td>
+                <td class="more"><a href="map-editor-trainlist.en.html#path-group">Operations</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Train list</span></td>
+                <td><strong>A table listing, one by one, the trains you actually run</strong>.</td>
+                <td>For each train, specify its train number, type, class, path group, and times.</td>
+                <td class="more"><a href="map-editor-trainlist.en.html#train-list">Operations</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Appearance TC</span></td>
+                <td>The <strong>track circuit where a train first appears</strong> (TC = abbreviation for track circuit).</td>
+                <td>In a path group, press the "Select TC" button and click a track circuit on the map to specify it.</td>
+                <td class="more"><a href="map-editor-trainlist.en.html#path-group">Operations</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Diagram row</span></td>
+                <td>A <strong>single row along the vertical axis of the diagram (graph)</strong> (a station track number or map edge).</td>
+                <td>Defined in the Operations category. The times trains pass the linked track circuits are drawn as lines.</td>
+                <td class="more"><a href="map-editor-trainlist.en.html#diagram-row">Operations</a></td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="misc">
+        <h2>📦 Other</h2>
+        <table>
+            <tr><th style="width:22%;">Term</th><th>In one line</th><th>In the game</th><th style="width:18%;">More</th></tr>
+            <tr>
+                <td><span class="term">UGC</span></td>
+                <td><strong>A map made by a user</strong> (User-Generated Content).</td>
+                <td>Every map you make in the map editor is UGC. Some features differ from the official maps bundled with the main game.</td>
+                <td class="more"><a href="map-editor.en.html#overview">Getting Started</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Bundle info</span></td>
+                <td>The <strong>set of title, description, author, and preview image</strong> used when distributing a map.</td>
+                <td>Set it under "File → Edit Bundle Info." It appears in the user map list.</td>
+                <td class="more"><a href="map-editor.en.html#bundle-info">Getting Started</a></td>
+            </tr>
+            <tr>
+                <td><span class="term">Preview</span></td>
+                <td>A feature to <strong>test-play a map in progress on the spot</strong>.</td>
+                <td>Launch it with ▶ Preview at the top right. It always runs in a sandbox (no score).</td>
+                <td class="more"><a href="map-editor.en.html#save-preview">Getting Started</a></td>
+            </tr>
+        </table>
+        <div class="callout">
+            <strong>Don't see a word here?</strong> Terms that come up in the main game's how-to are gathered in the <a href="help.en.html">How to Play Guide</a>, and the detailed specs of each feature are gathered in the individual guides in the left menu.
+        </div>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support Page</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>

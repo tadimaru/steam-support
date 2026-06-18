@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会社編集ガイド | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root { --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --accent: #4a90d9; --text: #e8eaf6; --text-dim: #9ca3af; --border: #2e3250; --green: #6ab04c; --warn: #f59e0b; --radius: 8px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; font-size: 15px; line-height: 1.75; }
+        header { background: var(--surface2); border-bottom: 2px solid var(--accent); padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+        .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+        nav { width: 240px; min-width: 220px; padding: 28px 16px; position: sticky; top: 65px; align-self: flex-start; max-height: calc(100vh - 65px); overflow-y: auto; }
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+        nav a { display: block; padding: 6px 12px; color: var(--text-dim); text-decoration: none; font-size: 13px; border-radius: var(--radius); transition: background 0.15s, color 0.15s; }
+        nav a:hover, nav a.active { background: var(--surface2); color: var(--accent); }
+        nav .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); padding: 16px 12px 4px; font-weight: bold; }
+        main { flex: 1; padding: 36px 28px; min-width: 0; max-width: 820px; }
+        .breadcrumb { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        @media (max-width: 800px) { nav { display: none; } main { padding: 20px 16px; } }
+        section { margin-bottom: 48px; }
+        h2 { font-size: 22px; font-weight: bold; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        h3 { font-size: 16px; font-weight: bold; color: var(--text); margin: 24px 0 10px; }
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+        main ul, main ol { padding-left: 1.5em; margin: 8px 0; }
+        main ul li, main ol li { margin-bottom: 4px; }
+        code { background: var(--surface2); color: var(--text); padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Consolas', 'Menlo', monospace; }
+        kbd { background: var(--surface2); color: var(--text); padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; font-size: 12px; font-family: 'Consolas', 'Menlo', monospace; }
+        .callout { background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: var(--text-dim); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th { background: var(--surface2); padding: 10px 14px; text-align: left; color: var(--text-dim); font-weight: bold; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .step-list { list-style: none; counter-reset: step; margin: 12px 0; padding-left: 0; }
+        .step-list li { counter-increment: step; position: relative; padding-left: 36px; margin-bottom: 10px; }
+        .step-list li::before { content: counter(step); position: absolute; left: 0; top: 2px; background: var(--accent); color: #fff; font-weight: bold; font-size: 12px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        footer { background: #1a1a2e; color: #aaa; text-align: center; padding: 32px 20px; font-size: 0.9rem; }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🏢</span>
+    <div>
+        <h1>会社編集ガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-company.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html" class="active">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+        <li><a href="map-editor-tutorial2.html">② 複線駅で折り返し</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#overview">概要</a></li>
+        <li><a href="#train-class">列車種別</a></li>
+        <li><a href="#train-type">列車形式</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="help.html">← 遊び方ガイド</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor.html">マップエディタ入門</a> / 会社編集
+    </div>
+
+    <section id="overview">
+        <h2>🎯 概要</h2>
+        <p>
+            <strong>会社</strong>カテゴリでは、列車にまつわる 2 つのマスタを整備します。
+            「普通」「急行」といった<strong>種別</strong>と、E233 系のような<strong>車両形式</strong>です。
+            列車一覧（運行カテゴリ）で各列車にこの 2 つを指定するため、マップ作成の最初に整えておきます。
+        </p>
+        <p>
+            左サイドバーの<strong>会社カテゴリ</strong>から開きます。子モードは 2 つです。
+        </p>
+        <ul>
+            <li><strong>列車種別</strong> — 「普通」「急行」など、発車標・ダイヤ図に出るラベルと色の定義</li>
+            <li><strong>列車形式</strong> — 車両 1 編成のスペック（系列・編成数）とマップ上のアイコン</li>
+        </ul>
+    </section>
+
+    <section id="train-class">
+        <h2>🏷 列車種別</h2>
+        <p>
+            <strong>列車種別</strong>は「普通」「急行」「特急」など、種別ラベルとそれに紐づく色の定義です。
+            発車標の種別バッジや、ダイヤグラム上の筋の色として使われます。
+        </p>
+
+        <h3>既定バンクからの追加</h3>
+        <p>
+            ゼロから定義するのは大変なので、<strong>既定バンク</strong>からよく使われる種別を 1 クリックで追加できます。
+            「各駅停車」「普通」「快速」「準急」「急行」「特急」など 8 種類のテンプレートが用意されており、配色・略称・音声ファイル名がすべて既定値で揃った状態で登録されます。
+        </p>
+        <ol class="step-list">
+            <li>「既定から追加」セクションでバンクからほしい種別を選ぶ</li>
+            <li>「追加」ボタンを押すとマスタに 1 行登録される</li>
+            <li>表示名・色などを後から調整できる</li>
+        </ol>
+
+        <h3>主な項目</h3>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>ID</strong></td><td>内部参照用の識別子（例: <code>local</code>, <code>express</code>）</td></tr>
+            <tr><td><strong>表示名</strong></td><td>発車標・ダイヤ図に出る名前（例: <code>普通</code>, <code>急行</code>）</td></tr>
+            <tr><td><strong>略称</strong></td><td>発車標の小さい欄に入りきらない場合の短縮表記</td></tr>
+            <tr><td><strong>バッジ色</strong></td><td>発車標の種別バッジの背景色と文字色</td></tr>
+            <tr><td><strong>ダイヤ色</strong></td><td>ダイヤグラム上の筋の色（バッジ背景が暗いとダイヤ図に埋もれるので別管理）</td></tr>
+        </table>
+
+        <div class="callout tip">
+            <strong>ダイヤ色について：</strong>列車種別に設定した<strong>ダイヤ色</strong>がダイヤグラム上の筋として表示されます。
+            ダイヤ色を空欄にすると、バッジ色からのフォールバックや、種別 ID ベースのデフォルトで自動補完されます。
+            既定バンクから追加した種別はあらかじめ見やすいダイヤ色がセットされています。
+        </div>
+
+        <div class="callout warn">
+            <strong>削除と再追加について：</strong>既定バンクから追加した種別を削除し、また同じものを追加すると、参照整合性のために削除がブロックされることがあります。
+            その場合は依存している列車一覧の行（その種別を使っている列車）を先に整理してから再削除してください。
+        </div>
+    </section>
+
+    <section id="train-type">
+        <h2>🚆 列車形式</h2>
+        <p>
+            <strong>列車形式</strong>は車両 1 編成の物理スペック（系列名・編成数・全長）と、マップ上に表示される<strong>アイコン</strong>の定義です。
+            同じ「急行」種別でも、走らせる車両が違えば（例: E233 系と E231 系）別の列車形式として登録します。
+        </p>
+
+        <h3>主な項目</h3>
+        <table>
+            <tr><th>項目</th><th>説明</th></tr>
+            <tr><td><strong>ID</strong></td><td>内部参照用の識別子。英数字での命名がおすすめ（例: <code>e233_3000</code>）</td></tr>
+            <tr><td><strong>ニックネーム</strong></td><td>人間が見てわかりやすい名前。会社・系列・番台などお好みで（例: <code>JR東日本 E233系 3000番台</code>、<code>京急 600形</code>、<code>1000系（赤）</code> など）。列車一覧から形式を選ぶときに表示される</td></tr>
+            <tr><td><strong>両数</strong></td><td>編成の車両数（例: 10 両）</td></tr>
+            <tr><td><strong>全長</strong></td><td>編成全長（メートル）</td></tr>
+            <tr><td><strong>アイコン</strong></td><td>マップ上で列車を表すアイコン画像</td></tr>
+        </table>
+
+        <h3>アイコンの選択</h3>
+        <p>
+            アイコンは<strong>公式アイコンバンク</strong>から、「形式 × カラー」の組み合わせで選びます。
+            通勤型・近郊型・特急型など複数の形式が用意され、それぞれに数色のカラーバリエーション（黄緑・オレンジ・水色・黄色・緑など）が紐づきます。
+            まず形式を選び、続いて色を選ぶと、その組み合わせがアイコンとして登録されます。
+        </p>
+        <div class="callout">
+            <strong>自前アイコンを使う：</strong>公式バンクに無いアイコンを使いたい場合は、ユーザーフォルダに PNG を置いて参照する方法があります。
+            詳しくは <a href="train-icon.html">列車アイコン変更ガイド</a> を参照してください。
+        </div>
+    </section>
+
+    <section id="related">
+        <h2>📚 関連ガイド</h2>
+        <ul>
+            <li><a href="map-editor.html"><strong>マップエディタ入門</strong></a> — エディタの全体像と保存・プレビュー</li>
+            <li><a href="map-editor-wiring.html"><strong>配線編集ガイド</strong></a> — 軌道回路から駅・ホームまで</li>
+            <li><a href="map-editor-equipment.html"><strong>設備編集ガイド</strong></a> — てこ・進路・信号機・出発ボタン</li>
+            <li><a href="map-editor-trainlist.html"><strong>運行編集ガイド</strong></a> — ここで定義した形式・種別を使ってダイヤを組む</li>
+            <li><a href="train-icon.html"><strong>列車アイコン変更ガイド</strong></a> — 自前 PNG をアイコンに使う</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>
