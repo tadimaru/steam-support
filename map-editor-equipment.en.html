@@ -194,10 +194,10 @@
             When wiring, decide which track circuit "handles" the signal, place the lever and signal on the <strong>near side</strong> of that boundary, and let the route's chained circuits begin on the <strong>far side</strong>.
         </div>
         <p>
-            Example: if the layout is <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> and you mount the start lever and the home signal on <code>TC_A</code>, the route should chain <code>TC_B</code>, <code>TC_C</code>, … — <code>TC_A</code> itself is excluded.
+            Example: if the layout is <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> with the start lever on <code>TC_A</code>, the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>, the route should chain <code>TC_B</code> and <code>TC_C</code>. <code>TC_A</code> is excluded. <strong>The end lever's track circuit <code>TC_C</code> is included</strong> (the end lever marks where the route terminates, and its track circuit sits inside the route's protected range).
         </p>
         <figure>
-            <svg viewBox="0 0 560 180" role="img" aria-label="Diagram showing which track circuits to include in a route: TC_A (where the start lever and home signal sit) is excluded; the route chains TC_B and TC_C only.">
+            <svg viewBox="0 0 560 180" role="img" aria-label="Diagram showing which track circuits to include in a route: TC_A (start lever) is excluded; the home signal sits at the TC_A/TC_B boundary; the route chains TC_B and TC_C, and TC_C (which holds the end lever) is included.">
                 <!-- Direction of travel -->
                 <text x="280" y="22" text-anchor="middle" class="svg-dim">Train direction →</text>
 
@@ -219,21 +219,25 @@
                 <circle cx="90" cy="90" r="9" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
                 <text x="90" y="64" text-anchor="middle" class="svg-dim">Start lever</text>
 
-                <!-- Home signal on TC_A -->
-                <line x1="160" y1="90" x2="160" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
-                <circle cx="160" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
-                <text x="160" y="36" text-anchor="middle" class="svg-dim">Home signal</text>
+                <!-- Home signal exactly at TC_A / TC_B boundary (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">Home signal</text>
+
+                <!-- End lever on TC_C -->
+                <circle cx="500" cy="90" r="9" fill="#4a90d9" stroke="#fff" stroke-width="1.5"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">End lever</text>
 
                 <!-- Route bracket (TC_B to TC_C) -->
                 <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
                 <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
                 <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
-                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">Include this range in the route</text>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">Include this range (TC_C with the end lever is included)</text>
 
                 <!-- Excluded marker on TC_A -->
                 <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× Excluded</text>
             </svg>
-            <figcaption>Because <code>TC_A</code> hosts the start lever and home signal, the route chain begins at <code>TC_B</code>; <code>TC_A</code> itself is excluded.</figcaption>
+            <figcaption>The start lever sits on <code>TC_A</code> (excluded), the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>. The route chains <code>TC_B</code> through <code>TC_C</code>.</figcaption>
         </figure>
 
         <h3>Conflicting routes</h3>

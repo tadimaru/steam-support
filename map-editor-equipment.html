@@ -194,10 +194,10 @@
             発点てこと信号機をどこに置くかで、進路に含めるべき軌道回路の範囲が変わります。配線時に「ここの軌道回路で信号を扱う」と決め、てこと信号機をその<strong>手前側</strong>、進路の連ねを<strong>その先</strong>から開始するのが基本形になります。
         </div>
         <p>
-            実例: 軌道回路 <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> と並んでおり、<code>TC_A</code> に発点てこ・場内信号機を置く場合、進路には <code>TC_B</code> から先（<code>TC_B</code>, <code>TC_C</code>, …）を連ねます。<code>TC_A</code> は進路に含めません。
+            実例: 軌道回路 <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> と並んでおり、<code>TC_A</code> に発点てこを置き、<code>TC_A</code> と <code>TC_B</code> の境界に場内信号機を置き、<code>TC_C</code> に着点てこを置く場合、進路には <code>TC_B</code>, <code>TC_C</code> を連ねます。<code>TC_A</code> は進路に含めません。<strong>着点てこのある <code>TC_C</code> は進路に含めます</strong>（着点てこは進路の終端を示す目印で、その軌道回路は進路範囲の内側です）。
         </p>
         <figure>
-            <svg viewBox="0 0 560 180" role="img" aria-label="進路に含める軌道回路の範囲を示す図。発点てこ・場内信号機が置かれた TC_A は進路に含めず、進路は TC_B から TC_C へと連ねる。">
+            <svg viewBox="0 0 560 180" role="img" aria-label="進路に含める軌道回路の範囲を示す図。発点てこのある TC_A は進路に含めず、場内信号機を TC_A と TC_B の境界に置き、着点てこのある TC_C も含めて進路は TC_B と TC_C を連ねる。">
                 <!-- 列車の進行方向矢印 -->
                 <text x="280" y="22" text-anchor="middle" class="svg-dim">列車の進行方向 →</text>
 
@@ -215,25 +215,29 @@
                 <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
                 <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
 
-                <!-- 発点てこ（青丸＝本線用発点）on TC_A -->
+                <!-- 発点てこ on TC_A -->
                 <circle cx="90" cy="90" r="9" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
                 <text x="90" y="64" text-anchor="middle" class="svg-dim">発点てこ</text>
 
-                <!-- 場内信号機 on TC_A（赤丸を線路の上に描く）-->
-                <line x1="160" y1="90" x2="160" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
-                <circle cx="160" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
-                <text x="160" y="36" text-anchor="middle" class="svg-dim">場内信号機</text>
+                <!-- 場内信号機 ちょうど TC_A / TC_B の境界 (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">場内信号機</text>
+
+                <!-- 着点てこ on TC_C -->
+                <circle cx="500" cy="90" r="9" fill="#4a90d9" stroke="#fff" stroke-width="1.5"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">着点てこ</text>
 
                 <!-- 進路範囲ブラケット（TC_B 〜 TC_C 下に緑線で示す）-->
                 <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
                 <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
                 <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
-                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">この範囲を進路に含める</text>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">この範囲を進路に含める（着点てこのある TC_C も含む）</text>
 
                 <!-- 含めない印（TC_A に × マーク）-->
                 <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× 含めない</text>
             </svg>
-            <figcaption>発点てこ・場内信号機の置かれた <code>TC_A</code> は進路に含めず、<code>TC_B</code> から先を進路として連ねる。</figcaption>
+            <figcaption>発点てこのある <code>TC_A</code> は進路に含めず、場内信号機の先 <code>TC_B</code> から、着点てこのある <code>TC_C</code> までを進路として連ねる。</figcaption>
         </figure>
 
         <h3>競合進路</h3>
