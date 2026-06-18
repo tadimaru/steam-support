@@ -593,6 +593,62 @@
         <div class="callout">
             <strong>経由する軌道回路の考え方：</strong>発点てこのある軌道回路は<strong>経由には含めず</strong>、その次の軌道回路から着点てこのある軌道回路までを順に選びます。発点のある軌道回路は次の「接近鎖錠」の対象になります。
         </div>
+        <p>
+            進路として連ねた軌道回路は、その進路を守る信号機（場内・出発・入換）が「ここから先は自分の管理範囲」と宣言する区間になります。信号機は管理範囲内に列車が在線している間は<strong>赤</strong>を示し、列車を進入させません。
+        </p>
+        <p>
+            このため、<strong>発点てこ・信号機が置かれている軌道回路は、進路に含めません</strong>。含めてしまうと、列車がてこ・信号機の位置に達した瞬間に信号機が自分自身を守って赤になり、列車がその場で立ち往生します。
+        </p>
+        <div class="callout warn">
+            <strong>原則：</strong>進路の最初の軌道回路は、発点てこ・信号機より<strong>進行方向の先</strong>にある軌道回路です。<br>
+            発点てこと信号機をどこに置くかで、進路に含めるべき軌道回路の範囲が変わります。配線時に「ここの軌道回路で信号を扱う」と決め、てこと信号機をその<strong>手前側</strong>、進路の連ねを<strong>その先</strong>から開始するのが基本形になります。
+        </div>
+        <p>
+            実例: 軌道回路 <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> と並んでおり、<code>TC_A</code> に発点てこを置き、<code>TC_A</code> と <code>TC_B</code> の境界に場内信号機を置き、<code>TC_C</code> に着点てこを置く場合、進路には <code>TC_B</code>, <code>TC_C</code> を連ねます。<code>TC_A</code> は進路に含めません。<strong>着点てこのある <code>TC_C</code> は進路に含めます</strong>（着点てこは進路の終端を示す目印で、その軌道回路は進路範囲の内側です）。
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 180" role="img" aria-label="進路に含める軌道回路の範囲を示す図。発点てこのある TC_A は進路に含めず、場内信号機を TC_A と TC_B の境界に置き、着点てこのある TC_C も含めて進路は TC_B と TC_C を連ねる。">
+                <!-- 列車の進行方向矢印 -->
+                <text x="280" y="22" text-anchor="middle" class="svg-dim">列車の進行方向 →</text>
+
+                <!-- 線路（3 つの TC を横に並べる） -->
+                <line x1="40"  y1="90" x2="200" y2="90" stroke="#4a90d9" stroke-width="6"/>
+                <line x1="200" y1="90" x2="370" y2="90" stroke="#6ab04c" stroke-width="6"/>
+                <line x1="370" y1="90" x2="540" y2="90" stroke="#6ab04c" stroke-width="6"/>
+
+                <!-- TC 境界の縦線 -->
+                <line x1="200" y1="78" x2="200" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+                <line x1="370" y1="78" x2="370" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+
+                <!-- TC ラベル -->
+                <text x="120" y="115" text-anchor="middle" class="svg-label">TC_A</text>
+                <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
+                <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
+
+                <!-- 発点てこ on TC_A（ゲーム表記: 右向き三角） -->
+                <polygon points="80,80 102,90 80,100" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+                <text x="90" y="64" text-anchor="middle" class="svg-dim">発点てこ</text>
+
+                <!-- 場内信号機 ちょうど TC_A / TC_B の境界 (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">場内信号機</text>
+
+                <!-- 着点てこ on TC_C（ゲーム表記: 白抜き丸） -->
+                <circle cx="500" cy="90" r="9" fill="#fff" stroke="#4a90d9" stroke-width="3"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">着点てこ</text>
+
+                <!-- 進路範囲ブラケット（TC_B 〜 TC_C 下に緑線で示す）-->
+                <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">この範囲を進路に含める（着点てこのある TC_C も含む）</text>
+
+                <!-- 含めない印（TC_A に × マーク）-->
+                <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× 含めない</text>
+            </svg>
+            <figcaption>発点てこのある <code>TC_A</code> は進路に含めず、場内信号機の先 <code>TC_B</code> から、着点てこのある <code>TC_C</code> までを進路として連ねる。</figcaption>
+        </figure>
 
         <h3>3-4.（任意・上級）接近鎖錠を設定する</h3>
         <div class="callout">

@@ -593,6 +593,62 @@
         <div class="callout">
             <strong>How to think about the track circuits it passes through:</strong> <strong>don't include</strong> the track circuit where the start lever is; select from the next track circuit through to the one where the end lever is, in order. The track circuit with the start lever becomes the target of the next "approach locking".
         </div>
+        <p>
+            The track circuits you chain together form the area that the route's signal (home / starting / shunting) protects. While any of those track circuits is occupied, the signal stays <strong>red</strong>, blocking further trains from entering.
+        </p>
+        <p>
+            Therefore, <strong>do not include the track circuit where the start lever or the signal itself is placed</strong>. If you do, the moment the train reaches that lever/signal position, the signal protects its own location, turns red, and the train stops right there.
+        </p>
+        <div class="callout warn">
+            <strong>Rule of thumb:</strong> a route's first track circuit must be the one <strong>past</strong> the start lever and signal, not the one they sit on.<br>
+            When wiring, decide which track circuit "handles" the signal, place the lever and signal on the <strong>near side</strong> of that boundary, and let the route's chained circuits begin on the <strong>far side</strong>.
+        </div>
+        <p>
+            Example: if the layout is <code>TC_A</code> → <code>TC_B</code> → <code>TC_C</code> with the start lever on <code>TC_A</code>, the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>, the route should chain <code>TC_B</code> and <code>TC_C</code>. <code>TC_A</code> is excluded. <strong>The end lever's track circuit <code>TC_C</code> is included</strong> (the end lever marks where the route terminates, and its track circuit sits inside the route's protected range).
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 180" role="img" aria-label="Diagram showing which track circuits to include in a route: TC_A (start lever) is excluded; the home signal sits at the TC_A/TC_B boundary; the route chains TC_B and TC_C, and TC_C (which holds the end lever) is included.">
+                <!-- Direction of travel -->
+                <text x="280" y="22" text-anchor="middle" class="svg-dim">Train direction →</text>
+
+                <!-- Tracks for 3 TCs -->
+                <line x1="40"  y1="90" x2="200" y2="90" stroke="#4a90d9" stroke-width="6"/>
+                <line x1="200" y1="90" x2="370" y2="90" stroke="#6ab04c" stroke-width="6"/>
+                <line x1="370" y1="90" x2="540" y2="90" stroke="#6ab04c" stroke-width="6"/>
+
+                <!-- TC boundary marks -->
+                <line x1="200" y1="78" x2="200" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+                <line x1="370" y1="78" x2="370" y2="102" stroke="#9ca3af" stroke-width="1.5"/>
+
+                <!-- TC labels -->
+                <text x="120" y="115" text-anchor="middle" class="svg-label">TC_A</text>
+                <text x="285" y="115" text-anchor="middle" class="svg-label">TC_B</text>
+                <text x="455" y="115" text-anchor="middle" class="svg-label">TC_C</text>
+
+                <!-- Start lever on TC_A (game UI: right-pointing triangle) -->
+                <polygon points="80,80 102,90 80,100" fill="#f59e0b" stroke="#fff" stroke-width="1.5"/>
+                <text x="90" y="64" text-anchor="middle" class="svg-dim">Start lever</text>
+
+                <!-- Home signal exactly at TC_A / TC_B boundary (x=200) -->
+                <line x1="200" y1="78" x2="200" y2="58" stroke="#9ca3af" stroke-width="1.5"/>
+                <circle cx="200" cy="48" r="8" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+                <text x="200" y="36" text-anchor="middle" class="svg-dim">Home signal</text>
+
+                <!-- End lever on TC_C (game UI: hollow circle, white center) -->
+                <circle cx="500" cy="90" r="9" fill="#fff" stroke="#4a90d9" stroke-width="3"/>
+                <text x="500" y="64" text-anchor="middle" class="svg-dim">End lever</text>
+
+                <!-- Route bracket (TC_B to TC_C) -->
+                <line x1="200" y1="140" x2="540" y2="140" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="200" y1="135" x2="200" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <line x1="540" y1="135" x2="540" y2="145" stroke="#6ab04c" stroke-width="3"/>
+                <text x="370" y="162" text-anchor="middle" class="svg-label" style="fill:#6ab04c;">Include this range (TC_C with the end lever is included)</text>
+
+                <!-- Excluded marker on TC_A -->
+                <text x="120" y="162" text-anchor="middle" class="svg-dim" style="fill:#dc2626;">× Excluded</text>
+            </svg>
+            <figcaption>The start lever sits on <code>TC_A</code> (excluded), the home signal at the <code>TC_A</code>/<code>TC_B</code> boundary, and the end lever on <code>TC_C</code>. The route chains <code>TC_B</code> through <code>TC_C</code>.</figcaption>
+        </figure>
 
         <h3>3-4. (Optional / advanced) Set up approach locking</h3>
         <div class="callout">
