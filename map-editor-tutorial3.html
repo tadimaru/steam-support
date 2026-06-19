@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践③ 引上線で入換（折り返し） | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 概念図（インライン SVG） */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .svg-label { fill: var(--text); font-size: 12px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 10.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        /* スクリーンショット差し込み枠（画像ができたら img に差し替え） */
+        figure.shot { padding: 0; background: none; border: none; }
+        .shot-ph {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            padding: 26px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .shot-ph .cam { font-size: 26px; display: block; margin-bottom: 6px; opacity: 0.7; }
+        .shot-ph .fn { display: inline-block; margin-top: 8px; font-family: 'Consolas', 'Menlo', monospace; font-size: 12px; color: var(--accent); }
+        figure.shot img { max-width: 760px; max-height: min(640px, 78vh); width: auto; height: auto; border-radius: var(--radius); border: 1px solid var(--border); display: block; margin: 0 auto; cursor: zoom-in; transition: opacity 0.15s; }
+        figure.shot img:hover { opacity: 0.85; }
+
+        /* クリックで拡大表示（ライトボックス） */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 6px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: none; }
+        .lightbox .lb-close { position: absolute; top: 14px; right: 22px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; opacity: 0.8; }
+        .lightbox .lb-close:hover { opacity: 1; }
+        .lightbox .lb-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        .lvl-badge { display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--warn); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🔀</span>
+    <div>
+        <h1>実践③ 引上線で入換（折り返し）<span class="lvl-badge">Lv.3</span></h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-tutorial3.en.html">English</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">マップエディタ ガイド</div>
+    <ul>
+        <li><a href="map-editor-start.html">はじめて</a></li>
+        <li><a href="map-editor.html">入門</a></li>
+        <li><a href="map-editor-company.html">会社編集</a></li>
+        <li><a href="map-editor-wiring.html">配線編集</a></li>
+        <li><a href="map-editor-equipment.html">設備編集</a></li>
+        <li><a href="map-editor-trainlist.html">運行編集</a></li>
+        <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+    <div class="section-title">実践（つくってみる）</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.html">① 単線で行き違い</a></li>
+        <li><a href="map-editor-tutorial2.html">② 複線駅で折り返し</a></li>
+        <li><a href="map-editor-tutorial3.html" class="active">③ 引上線で入換</a></li>
+    </ul>
+    <div class="section-title">本ページ内</div>
+    <ul>
+        <li><a href="#goal">ゴールと完成イメージ</a></li>
+        <li><a href="#design">設計図（1面2線＋引上線）</a></li>
+        <li><a href="#company">STEP1 会社</a></li>
+        <li><a href="#wiring">STEP2 配線（駅を2つ）</a></li>
+        <li><a href="#equipment">STEP3 設備（競合進路）</a></li>
+        <li><a href="#operation">STEP4 運行（4分割・折り返し）</a></li>
+        <li><a href="#done">完成・まとめ</a></li>
+    </ul>
+    <div class="section-title">関連</div>
+    <ul>
+        <li><a href="map-editor-tutorial2.html">← 実践② 複線駅で折り返し</a></li>
+        <li><a href="glossary.html">用語集</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.html">遊び方ガイド</a> / <a href="map-editor-start.html">はじめての自作マップ</a> / <a href="map-editor-tutorial2.html">実践②</a> / 実践③ 引上線で入換（折り返し）
+    </div>
+
+    <section id="goal">
+        <h2>🔀 ゴールと完成イメージ</h2>
+        <p>
+            実践③では、<strong>駅のとなりにある「引上線（ひきあげせん）」を使って列車を入換（折り返し）させる</strong>マップを作ります。
+            列車が駅に着いたあと、いったん<strong>引上線へ引き上げて</strong>から向きを変え、別の番線へ戻って当駅始発として出発する——車庫や折返し駅でよく見るあの動きです。
+        </p>
+        <p>
+            完成すると、1本の列車が次の4つの動きを順番にこなします。まずはこの<strong>完成イメージ</strong>を頭に入れてから読み進めてください。
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv3-00-arrive.png" alt="完成図①：列車が1番線に到着">
+            <figcaption>完成図①　左から来た列車が1番線に到着する。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-01-to-yard.png" alt="完成図②：1番線から引上線へ進入">
+            <figcaption>完成図②　回送に切り替わり、1番線から引上線へ進入する。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-02-from-yard.png" alt="完成図③：引上線で折り返し、2番線へ進入">
+            <figcaption>完成図③　引上線で折り返し、2番線へ進入する。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-03-depart.png" alt="完成図④：2番線から当駅始発の各駅停車として出発">
+            <figcaption>完成図④　2番線から、当駅始発の各駅停車として左へ出発する。</figcaption>
+        </figure>
+
+        <h3>このチュートリアルで新しく学べること</h3>
+        <ul>
+            <li><strong>1つのマップに駅を2つ置く</strong>（乗降する駅＋引上線を別々の駅として登録）</li>
+            <li>なぜ分けるのか：<strong>1つの経路グループに設定できる発着時刻は1つだけ</strong>という制約</li>
+            <li><strong>入換用の発点てこ</strong>（緑）の使い方と番号の付け方</li>
+            <li><strong>競合進路</strong>で「同時に開通させたくない進路」を手動で登録する</li>
+            <li><strong>経路グループを4つに分割</strong >して、入換の一連の動きを組み立てる</li>
+            <li>列車一覧で<strong>「次運用を作成して登録」を3回つないで</strong>、到着→入換→折り返し出発を1本にする</li>
+            <li>引上線の<strong>発車標</strong>を別途表示する</li>
+        </ul>
+
+        <div class="callout warn">
+            <strong>ここから上級者向けです。</strong>実践③は、ゲーム側でも「複数駅を置くのは上級者向け」という注意が出るレベルの内容です。マップ作成の基本（会社→配線→設備→運行の流れ、てこ・進路・信号・経路グループ）は<a href="map-editor-tutorial1.html">実践①</a>・<a href="map-editor-tutorial2.html">実践②</a>で説明済みなので、ここでは<strong>くり返しは大きく省き、入換の経路グループと列車一覧に集中</strong>して進めます。
+        </div>
+    </section>
+
+    <section id="design">
+        <h2>✏️ 設計図（1面2線＋引上線）</h2>
+        <p>
+            今回の駅は、上下2本の本線（複線）にはさまれた<strong>1面2線の島式ホーム</strong>に、<strong>右側へ伸びる引上線</strong>を1本足した形です。
+            番線は<strong>1番線（下り側・到着）・2番線（上り側・出発）</strong>とし、引上線は番線を持たない行き止まりの線路です。
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 240" role="img" aria-label="1面2線の島式ホームと右側の引上線の配線図">
+                <defs><marker id="arrow3" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><polygon points="0,0 9,4.5 0,9" fill="#6ab04c"/></marker></defs>
+                <!-- 1番線（下り・上の本線） -->
+                <line x1="20" y1="78" x2="540" y2="78" stroke="#4a90d9" stroke-width="5"/>
+                <!-- 2番線（上り・下の本線） -->
+                <line x1="20" y1="170" x2="540" y2="170" stroke="#4a90d9" stroke-width="5"/>
+                <!-- 島式ホーム -->
+                <rect x="120" y="98" width="200" height="52" rx="5" fill="#22263a" stroke="#2e3250"/>
+                <text x="220" y="129" text-anchor="middle" class="svg-dim">島式ホーム</text>
+                <!-- 引上線（右の行き止まりスタブ） -->
+                <line x1="460" y1="124" x2="540" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <!-- 片開きで1番線・2番線を引上線につなぐ -->
+                <line x1="410" y1="78" x2="460" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="410" y1="170" x2="460" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="410" cy="78" r="6" fill="#f59e0b"/>
+                <circle cx="410" cy="170" r="6" fill="#f59e0b"/>
+                <!-- 入換の流れ：1番線→引上線→2番線 -->
+                <path d="M 470 110 L 506 110 A 8 8 0 0 1 506 138 L 470 138" fill="none" stroke="#6ab04c" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow3)"/>
+                <text x="500" y="102" text-anchor="middle" class="svg-dim">折り返し</text>
+                <!-- ラベル -->
+                <text x="24" y="68" class="svg-dim">下り線（到着）→</text>
+                <text x="24" y="190" class="svg-dim">←上り線（出発）</text>
+                <text x="120" y="70" class="svg-label">1番線</text>
+                <text x="120" y="192" class="svg-label">2番線</text>
+                <text x="476" y="118" class="svg-label">引上線</text>
+            </svg>
+            <figcaption>1面2線＋引上線。下りで来た列車は1番線に着き、引上線へ引き上げて折り返し、2番線から上り方向へ出発する。引上線は行き止まり。</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>進路の決めごと（今回）：</strong>下り（右行き）は1番線へ到着・出発、上り（左行き）は2番線へ到着・出発の<strong>本線4本</strong>に、<strong>1番線→引上線</strong>・<strong>引上線→2番線</strong>の<strong>入換2本</strong>を足した、合計<strong>6本</strong>の進路を作ります。
+        </div>
+    </section>
+
+    <section id="company">
+        <h2>🏢 STEP1　会社（今回は軽く）</h2>
+        <p>新規マップを作り（例：マップ名 <code>入れ替えがある駅</code>）、会社カテゴリから始めます。今回は入換がメインなので、会社まわりは<strong>必要最低限</strong>にして先へ進みます。</p>
+        <h3>1-1. 列車種別は「各駅停車」と「回送」だけ</h3>
+        <p>
+            入換中の列車は<strong>回送</strong>として走り、お客さんを乗せる区間は<strong>各駅停車</strong>になります。今回はこの2種別だけ用意すればOKです（種別のカスタム作成は<a href="map-editor-tutorial2.html#company">実践②</a>を参照）。
+        </p>
+        <h3>1-2. 列車形式は1つだけ</h3>
+        <p>記事では車両を1形式のみ用意します。例として<strong>通勤型・10両編成・全長200m（公式バンクのオレンジ）</strong>を「1系」として設定します。手順は<a href="map-editor-company.html">会社編集ガイド</a>のとおり。</p>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 STEP2　配線（駅を2つ登録するのがカギ）</h2>
+        <p>線路を引く手順そのものは実践①・②と同じなので<strong>サクサク進めます</strong>。今回の山場は<strong>「駅を2つ登録する」</strong>ところです。</p>
+
+        <h3>2-1. 線路を引く（複線＋島式＋引上線）</h3>
+        <p>
+            上下線（複線）の間に1面2線の島式ホーム、その右側に引上線のスタブ（行き止まり）を引きます。本線と引上線をつなぐのは<strong>Y字の片開き分岐</strong>です。
+        </p>
+        <p>分岐はオーソドックスな設定（分岐側45km/h・直進側80km/h、長さ20mほど）で大丈夫です。線路が引けたら<strong>いったんプレビュー</strong>して形を確認しましょう。</p>
+        <figure class="shot">
+            <img src="tutorial/lv3-04-track-preview.png" alt="線路だけを置いた状態のプレビュー">
+            <figcaption>線路が引けたら、いったんプレビューで形を確認する。</figcaption>
+        </figure>
+
+        <h3>2-2.（Lv3の肝①）駅と引上線を「別の駅」として登録する</h3>
+        <div class="callout warn">
+            <strong>大前提：</strong>同じ駅を、同じ経路で2回通ることは基本的にできません。「駅 → 引上線 → 駅」のように<strong>同じ場所に2回止まる</strong>運用を作るには、<strong>引上線を別の駅として登録</strong>します。
+        </div>
+        <p>そこで、駅を<strong>2つ</strong>登録します。</p>
+        <ul>
+            <li><strong>① 入れ替えがある駅</strong> … 人が乗り降りする島式ホームの駅（1番線・2番線）</li>
+            <li><strong>② 引上線</strong> … 折り返し用の行き止まり。番線・ホームは持たない</li>
+        </ul>
+        <p>
+            2つ目の駅を作ろうとすると、<strong>注意書き</strong>が表示されます。
+        </p>
+        <div class="callout">
+            <strong>表示される注意（要点）：</strong>「1つのマップに複数の駅を置くのは上級者向けです」「<strong>1つの経路グループに設定できる発着時刻は1つだけ</strong>です」。<br>
+            ——つまり、駅と引上線の両方で時刻を設定したいなら、<strong>駅でいったん経路グループを分ける</strong>（普通電車→回送電車に切り替えるイメージ）必要がある、ということ。これが実践③が上級者向けである理由です。<strong>「それでも登録しますか」には「登録する」</strong>で進めてください。
+        </div>
+
+        <h3>2-3. ホームは旅客駅にだけ</h3>
+        <p>ホームは<strong>乗り降りする側（入れ替えがある駅）にだけ</strong>載せます。引上線にはホームを置きません。置けたら保存します。</p>
+
+        <h3>2-4. 出発ボタンの考え方（引上線は置かない）</h3>
+        <p>
+            出発ボタンは、<strong>「出発合図を待ってから発車させるか／時刻になったら自動で発車させるか」</strong>を決めるものです。
+        </p>
+        <ul>
+            <li><strong>たくさん列車が入る駅</strong>：出発ボタンを置くのがおすすめ。ダイヤが乱れたときに「まだ出したくないのに発車」を防げます。</li>
+            <li><strong>今回の引上線</strong>：1線しかなく、進路を構成しない限り列車は先へ進めません。そこで<strong>引上線には出発ボタンを置かず</strong>、時刻になったら<strong>自動で発車</strong>させます。</li>
+        </ul>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-wiring.html">配線編集ガイド</a></p>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 STEP3　設備（入換用てこ・6進路・競合進路）</h2>
+
+        <h3>3-1.（Lv3の肝②）入換用の発点てこを使う</h3>
+        <p>
+            今回はじめて<strong>入換用の発点てこ（緑）</strong>を使います。発点てこは数字で管理しますが、<strong>本線用と入換用で番号帯を分ける</strong>と分かりやすくなります。
+        </p>
+        <table>
+            <tr><th>用途</th><th>方向</th><th>番号の例</th></tr>
+            <tr><td>本線用（黄）</td><td>右行き</td><td>1・2</td></tr>
+            <tr><td>本線用（黄）</td><td>左行き</td><td>11・12</td></tr>
+            <tr><td>入換用（緑）</td><td>入換</td><td><strong>21・22</strong>（21番台で分ける）</td></tr>
+        </table>
+        <p>今回は、<strong>1番線→引上線</strong>のルートに <code>21</code> 番、<strong>引上線→2番線</strong>のルートに <code>22</code> 番の入換用てこを割り当てます。着点てこはいつも通りアルファベットで振ります。</p>
+
+        <h3>3-2. 必要な6進路</h3>
+        <p>本線用4本＋入換用2本の<strong>合計6本</strong>。発点てこの軌道回路は経由に含めず、その次から着点てこの所までを経由に登録します（おさらいは<a href="map-editor-tutorial2.html#equipment">実践②</a>）。</p>
+        <table>
+            <tr><th>進路</th><th>意味</th><th>発点</th><th>着点</th></tr>
+            <tr><td><code>1A</code></td><td>下り → 1番線に到着</td><td>1</td><td>A（1番線）</td></tr>
+            <tr><td><code>2B</code></td><td>1番線 → 下りへ出発</td><td>2</td><td>B（下り本線）</td></tr>
+            <tr><td><code>11D</code></td><td>上り → 2番線に到着</td><td>11</td><td>D（2番線）</td></tr>
+            <tr><td><code>12E</code></td><td>2番線 → 上りへ出発</td><td>12</td><td>E（上り本線）</td></tr>
+            <tr><td><code>21C</code></td><td>1番線 → 引上線（入換）</td><td>21（緑）</td><td>C（引上線）</td></tr>
+            <tr><td><code>22D</code></td><td>引上線 → 2番線（入換）</td><td>22（緑）</td><td>D（2番線）</td></tr>
+        </table>
+        <h3>3-3. 信号機を置く</h3>
+        <p>
+            信号機は、<strong>場内2本・出発2本・入換2本</strong>と、駅間防護の<strong>閉塞信号機</strong>を置きます。基本の置き方は実践①・②と同じ（進路と守る軌道回路を見て現示が決まる）です。
+        </p>
+        <div class="callout warn">
+            <strong>入換用の信号機には黄色条件がありません。</strong>入換信号機にはそもそも黄色（注意）の現示がないため、黄色の条件は設定できません。場内・出発信号機の黄色条件はこれまで通り設定します。
+        </div>
+
+        <h3>3-4.（Lv3の肝③）競合進路 — 同時に開けたくない進路を登録する</h3>
+        <p>
+            この駅では、本線到着の <code>1A</code> と本線出発の <code>2B</code> は<strong>同時に開通できてかまいません</strong>（到着して出発する進路は同時に開けられることが多い）。
+        </p>
+        <p>
+            いっぽう、本線到着の <code>1A</code> と、そこから引上線へ入る入換の <code>21C</code> は、<strong>同時に開通させたくない</strong>のがふつうです。軌道回路を共有していないために自動では競合扱いにならない場合でも、<strong>手動で「競合進路」に登録</strong>できます。
+        </p>
+        <ol class="step-list">
+            <li><code>1A</code> の進路を選択する</li>
+            <li>競合進路に <code>21C</code> をチェックして保存</li>
+            <li>これで <code>1A</code> と <code>21C</code> は<strong>同時に開通できなく</strong>なる</li>
+        </ol>
+        <div class="callout">
+            <strong>相互参照されます：</strong><code>1A</code> 側に <code>21C</code> を登録すると、<code>21C</code> 側にも自動で <code>1A</code> が登録されます。<strong>片方だけ設定すればOK</strong>です。<br>
+            なお、競合進路はあくまで<strong>よりリアルな運用を再現するためのもの</strong>。設定しなくてもゲームがバグることはありません。気になる人だけどうぞ。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-07-conflict-route.png" alt="1A 選択中に競合進路 21C をチェックした画面">
+            <figcaption>1A を選択し、競合進路に 21C をチェックして保存。これで両者は同時開通しなくなる。</figcaption>
+        </figure>
+
+        <h3>3-5. 出発ボタン</h3>
+        <p>出発ボタンは本線の各番線に置きます。<strong>引上線には置きません</strong>（2-4のとおり自動発車）。ここまでで軌道がすべて完成したら、いったんスクショを残しておきましょう。</p>
+        <figure class="shot">
+            <img src="tutorial/lv3-05-equipment-done.png" alt="信号機・出発ボタンまで配置し終えた全体">
+            <figcaption>信号機・出発ボタンまで配置し終えた状態。引上線には出発ボタンを置かない。</figcaption>
+        </figure>
+        <p class="more" style="font-size:13px;">→ くわしくは <a href="map-editor-equipment.html">設備編集ガイド</a></p>
+    </section>
+
+    <section id="operation">
+        <h2>📋 STEP4　運行（経路グループ4分割・折り返し連結）</h2>
+        <p>ここが実践③の本題です。入換の一連の動きを、<strong>4つの経路グループ</strong>に分けて作り、最後に列車一覧で<strong>1本につなぎ</strong>ます。</p>
+
+        <h3>4-1.（Lv3の肝④）なぜ経路グループを4つに分けるのか</h3>
+        <p>入換の動きは、次の4区間に分けます。</p>
+        <ol>
+            <li><strong>1番線に到着</strong></li>
+            <li><strong>1番線 → 引上線</strong>へ入る</li>
+            <li><strong>引上線 → 2番線</strong>へ入る</li>
+            <li><strong>2番線から出発</strong></li>
+        </ol>
+        <div class="callout warn">
+            「1番線到着」と「引上線へ行く」はどちらも右向きだから<strong>まとめてよいのでは？</strong>と思うかもしれません。でも、<strong>1つの経路グループに設定できる発着時刻は1つだけ</strong>。まとめてしまうと、後ろの駅（引上線）の時刻が設定できなくなります。<strong>2か所に止まるなら、その途中で経路グループを分ける</strong>——これが鉄則です。
+        </div>
+
+        <h3>4-2. 経路グループ① 1番線到着</h3>
+        <ol class="step-list">
+            <li>経路グループID（例 <code>1番線到着</code>）、方向「右」</li>
+            <li>出現TCは左端の軌道回路、出現オフセットは到着の手前（例：80秒前）</li>
+            <li>ステップ：進路 <code>1A</code> で到着 → <strong>入れ替えがある駅（S001）で停車</strong></li>
+            <li>停車は<strong>運用切り替えの「旅客扱い」</strong>に。回送で出ていく駅ですが、<strong>お客さんを降ろす作業がある</strong>ので旅客扱いでOK</li>
+            <li>停車秒は<strong>0秒</strong>でOK（実際の停車は次の経路グループのステップで入れるため）</li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv3-08-group1-arrive.png" alt="経路グループ①（1番線到着・旅客扱い）">
+            <figcaption>経路グループ①　進路1Aで到着し、入れ替えがある駅で旅客扱い停車（0秒）。</figcaption>
+        </figure>
+
+        <h3>4-3. 経路グループ② 1番線 → 引上線</h3>
+        <ol class="step-list">
+            <li>経路グループID（例 <code>1番線→引上線</code>）、方向「右」</li>
+            <li>出現TCは<strong>1つ前のグループが最後に止まった所＝1番線</strong>（引き継ぎ）</li>
+            <li>出現オフセットは<strong>空欄</strong>（前の運用から引き継ぐので入れない）</li>
+            <li>ステップ：1番線で停車（引き継ぎなので「停車・旅客扱い」、秒数は適当でOK＝出発ボタンが効くため） → 進路 <code>21C</code> → <strong>引上線で「折り返し（旅客扱いなし）」</strong></li>
+        </ol>
+        <div class="callout">
+            引上線ではお客さんの乗り降りがないので、<strong>折り返しは「旅客扱いなし」</strong>を選びます。この「折り返し」が入換動作のスイッチです。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-09-group2-to-yard.png" alt="経路グループ②（21Cで引上線へ・折り返し旅客扱いなし）">
+            <figcaption>経路グループ②　進路21Cで引上線へ。引上線では「折り返し（旅客扱いなし）」を選ぶ。</figcaption>
+        </figure>
+
+        <h3>4-4. 経路グループ③ 引上線 → 2番線</h3>
+        <ol class="step-list">
+            <li>経路グループID（例 <code>引上線→2番線</code>）、<strong>方向は「左」</strong>（向きが変わるので選び忘れに注意）</li>
+            <li>出現TCは<strong>引上線の軌道回路</strong></li>
+            <li>ステップ：引上線で停車（<strong>旅客扱いなし</strong>） → 進路 <code>22D</code> → 2番線で停車（<strong>運用切り替えの「旅客扱い」</strong>）</li>
+        </ol>
+        <div class="callout tip">
+            <strong>旅客扱いの見分け方：</strong>その駅で<strong>1人でもお客さんが乗り降りするなら「旅客扱い」</strong>。引上線は乗り降りがないので「旅客扱いなし」です。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-10-group3-from-yard.png" alt="経路グループ③（22Dで2番線へ）">
+            <figcaption>経路グループ③　方向「左」。引上線で停車（旅客扱いなし）→進路22D→2番線で旅客扱い停車。</figcaption>
+        </figure>
+
+        <h3>4-5. 経路グループ④ 2番線発車</h3>
+        <ol class="step-list">
+            <li>経路グループID（例 <code>2番線発車</code>）、方向「左」</li>
+            <li>出現TCは<strong>2番線の軌道回路</strong>、出現オフセットは<strong>空欄</strong>（引き継ぎ）</li>
+            <li>ステップ：2番線で停車（旅客扱い） → 進路 <code>12E</code> で出発</li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv3-11-group4-depart.png" alt="経路グループ④（2番線停車→12Eで出発）">
+            <figcaption>経路グループ④　2番線で旅客扱い停車→進路12Eで上り方向へ出発。</figcaption>
+        </figure>
+
+        <h3>4-6.（Lv3の肝⑤）列車一覧 — 「次運用を作成して登録」で4運用をつなぐ</h3>
+        <p>
+            4つの経路グループを、列車一覧で<strong>1本の列車</strong>につなぎます。最初の運用を作ったら、<strong>「次運用を作成して登録」</strong>ボタンを3回くり返して、到着→入換→折り返し出発をつなげます。
+        </p>
+        <ol class="step-list">
+            <li>列車番号 <code>1001</code>（番号は何でもOK）、種別<strong>各駅停車</strong>、経路グループ <code>1番線到着</code>。到着時刻 <strong>10:00</strong></li>
+            <li><strong>「次運用を作成して登録」</strong>→ <code>1001_2</code>。種別<strong>回送</strong>、経路グループ <code>1番線→引上線</code></li>
+            <li>もう一度<strong>「次運用を作成して登録」</strong>→ <code>1001_3</code>。種別<strong>回送</strong>、経路グループ <code>引上線→2番線</code></li>
+            <li>もう一度<strong>「次運用を作成して登録」</strong>→ <code>1001_4</code>。種別<strong>各駅停車</strong>、経路グループ <code>2番線発車</code></li>
+            <li>保存。エラーが出たら、表示にしたがって時刻などを直す</li>
+        </ol>
+        <div class="callout warn">
+            <strong>時刻は「欄に書いてある駅」の時刻です。</strong>たとえば <code>1001_2</code>（1番線→引上線）の時刻は、<strong>引上線ではなく「入れ替えがある駅（S001）」の時刻</strong>。「この列車は引上線へ行くから引上線の時刻かな？」と思いがちですが、<strong>欄に書かれている駅の時刻</strong>を入れてください。前の運用と時刻がズレないように。
+        </div>
+        <p>時刻の例（前後の運用がつながるように組みます）：</p>
+        <table>
+            <tr><th>列番</th><th>種別</th><th>経路グループ</th><th>基準の駅</th><th>時刻</th></tr>
+            <tr><td><code>1001</code></td><td>各駅停車</td><td>1番線到着</td><td>入れ替えがある駅</td><td>10:00 着</td></tr>
+            <tr><td><code>1001_2</code></td><td>回送</td><td>1番線→引上線</td><td>入れ替えがある駅</td><td>10:00 着 / 10:01 発</td></tr>
+            <tr><td><code>1001_3</code></td><td>回送</td><td>引上線→2番線</td><td>引上線</td><td>10:02 着 / 10:04 発</td></tr>
+            <tr><td><code>1001_4</code></td><td>各駅停車</td><td>2番線発車</td><td>入れ替えがある駅</td><td>10:05 着 / 10:06 発</td></tr>
+        </table>
+        <div class="callout">
+            折り返しの停車時間は、<strong>運転士が前から後ろへ移動する時間</strong>を見込みます（例：引上線に10:02着→2分ほど見て10:04発）。区間の所要も1分程度を目安に置けば自然なダイヤになります。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-12-train1.png" alt="列車一覧①（1001 各停・1番線到着）">
+            <figcaption>列車一覧①　列車番号1001・各駅停車・経路グループ「1番線到着」。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-13-train2.png" alt="列車一覧②（1001_2 回送・1番線→引上線）">
+            <figcaption>列車一覧②　「次運用を作成して登録」で 1001_2・回送・「1番線→引上線」。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-14-train3.png" alt="列車一覧③（1001_3 回送・引上線→2番線）">
+            <figcaption>列車一覧③　1001_3・回送・「引上線→2番線」。時刻は引上線での時刻になる。</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-15-train4.png" alt="列車一覧④（1001_4 各停・2番線発車）">
+            <figcaption>列車一覧④　1001_4・各駅停車・「2番線発車」。当駅始発として出発する。</figcaption>
+        </figure>
+
+        <h3>4-7. ダイヤグラムと発車標で確認</h3>
+        <p>
+            ダイヤ行を設定して（手順は実践①・②と同じ）保存します。エラーが出なければプレビューへ。ダイヤグラムには、<strong>左端から入って1番線で止まり、回送（<code>1001_2</code>）に切り替わって引上線へ、折り返して（<code>1001_3</code>・<code>1001_4</code>）2番線から各駅停車で出発</strong>、という<strong>折り返しの筋</strong>がきれいに描かれます。
+        </p>
+        <p>発車標も確認しましょう。乗り場の表示は回送で <strong>10:01 発</strong>、2番線（上り）は各駅停車 <strong>10:06 発</strong>——これが引上線から戻ってきた列車です。</p>
+
+        <h3>4-8. 引上線の発車標も出せる</h3>
+        <p>
+            <strong>「発車標プラス」ボタン</strong>をもう1つ押すと、発車標を追加できます。下の入力欄で<strong>駅と方面</strong>を選べるので、駅を <strong>引上線</strong>・方面を<strong>上り</strong>にすると、引上線での発車時刻も表示できます。
+        </p>
+        <div class="callout">
+            引上線は出発ボタンがなく自動発車なので、運転上は見なくても大丈夫（ダイヤグラムでも確認できます）。「こういう表示も作れる」という応用として覚えておくと便利です。
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-17-yard-departure-board.png" alt="引上線の発車標を追加表示した画面">
+            <figcaption>「発車標プラス」で発車標を追加し、駅＝引上線・方面＝上りを選ぶと引上線の発車時刻も表示できる。</figcaption>
+        </figure>
+
+        <h3>4-9. 動かして確認</h3>
+        <p>実際に動かしてみましょう。</p>
+        <ul>
+            <li>1番線に到着 → 引上線への進路を引いて、出発ボタンを押すと引上線への進路を通って引上線へ</li>
+            <li>引上線は出発ボタンがないので、<strong>出発時刻になると自動で発車準備</strong>になり発車</li>
+            <li>2番線に着いたら、2番線から出発する進路を開けて、<strong>いつも通り出発ボタンを押す</strong></li>
+            <li>各駅停車として、当駅始発で出発すれば成功</li>
+        </ul>
+    </section>
+
+    <section id="done">
+        <h2>🎉 完成！</h2>
+        <p>
+            おつかれさまでした。<strong>1つのマップに駅を2つ置き、引上線を使って入換（折り返し）する</strong>——という、一歩進んだ運用が組めるようになりました。
+            実践③の山場は、<strong>駅を2つに分ける考え方</strong>・<strong>経路グループの4分割</strong>・<strong>「次運用を作成して登録」での連結</strong>の3つです。
+        </p>
+
+        <h3>うまく動かないときは</h3>
+        <ul>
+            <li><strong>引上線の時刻が設定できない：</strong>引上線を別の駅として登録したか（駅が2つあるか）</li>
+            <li><strong>折り返さない／出発側が出てこない：</strong>経路グループを4つに分け、②で「折り返し」を選んだか</li>
+            <li><strong>時刻がズレてエラー：</strong>各運用の時刻は「欄に書いてある駅」の時刻になっているか。前の運用とつながっているか</li>
+            <li><strong>入換信号で黄色条件が出ない：</strong>入換信号機には黄色現示がないため設定できません（仕様どおり）</li>
+        </ul>
+
+        <div class="callout tip">
+            <strong>応用のヒント：</strong>引上線を「留置線」に置きかえれば、夜間留置からの出庫や、複数列車の入換など、さらに複雑な運用も同じ考え方で組めます。メインの乗降駅のとなりに別の駅（引上線・留置線）を置く——この型を覚えれば、表現の幅がぐっと広がります。
+        </div>
+
+        <h3>関連ガイド</h3>
+        <ul>
+            <li><a href="map-editor-tutorial2.html">実践② 複線駅で折り返し</a> — 折り返しの基本（経路グループ2つ）</li>
+            <li><a href="map-editor-tutorial1.html">実践① 単線で行き違い</a> — マップ作成の基本</li>
+            <li><a href="map-editor-trainlist.html">運行編集</a> / <a href="map-editor-equipment.html">設備編集</a> — 経路グループ・進路・信号の詳細</li>
+            <li><a href="glossary.html">用語集</a> — 競合進路・入換信号などの確認</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <span class="lb-close" aria-label="閉じる">&times;</span>
+    <img alt="">
+    <div class="lb-hint">クリックまたは Esc キーで閉じる</div>
+</div>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    document.querySelectorAll('figure.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lb.classList.add('open');
+        });
+    });
+    function close() { lb.classList.remove('open'); lbImg.src = ''; }
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

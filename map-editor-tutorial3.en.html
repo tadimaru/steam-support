@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on ③ Shunting with a pull-out track (turnaround) | Railway Operation Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --green: #6ab04c;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 36px 28px;
+            min-width: 0;
+            max-width: 820px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 24px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+
+        strong { color: #fff; }
+
+        main ul, main ol {
+            padding-left: 1.5em;
+            margin: 8px 0;
+        }
+        main ul li, main ol li { margin-bottom: 4px; }
+
+        main a { color: var(--accent); }
+
+        code {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        kbd {
+            background: var(--surface2);
+            color: var(--text);
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.tip  { border-left-color: var(--green); }
+        .callout strong { color: var(--text); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 12px 0;
+            padding-left: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Concept diagram (inline SVG) */
+        figure {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        figure svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+        figcaption { font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+        .svg-label { fill: var(--text); font-size: 12px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+        .svg-dim { fill: var(--text-dim); font-size: 10.5px; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif; }
+
+        /* Screenshot slot (swap to img once the image is ready) */
+        figure.shot { padding: 0; background: none; border: none; }
+        .shot-ph {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            padding: 26px 16px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        .shot-ph .cam { font-size: 26px; display: block; margin-bottom: 6px; opacity: 0.7; }
+        .shot-ph .fn { display: inline-block; margin-top: 8px; font-family: 'Consolas', 'Menlo', monospace; font-size: 12px; color: var(--accent); }
+        figure.shot img { max-width: 760px; max-height: min(640px, 78vh); width: auto; height: auto; border-radius: var(--radius); border: 1px solid var(--border); display: block; margin: 0 auto; cursor: zoom-in; transition: opacity 0.15s; }
+        figure.shot img:hover { opacity: 0.85; }
+
+        /* Click to enlarge (lightbox) */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 96vw; max-height: 94vh; border-radius: 6px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: none; }
+        .lightbox .lb-close { position: absolute; top: 14px; right: 22px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; opacity: 0.8; }
+        .lightbox .lb-close:hover { opacity: 1; }
+        .lightbox .lb-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.7); font-size: 12px; }
+
+        .lvl-badge { display: inline-block; font-size: 11px; font-weight: bold; color: #fff; background: var(--warn); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🔀</span>
+    <div>
+        <h1>Hands-on ③ Shunting with a pull-out track (turnaround)<span class="lvl-badge">Lv.3</span></h1>
+        <p>Railway Operation Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="map-editor-tutorial3.html">日本語</a></div>
+</header>
+
+<div class="layout">
+<nav>
+    <div class="section-title">Map Editor Guide</div>
+    <ul>
+        <li><a href="map-editor-start.en.html">Start Here</a></li>
+        <li><a href="map-editor.en.html">Getting Started</a></li>
+        <li><a href="map-editor-company.en.html">Company</a></li>
+        <li><a href="map-editor-wiring.en.html">Wiring</a></li>
+        <li><a href="map-editor-equipment.en.html">Equipment</a></li>
+        <li><a href="map-editor-trainlist.en.html">Operations</a></li>
+        <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+    <div class="section-title">Hands-on (build it)</div>
+    <ul>
+        <li><a href="map-editor-tutorial1.en.html">① Single-track passing</a></li>
+        <li><a href="map-editor-tutorial2.en.html">② Double-track turnaround</a></li>
+        <li><a href="map-editor-tutorial3.en.html" class="active">③ Pull-out track shunting</a></li>
+    </ul>
+    <div class="section-title">On this page</div>
+    <ul>
+        <li><a href="#goal">Goal and finished image</a></li>
+        <li><a href="#design">Design (1 platform / 2 tracks + pull-out track)</a></li>
+        <li><a href="#company">STEP1 Company</a></li>
+        <li><a href="#wiring">STEP2 Wiring (two stations)</a></li>
+        <li><a href="#equipment">STEP3 Equipment (conflicting routes)</a></li>
+        <li><a href="#operation">STEP4 Operations (4 groups, turnaround)</a></li>
+        <li><a href="#done">Done — wrap-up</a></li>
+    </ul>
+    <div class="section-title">Related</div>
+    <ul>
+        <li><a href="map-editor-tutorial2.en.html">← Hands-on ② Double-track turnaround</a></li>
+        <li><a href="glossary.en.html">Glossary</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="help.en.html">Playing Guide</a> / <a href="map-editor-start.en.html">Your First Custom Map</a> / <a href="map-editor-tutorial2.en.html">Hands-on ②</a> / Hands-on ③ Shunting with a pull-out track (turnaround)
+    </div>
+
+    <section id="goal">
+        <h2>🔀 Goal and finished image</h2>
+        <p>
+            In Hands-on ③, you'll build a map that <strong>shunts (turns around) a train using a "pull-out track" next to the station</strong>.
+            After a train arrives, it <strong>pulls out into the pull-out track</strong>, reverses direction, returns to a different track, and departs as a train originating at this station — the kind of move you often see at a depot or terminal.
+        </p>
+        <p>
+            Once finished, a single train performs the following four moves in order. Get this <strong>finished image</strong> in mind before reading on.
+        </p>
+        <figure class="shot">
+            <img src="tutorial/lv3-00-arrive.png" alt="Finished image ①: a train arrives on track 1">
+            <figcaption>Finished image ①　A train coming from the left arrives on track 1.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-01-to-yard.png" alt="Finished image ②: entering the pull-out track from track 1">
+            <figcaption>Finished image ②　Switching to out-of-service, it enters the pull-out track from track 1.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-02-from-yard.png" alt="Finished image ③: turning around on the pull-out track and entering track 2">
+            <figcaption>Finished image ③　It turns around on the pull-out track and enters track 2.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-03-depart.png" alt="Finished image ④: departing from track 2 as a Local originating at this station">
+            <figcaption>Finished image ④　It departs to the left from track 2 as a Local originating at this station.</figcaption>
+        </figure>
+
+        <h3>What you'll learn that's new in this tutorial</h3>
+        <ul>
+            <li><strong>Placing two stations on one map</strong> (registering the passenger station and the pull-out track as separate stations)</li>
+            <li>Why split them: the constraint that <strong>a path group can have only one set of arrival/departure times</strong></li>
+            <li>How to use the <strong>shunting start lever</strong> (green) and how to number it</li>
+            <li>Using <strong>conflicting routes</strong> to manually register routes you don't want opened at the same time</li>
+            <li><strong>Splitting the path group into four</strong> to build the whole shunting sequence</li>
+            <li>Chaining <strong>"Create and register next operation" three times</strong> in the train list to make arrival → shunting → turnaround departure into one train</li>
+            <li>Displaying the pull-out track's <strong>departure board</strong> separately</li>
+        </ul>
+
+        <div class="callout warn">
+            <strong>This is for advanced users.</strong> Hands-on ③ is the kind of content where even the game shows a warning that "placing multiple stations is an advanced setup." The basics of map creation (the Company → Wiring → Equipment → Operations flow, and levers, routes, signals, and path groups) are explained in <a href="map-editor-tutorial1.en.html">Hands-on ①</a> and <a href="map-editor-tutorial2.en.html">②</a>, so here we'll <strong>skip most of the repetition and focus on the shunting path groups and the train list</strong>.
+        </div>
+    </section>
+
+    <section id="design">
+        <h2>✏️ Design (1 platform / 2 tracks + pull-out track)</h2>
+        <p>
+            This station is a <strong>1-platform / 2-track island platform</strong> between two main lines (double track) of the up and down directions, with <strong>one pull-out track extending to the right</strong> added.
+            The tracks are <strong>track 1 (down side, arrival) and track 2 (up side, departure)</strong>, and the pull-out track is a dead-end track with no track number.
+        </p>
+        <figure>
+            <svg viewBox="0 0 560 240" role="img" aria-label="Track layout of a 1-platform / 2-track island platform with a pull-out track on the right">
+                <defs><marker id="arrow3" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><polygon points="0,0 9,4.5 0,9" fill="#6ab04c"/></marker></defs>
+                <!-- Track 1 (down, upper main line) -->
+                <line x1="20" y1="78" x2="540" y2="78" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Track 2 (up, lower main line) -->
+                <line x1="20" y1="170" x2="540" y2="170" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Island platform -->
+                <rect x="120" y="98" width="200" height="52" rx="5" fill="#22263a" stroke="#2e3250"/>
+                <text x="220" y="129" text-anchor="middle" class="svg-dim">Island platform</text>
+                <!-- Pull-out track (dead-end stub on the right) -->
+                <line x1="460" y1="124" x2="540" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <!-- Single switches connecting tracks 1 and 2 to the pull-out track -->
+                <line x1="410" y1="78" x2="460" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <line x1="410" y1="170" x2="460" y2="124" stroke="#4a90d9" stroke-width="5"/>
+                <circle cx="410" cy="78" r="6" fill="#f59e0b"/>
+                <circle cx="410" cy="170" r="6" fill="#f59e0b"/>
+                <!-- Shunting flow: track 1 → pull-out track → track 2 -->
+                <path d="M 470 110 L 506 110 A 8 8 0 0 1 506 138 L 470 138" fill="none" stroke="#6ab04c" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow3)"/>
+                <text x="500" y="102" text-anchor="middle" class="svg-dim">Turnaround</text>
+                <!-- Labels -->
+                <text x="24" y="68" class="svg-dim">Down line (arrival) →</text>
+                <text x="24" y="190" class="svg-dim">← Up line (departure)</text>
+                <text x="120" y="70" class="svg-label">Track 1</text>
+                <text x="120" y="192" class="svg-label">Track 2</text>
+                <text x="470" y="118" class="svg-label">Pull-out track</text>
+            </svg>
+            <figcaption>1 platform / 2 tracks + pull-out track. A train coming on the down line reaches track 1, pulls out into the pull-out track and turns around, then departs in the up direction from track 2. The pull-out track is a dead end.</figcaption>
+        </figure>
+        <div class="callout tip">
+            <strong>Route rules (this time):</strong> down trains (heading right) arrive/depart on track 1, up trains (heading left) arrive/depart on track 2 — that's <strong>4 main-line routes</strong> — plus the <strong>2 shunting routes</strong> <strong>track 1 → pull-out track</strong> and <strong>pull-out track → track 2</strong>, for a total of <strong>6 routes</strong>.
+        </div>
+    </section>
+
+    <section id="company">
+        <h2>🏢 STEP1　Company (kept light this time)</h2>
+        <p>Create a new map (e.g. map name <code>Shunting station</code>) and start from the Company category. Since shunting is the focus this time, keep the company side to the <strong>bare minimum</strong> and move on.</p>
+        <h3>1-1. Just two train classes: "Local" and "Out of service"</h3>
+        <p>
+            A train being shunted runs as <strong>out of service</strong>, and the section where it carries passengers is a <strong>Local</strong>. You only need these two classes this time (for creating a custom class, see <a href="map-editor-tutorial2.en.html#company">Hands-on ②</a>).
+        </p>
+        <h3>1-2. Just one train type</h3>
+        <p>This article prepares only one vehicle type. As an example, set up <strong>a commuter type, 10-car formation, 200m long (orange from the official bank)</strong> as "Type 1." The procedure follows the <a href="map-editor-company.en.html">Company editing guide</a>.</p>
+    </section>
+
+    <section id="wiring">
+        <h2>🛤 STEP2　Wiring (registering two stations is the key)</h2>
+        <p>The procedure for drawing track is the same as Hands-on ① and ②, so we'll <strong>move quickly</strong>. The high point this time is <strong>"registering two stations."</strong></p>
+
+        <h3>2-1. Draw the tracks (double track + island platform + pull-out track)</h3>
+        <p>
+            Draw a 1-platform / 2-track island platform between the up and down lines (double track), and a pull-out track stub (dead end) on its right. The main lines and the pull-out track are connected by a <strong>Y-shaped single switch</strong>.
+        </p>
+        <p>An orthodox switch setting is fine (diverging side 45km/h, straight side 80km/h, around 20m long). Once the tracks are drawn, <strong>preview</strong> to check the shape.</p>
+        <figure class="shot">
+            <img src="tutorial/lv3-04-track-preview.png" alt="Preview with only the tracks placed">
+            <figcaption>Once the tracks are drawn, preview to check the shape.</figcaption>
+        </figure>
+
+        <h3>2-2. (Lv3 key point ①) Register the station and the pull-out track as "separate stations"</h3>
+        <div class="callout warn">
+            <strong>Key premise:</strong> a train basically cannot pass through the same station twice on the same path. To build an operation that <strong>stops at the same place twice</strong>, like "station → pull-out track → station," <strong>register the pull-out track as a separate station</strong>.
+        </div>
+        <p>So you register <strong>two</strong> stations.</p>
+        <ul>
+            <li><strong>① Shunting station</strong> … the island-platform station where people board and alight (tracks 1 and 2)</li>
+            <li><strong>② Pull-out track</strong> … the dead end used for turning around. It has no track number or platform</li>
+        </ul>
+        <p>
+            When you try to create the second station, a <strong>warning</strong> appears.
+        </p>
+        <div class="callout">
+            <strong>The warning (key points):</strong> "Placing multiple stations on one map is an advanced setup." "<strong>Each path group can have only one set of arrival/departure times.</strong>"<br>
+            — In other words, if you want to set times at both the station and the pull-out track, you need to <strong>split the path group at the station</strong> (picture switching from a local to an out-of-service train). That's why Hands-on ③ is for advanced users. Choose <strong>"register"</strong> on the "register anyway?" prompt and continue.
+        </div>
+
+        <h3>2-3. Platforms only at the passenger station</h3>
+        <p>Place platforms <strong>only on the boarding/alighting side (the shunting station)</strong>. Don't place a platform on the pull-out track. Once placed, save.</p>
+
+        <h3>2-4. How to think about departure buttons (none on the pull-out track)</h3>
+        <p>
+            A departure button decides <strong>"whether the train waits for a departure signal before leaving, or departs automatically when its time comes."</strong>
+        </p>
+        <ul>
+            <li><strong>Stations where many trains enter:</strong> placing a departure button is recommended. It prevents "departing when you don't want it to yet" when the timetable is disrupted.</li>
+            <li><strong>This pull-out track:</strong> it has only one track, and a train can't proceed unless a route is set. So <strong>don't place a departure button on the pull-out track</strong> and let it <strong>depart automatically</strong> when its time comes.</li>
+        </ul>
+        <p class="more" style="font-size:13px;">→ For details, see the <a href="map-editor-wiring.en.html">Wiring editing guide</a></p>
+    </section>
+
+    <section id="equipment">
+        <h2>🚦 STEP3　Equipment (shunting levers, 6 routes, conflicting routes)</h2>
+
+        <h3>3-1. (Lv3 key point ②) Use the shunting start lever</h3>
+        <p>
+            This time you'll use the <strong>shunting start lever (green)</strong> for the first time. Start levers are managed with numbers, and it's clearer to <strong>separate the number ranges for main-line and shunting use</strong>.
+        </p>
+        <table>
+            <tr><th>Use</th><th>Direction</th><th>Example numbers</th></tr>
+            <tr><td>Main line (yellow)</td><td>Heading right</td><td>1, 2</td></tr>
+            <tr><td>Main line (yellow)</td><td>Heading left</td><td>11, 12</td></tr>
+            <tr><td>Shunting (green)</td><td>Shunting</td><td><strong>21, 22</strong> (separate into the 21 range)</td></tr>
+        </table>
+        <p>This time, assign the <code>21</code> shunting lever to the <strong>track 1 → pull-out track</strong> route, and the <code>22</code> shunting lever to the <strong>pull-out track → track 2</strong> route. Assign end levers with letters as usual.</p>
+
+        <h3>3-2. The six routes you need</h3>
+        <p>4 main-line routes + 2 shunting routes = <strong>6 in total</strong>. Don't include the start lever's track circuit in the pass-through; register from the next one up to the end lever (for a recap, see <a href="map-editor-tutorial2.en.html#equipment">Hands-on ②</a>).</p>
+        <table>
+            <tr><th>Route</th><th>Meaning</th><th>Start</th><th>End</th></tr>
+            <tr><td><code>1A</code></td><td>Down → arrive on track 1</td><td>1</td><td>A (track 1)</td></tr>
+            <tr><td><code>2B</code></td><td>Track 1 → depart to the down line</td><td>2</td><td>B (down main line)</td></tr>
+            <tr><td><code>11D</code></td><td>Up → arrive on track 2</td><td>11</td><td>D (track 2)</td></tr>
+            <tr><td><code>12E</code></td><td>Track 2 → depart to the up line</td><td>12</td><td>E (up main line)</td></tr>
+            <tr><td><code>21C</code></td><td>Track 1 → pull-out track (shunting)</td><td>21 (green)</td><td>C (pull-out track)</td></tr>
+            <tr><td><code>22D</code></td><td>Pull-out track → track 2 (shunting)</td><td>22 (green)</td><td>D (track 2)</td></tr>
+        </table>
+        <h3>3-3. Place the signals</h3>
+        <p>
+            Place <strong>2 home, 2 starting, and 2 shunting</strong> signals, plus a <strong>block signal</strong> for protection between stations. The basic placement is the same as Hands-on ① and ② (the aspect is decided by the route and the track circuit it protects).
+        </p>
+        <div class="callout warn">
+            <strong>Shunting signals have no yellow condition.</strong> A shunting signal has no yellow (caution) aspect to begin with, so you can't set a yellow condition. Set the yellow conditions for home and starting signals as before.
+        </div>
+
+        <h3>3-4. (Lv3 key point ③) Conflicting routes — register routes you don't want opened at once</h3>
+        <p>
+            At this station, the main-line arrival <code>1A</code> and the main-line departure <code>2B</code> <strong>may be opened at the same time</strong> (an arrival route and a departure route can often be opened together).
+        </p>
+        <p>
+            On the other hand, the main-line arrival <code>1A</code> and the shunting route <code>21C</code> that enters the pull-out track from it usually <strong>should not be opened at the same time</strong>. Even when they don't share a track circuit and so aren't treated as conflicting automatically, you can <strong>register them as "conflicting routes" manually</strong>.
+        </p>
+        <ol class="step-list">
+            <li>Select the <code>1A</code> route</li>
+            <li>Check <code>21C</code> under conflicting routes and save</li>
+            <li>Now <code>1A</code> and <code>21C</code> <strong>can no longer be opened at the same time</strong></li>
+        </ol>
+        <div class="callout">
+            <strong>It's cross-referenced:</strong> registering <code>21C</code> on the <code>1A</code> side automatically registers <code>1A</code> on the <code>21C</code> side too. <strong>You only need to set one side.</strong><br>
+            Note that conflicting routes are purely for <strong>reproducing more realistic operation</strong>. The game won't break if you don't set them. Do it only if it bothers you.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-07-conflict-route.png" alt="Screen with 1A selected and conflicting route 21C checked">
+            <figcaption>Select 1A and check 21C under conflicting routes, then save. The two can no longer be opened at the same time.</figcaption>
+        </figure>
+
+        <h3>3-5. Departure buttons</h3>
+        <p>Place a departure button on each main-line track. <strong>Don't place one on the pull-out track</strong> (it departs automatically, as in 2-4). Once all the track is complete, take a screenshot.</p>
+        <figure class="shot">
+            <img src="tutorial/lv3-05-equipment-done.png" alt="The whole layout with signals and departure buttons placed">
+            <figcaption>The state with signals and departure buttons placed. No departure button on the pull-out track.</figcaption>
+        </figure>
+        <p class="more" style="font-size:13px;">→ For details, see the <a href="map-editor-equipment.en.html">Equipment editing guide</a></p>
+    </section>
+
+    <section id="operation">
+        <h2>📋 STEP4　Operations (4 path groups, turnaround linking)</h2>
+        <p>This is the main subject of Hands-on ③. Build the whole shunting sequence in <strong>four path groups</strong>, then <strong>link them into one train</strong> in the train list.</p>
+
+        <h3>4-1. (Lv3 key point ④) Why split the path group into four</h3>
+        <p>Split the shunting move into the following four segments.</p>
+        <ol>
+            <li><strong>Arrive on track 1</strong></li>
+            <li>Enter <strong>track 1 → pull-out track</strong></li>
+            <li>Enter <strong>pull-out track → track 2</strong></li>
+            <li><strong>Depart from track 2</strong></li>
+        </ol>
+        <div class="callout warn">
+            Since "arrive on track 1" and "go to the pull-out track" are both heading right, you might think <strong>you could combine them.</strong> But <strong>a path group can have only one set of arrival/departure times.</strong> If you combine them, you can't set the time for the later station (the pull-out track). <strong>If you stop in two places, split the path group in between</strong> — that's the rule.
+        </div>
+
+        <h3>4-2. Path group ① Arrive on track 1</h3>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Track 1 arrival</code>), direction "right"</li>
+            <li>The appearance TC is the leftmost track circuit; the appearance offset is just before arrival (e.g. 80 seconds before)</li>
+            <li>Steps: arrive on route <code>1A</code> → <strong>stop at the shunting station (S001)</strong></li>
+            <li>Make the stop a <strong>"passenger stop" via operation switch</strong>. It departs as out of service, but since there's <strong>the task of letting passengers off</strong>, a passenger stop is fine</li>
+            <li>The stop seconds can be <strong>0</strong> (the actual stop is added in the next path group's steps)</li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv3-08-group1-arrive.png" alt="Path group ① (track 1 arrival, passenger stop)">
+            <figcaption>Path group ①　Arrive on route 1A and make a passenger stop (0 seconds) at the shunting station.</figcaption>
+        </figure>
+
+        <h3>4-3. Path group ② Track 1 → pull-out track</h3>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Track 1 → pull-out track</code>), direction "right"</li>
+            <li>The appearance TC is <strong>where the previous group last stopped = track 1</strong> (inherited)</li>
+            <li>Leave the appearance offset <strong>blank</strong> (don't enter it, since it's inherited from the previous operation)</li>
+            <li>Steps: stop on track 1 (inherited, so "Stop, passenger stop"; the seconds can be anything since the departure button is in effect) → route <code>21C</code> → <strong>"Turnaround (no passenger stop)" on the pull-out track</strong></li>
+        </ol>
+        <div class="callout">
+            Since no one boards or alights on the pull-out track, choose <strong>"Turnaround, no passenger stop."</strong> This "Turnaround" is the switch for the shunting action.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-09-group2-to-yard.png" alt="Path group ② (to the pull-out track via 21C, turnaround with no passenger stop)">
+            <figcaption>Path group ②　To the pull-out track via route 21C. On the pull-out track, choose "Turnaround (no passenger stop)."</figcaption>
+        </figure>
+
+        <h3>4-4. Path group ③ Pull-out track → track 2</h3>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Pull-out track → track 2</code>), <strong>direction "left"</strong> (the direction changes, so don't forget to select it)</li>
+            <li>The appearance TC is the <strong>pull-out track's track circuit</strong></li>
+            <li>Steps: stop on the pull-out track (<strong>no passenger stop</strong>) → route <code>22D</code> → stop on track 2 (<strong>"passenger stop" via operation switch</strong>)</li>
+        </ol>
+        <div class="callout tip">
+            <strong>How to tell passenger stop:</strong> if <strong>even one passenger boards or alights</strong> at that station, it's a "passenger stop." The pull-out track has no boarding/alighting, so it's "no passenger stop."
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-10-group3-from-yard.png" alt="Path group ③ (to track 2 via 22D)">
+            <figcaption>Path group ③　Direction "left." Stop on the pull-out track (no passenger stop) → route 22D → passenger stop on track 2.</figcaption>
+        </figure>
+
+        <h3>4-5. Path group ④ Depart from track 2</h3>
+        <ol class="step-list">
+            <li>Path group ID (e.g. <code>Track 2 departure</code>), direction "left"</li>
+            <li>The appearance TC is the <strong>track 2 track circuit</strong>; leave the appearance offset <strong>blank</strong> (inherited)</li>
+            <li>Steps: stop on track 2 (passenger stop) → depart on route <code>12E</code></li>
+        </ol>
+        <figure class="shot">
+            <img src="tutorial/lv3-11-group4-depart.png" alt="Path group ④ (stop on track 2 → depart on 12E)">
+            <figcaption>Path group ④　Passenger stop on track 2 → depart in the up direction on route 12E.</figcaption>
+        </figure>
+
+        <h3>4-6. (Lv3 key point ⑤) Train list — link 4 operations with "Create and register next operation"</h3>
+        <p>
+            Link the four path groups into <strong>one train</strong> in the train list. After creating the first operation, press the <strong>"Create and register next operation"</strong> button three times to connect arrival → shunting → turnaround departure.
+        </p>
+        <ol class="step-list">
+            <li>Train number <code>1001</code> (any number is fine), class <strong>Local</strong>, path group <code>Track 1 arrival</code>. Arrival time <strong>10:00</strong></li>
+            <li><strong>"Create and register next operation"</strong> → <code>1001_2</code>. Class <strong>Out of service</strong>, path group <code>Track 1 → pull-out track</code></li>
+            <li>Again, <strong>"Create and register next operation"</strong> → <code>1001_3</code>. Class <strong>Out of service</strong>, path group <code>Pull-out track → track 2</code></li>
+            <li>Again, <strong>"Create and register next operation"</strong> → <code>1001_4</code>. Class <strong>Local</strong>, path group <code>Track 2 departure</code></li>
+            <li>Save. If an error appears, fix the times etc. as instructed</li>
+        </ol>
+        <div class="callout warn">
+            <strong>The time is for "the station shown in the field."</strong> For example, the time for <code>1001_2</code> (track 1 → pull-out track) is <strong>the time at the "shunting station (S001)," not the pull-out track</strong>. You might think "this train goes to the pull-out track, so it's the pull-out track's time?" but enter <strong>the time of the station shown in the field</strong>. Keep the times consistent with the previous operation.
+        </div>
+        <p>Example times (set so the operations connect before and after):</p>
+        <table>
+            <tr><th>Train no.</th><th>Class</th><th>Path group</th><th>Reference station</th><th>Time</th></tr>
+            <tr><td><code>1001</code></td><td>Local</td><td>Track 1 arrival</td><td>Shunting station</td><td>10:00 arr</td></tr>
+            <tr><td><code>1001_2</code></td><td>Out of service</td><td>Track 1 → pull-out track</td><td>Shunting station</td><td>10:00 arr / 10:01 dep</td></tr>
+            <tr><td><code>1001_3</code></td><td>Out of service</td><td>Pull-out track → track 2</td><td>Pull-out track</td><td>10:02 arr / 10:04 dep</td></tr>
+            <tr><td><code>1001_4</code></td><td>Local</td><td>Track 2 departure</td><td>Shunting station</td><td>10:05 arr / 10:06 dep</td></tr>
+        </table>
+        <div class="callout">
+            For the turnaround stop time, allow time for the <strong>driver to walk from the front to the rear</strong> (e.g. arrive at the pull-out track at 10:02 → allow about 2 minutes → depart at 10:04). Using about 1 minute per segment makes for a natural timetable.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-12-train1.png" alt="Train list ① (1001 Local, track 1 arrival)">
+            <figcaption>Train list ①　Train number 1001, Local, path group "Track 1 arrival."</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-13-train2.png" alt="Train list ② (1001_2 Out of service, track 1 → pull-out track)">
+            <figcaption>Train list ②　Via "Create and register next operation": 1001_2, Out of service, "Track 1 → pull-out track."</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-14-train3.png" alt="Train list ③ (1001_3 Out of service, pull-out track → track 2)">
+            <figcaption>Train list ③　1001_3, Out of service, "Pull-out track → track 2." The time is the time at the pull-out track.</figcaption>
+        </figure>
+        <figure class="shot">
+            <img src="tutorial/lv3-15-train4.png" alt="Train list ④ (1001_4 Local, track 2 departure)">
+            <figcaption>Train list ④　1001_4, Local, "Track 2 departure." It departs as a train originating at this station.</figcaption>
+        </figure>
+
+        <h3>4-7. Check on the diagram and departure board</h3>
+        <p>
+            Set the diagram rows (the procedure is the same as Hands-on ① and ②) and save. If no error appears, go to preview. On the diagram, a <strong>turnaround line</strong> is drawn cleanly: <strong>enter from the left end and stop on track 1, switch to out of service (<code>1001_2</code>) and go to the pull-out track, turn around (<code>1001_3</code>, <code>1001_4</code>) and depart from track 2 as a Local</strong>.
+        </p>
+        <p>Check the departure board too. The platform display shows out of service departing at <strong>10:01</strong>, and track 2 (up) shows a Local departing at <strong>10:06</strong> — this is the train that returned from the pull-out track.</p>
+
+        <h3>4-8. You can also show the pull-out track's departure board</h3>
+        <p>
+            Pressing the <strong>"Departure board plus" button</strong> adds another departure board. In the input field below, you can choose the <strong>station and direction</strong>, so set the station to <strong>the pull-out track</strong> and the direction to <strong>up</strong> to also display the departure time at the pull-out track.
+        </p>
+        <div class="callout">
+            Since the pull-out track has no departure button and departs automatically, you don't need to watch it for operation (you can also check it on the diagram). It's handy to know "you can make this kind of display too" as an application.
+        </div>
+        <figure class="shot">
+            <img src="tutorial/lv3-17-yard-departure-board.png" alt="Screen with the pull-out track's departure board added">
+            <figcaption>Add a board with "Departure board plus" and choose station = pull-out track, direction = up to display the pull-out track's departure times.</figcaption>
+        </figure>
+
+        <h3>4-9. Run it to check</h3>
+        <p>Let's actually run it.</p>
+        <ul>
+            <li>Arrive on track 1 → set the route to the pull-out track, and when you press the departure button the train enters the pull-out track via that route</li>
+            <li>The pull-out track has no departure button, so when the departure time comes it <strong>automatically prepares to depart</strong> and leaves</li>
+            <li>Once it reaches track 2, open the route departing from track 2 and <strong>press the departure button as usual</strong></li>
+            <li>Success if it departs as a Local originating at this station</li>
+        </ul>
+    </section>
+
+    <section id="done">
+        <h2>🎉 Done!</h2>
+        <p>
+            Nice work. You can now set up a more advanced operation: <strong>placing two stations on one map and shunting (turning around) using a pull-out track</strong>.
+            The high points of Hands-on ③ are these three: <strong>the idea of splitting into two stations</strong>, <strong>splitting the path group into four</strong>, and <strong>linking with "Create and register next operation."</strong>
+        </p>
+
+        <h3>If it doesn't work</h3>
+        <ul>
+            <li><strong>Can't set the pull-out track's time:</strong> did you register the pull-out track as a separate station (are there two stations)?</li>
+            <li><strong>It doesn't turn around / the departure side doesn't appear:</strong> did you split the path group into four and choose "Turnaround" in ②?</li>
+            <li><strong>Time mismatch error:</strong> is each operation's time the time of "the station shown in the field"? Does it connect with the previous operation?</li>
+            <li><strong>No yellow condition for the shunting signal:</strong> a shunting signal has no yellow aspect, so it can't be set (by design).</li>
+        </ul>
+
+        <div class="callout tip">
+            <strong>Application hint:</strong> if you replace the pull-out track with a "stabling siding," you can build even more complex operations the same way — departing from overnight stabling, shunting multiple trains, and so on. Once you learn this pattern of placing a separate station (pull-out track or stabling siding) next to the main passenger station, your range of expression grows a lot.
+        </div>
+
+        <h3>Related guides</h3>
+        <ul>
+            <li><a href="map-editor-tutorial2.en.html">Hands-on ② Double-track turnaround</a> — the basics of turnarounds (two path groups)</li>
+            <li><a href="map-editor-tutorial1.en.html">Hands-on ① Single-track passing</a> — the basics of map creation</li>
+            <li><a href="map-editor-trainlist.en.html">Operations</a> / <a href="map-editor-equipment.en.html">Equipment</a> — details on path groups, routes, and signals</li>
+            <li><a href="glossary.en.html">Glossary</a> — check conflicting routes, shunting signals, and more</li>
+        </ul>
+    </section>
+
+</main>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <span class="lb-close" aria-label="Close">&times;</span>
+    <img alt="">
+    <div class="lb-hint">Click or press Esc to close</div>
+</div>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    document.querySelectorAll('figure.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lb.classList.add('open');
+        });
+    });
+    function close() { lb.classList.remove('open'); lbImg.src = ''; }
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support page</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru / Tadimaru LLC
+</footer>
+
+</body>
+</html>
