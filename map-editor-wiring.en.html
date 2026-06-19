@@ -187,17 +187,17 @@
         <h3>Normal and reverse</h3>
         <p>
             When you set a route the editor figures out the required switch direction automatically, so you do not have to think about it relative to lever operation.
-            Each switch gets an auto-generated ID (e.g. <code>SW_0001</code>).
+            Each switch gets an auto-generated ID (e.g. <code>SW_001</code>).
         </p>
     </section>
 
     <section id="bulk-edit">
         <h2>📦 Bulk Edit</h2>
         <p>
-            <strong>Bulk Edit</strong> lets you box-select multiple track circuits and overwrite the same property (speed limit, station ID, track number) on all of them at once.
+            <strong>Bulk Edit</strong> lets you box-select multiple track circuits and overwrite their <strong>length (m)</strong> and <strong>speed limit (km/h)</strong> on all of them at once. Each property has its own toggle for whether to apply it.
         </p>
         <p>
-            Useful for assigning the same station ID to a dozen track circuits in the station premises, or setting station approach speed limits to 35 km/h in one go.
+            Useful for setting station approach speed limits to 35 km/h in one go.
         </p>
     </section>
 
@@ -224,14 +224,14 @@
     <section id="track-number">
         <h2>🔢 Track Number Master</h2>
         <p>
-            The <strong>track number master</strong> defines the labels you assign to platforms (e.g. "Track 1", "Track 2", "Upper Track 1").
-            Each station has its own list, edited from inside the Station mode sidebar.
+            The <strong>track number master</strong> assigns a <strong>track number (an integer: 1, 2, …)</strong> to each track circuit that belongs to a station.
+            Enter Station mode and set the number for each of the selected station's track circuits using the <kbd>+</kbd>/<kbd>-</kbd> buttons or by typing a digit.
         </p>
         <p>
-            With the master populated, platform editing and station-track assignment use a dropdown of registered numbers, which prevents typo drift (mixing <code>1番線</code> and <code>1番</code>).
+            With the master populated, platform editing and the departure-button track-number mode reference these numbers, which prevents inconsistent labeling.
         </p>
         <div class="callout tip">
-            <strong>Recommended order:</strong> create the station area and assign its ID, then add the track numbers you will use at that station.
+            <strong>Recommended order:</strong> create the station area and assign its ID, then assign a track number to each of that station's track circuits.
             Doing this first makes the later platform and track-circuit work much smoother.
         </div>
     </section>
@@ -274,7 +274,7 @@
             <li>Enter Platform mode</li>
             <li>Place the four corners of the platform rectangle on top of a track circuit</li>
             <li>In the sidebar, choose which <strong>station</strong> this platform belongs to</li>
-            <li>Assign a <strong>track number label (from the track number master) to each of the 4 sides</strong> — top, bottom, left, right. Empty sides hide that side's label</li>
+            <li><strong>Enter a track number (a digit) for the top and bottom sides</strong> using the <kbd>+</kbd>/<kbd>-</kbd> buttons or by typing — it is saved as <code>Track 1</code> etc. An empty side hides that side's label</li>
             <li>Click <strong>Register</strong>, then <kbd>Ctrl</kbd>+<kbd>S</kbd></li>
         </ol>
 

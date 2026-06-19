@@ -303,7 +303,7 @@
             <tr><th>項目</th><th>役割</th></tr>
             <tr><td><strong>経路グループ (PathGroup)</strong></td><td>列車の走行ルートを定義する「テンプレート」。出現場所、進路の連なり、駅停車を時系列で記述する</td></tr>
             <tr><td><strong>列車一覧 (TrainList)</strong></td><td>実際の列車を 1 行ずつ並べたもの。各列車に「列車番号」「列車形式」「どの経路グループに乗るか」を指定する</td></tr>
-            <tr><td><strong>ダイヤ行 (DiagramRow)</strong></td><td>ダイヤグラム上の縦軸に並ぶ行（駅番線・マップ端）の定義</td></tr>
+            <tr><td><strong>ダイヤ図 (DiagramRow)</strong></td><td>ダイヤグラム上の縦軸に並ぶ行（駅番線・マップ端）の定義</td></tr>
         </table>
 
         <h3>編集の流れ</h3>
@@ -416,7 +416,7 @@
         </p>
 
         <h3>編集場所</h3>
-        <p>左サイドバーの<strong>運行カテゴリ → ダイヤ行</strong>から開きます。</p>
+        <p>左サイドバーの<strong>運行カテゴリ → ダイヤ図</strong>から開きます。</p>
 
         <h3>主な項目</h3>
         <table>
@@ -436,8 +436,8 @@
         </p>
 
         <div class="callout tip">
-            <strong>ダイヤ色のフォールバック：</strong>各列車形式に設定された<strong>ダイヤ色</strong>がそのまま使われます。
-            形式側のダイヤ色も空だと暗い色でフォールバックされるので、<a href="map-editor-company.html#train-class">列車形式マスタ</a>側でダイヤ色を設定しておくと見やすくなります。
+            <strong>ダイヤ色のフォールバック：</strong>各列車種別に設定された<strong>ダイヤ色</strong>がそのまま使われます。
+            種別側のダイヤ色が空だと背景色（バッジ色）、それも空だと暗い色でフォールバックされるので、<a href="map-editor-company.html#train-class">列車種別マスタ</a>側でダイヤ色を設定しておくと見やすくなります。
         </div>
     </section>
 

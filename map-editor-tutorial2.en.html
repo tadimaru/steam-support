@@ -572,17 +572,17 @@
 
         <h3>4-2. Create a through train</h3>
         <p>
-            For a train you want to <strong>pass through</strong> rather than stop, just <strong>change the stop step to "through"</strong>.
+            For a train you want to <strong>pass through</strong> rather than stop, just <strong>change the stop step to "Pass"</strong>.
         </p>
         <ol class="step-list">
             <li>Create a new path group (e.g. <code>Track 1 through</code>, direction "right")</li>
             <li>The steps are the same as arrival/departure (<code>1A</code> → station → <code>2D</code>)</li>
-            <li>Press the <strong>"Stop" button on the middle station step and change it to "Through"</strong></li>
+            <li>Press the <strong>"Stop" button on the middle station step and change it to "Pass"</strong></li>
             <li>Register the through train in the train list (e.g. out-of-service train <code>9001</code>, with an appearance offset shorter than a stop, such as 60 seconds). <strong>Be sure to press the "Update" button after editing</strong></li>
         </ol>
         <figure class="shot">
             <img src="tutorial/lv2-08-through-step.png" alt="Screen with the station stop step changed to through">
-            <figcaption>For a through train, just switch the station step from "Stop" to "Through".</figcaption>
+            <figcaption>For a through train, just switch the station step from "Stop" to "Pass".</figcaption>
         </figure>
 
         <h3>4-3. (Lv2 key point ③) Turnaround operation — linking two path groups</h3>
@@ -594,7 +594,7 @@
         <ol class="step-list">
             <li>Path group ID (e.g. <code>Track 2 arrival</code>), direction "right"</li>
             <li>The appearance TC is the leftmost track circuit. Since the center track is slow at 45km/h, set the appearance offset longer than the track-1 arrival (e.g. 105 seconds)</li>
-            <li>Steps: route <code>1B</code> → stop on the track-2 track circuit. At this point, change the stop to <strong>"Turnaround (passenger stop)"</strong></li>
+            <li>Steps: route <code>1B</code> → stop on the track-2 track circuit. At this point, change the stop to <strong>"Turnaround (with service)"</strong></li>
         </ol>
         <figure class="shot">
             <img src="tutorial/lv2-09-turnback-step.png" alt="Screen setting the station stop step to turnaround (passenger stop)">
@@ -606,7 +606,7 @@
             <li>Path group ID (e.g. <code>Track 2 departure</code>), with the opposite direction "left"</li>
             <li>The appearance TC is the <strong>track-2 track circuit</strong> (inheriting the place where the previous operation = arrival ended)</li>
             <li><strong>Leave the appearance offset blank</strong> (don't specify it for a turnaround inherited from the previous operation)</li>
-            <li>Steps: stop on the track-2 track circuit (this one can stay a normal <strong>"Stop (passenger stop)"</strong>) → depart on route <code>12E</code></li>
+            <li>Steps: stop on the track-2 track circuit (this one can stay a normal <strong>"Stop (with service)"</strong>) → depart on route <code>12E</code></li>
         </ol>
         <figure class="shot">
             <img src="tutorial/lv2-10-departure-group.png" alt="Screen setting up the departure path group (direction left, appearance TC on the center track, appearance offset blank)">
