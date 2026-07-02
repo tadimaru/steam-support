@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京浜大田マップガイド | 鉄道運行管理シミュレーター</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-down     { background: #713f12; color: #fde68a; }
+        .badge-up       { background: #14532d; color: #86efac; }
+        .badge-air      { background: #1e3a5f; color: #93c5fd; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>京浜大田マップガイド</h1>
+        <p>鉄道運行管理シミュレーター</p>
+    </div>
+    <div class="lang-switch"><a href="keihin-ohta.en.html">English</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">マップ</div>
+        <ul>
+            <li><a href="#overview">マップ概要</a></li>
+            <li><a href="#lever-layout">てこの配置図</a></li>
+            <li><a href="#routes">方面別 進路の使い分け</a></li>
+            <li><a href="#departure-boards">3つの発車ボタン群</a></li>
+            <li><a href="#refuge">退避運用（朝ラッシュ）</a></li>
+        </ul>
+        <div class="section-title">折り返し運用</div>
+        <ul>
+            <li><a href="#turnaround-intro">はじめに</a></li>
+            <li><a href="#turnaround-steps">操作手順</a></li>
+            <li><a href="#turnaround-cautions">よくある間違い</a></li>
+        </ul>
+        <div class="section-title">関連</div>
+        <ul>
+            <li><a href="../help.html">← 遊び方ガイド</a></li>
+            <li><a href="heikai-jima.html">平海島マップ</a></li>
+            <li><a href="keihin-kawata.html">京浜川田マップ</a></li>
+            <li><a href="takanawa.html">高輪マップ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.html">← 遊び方ガイド</a> / 京浜大田マップ
+        </div>
+
+        <section id="overview">
+            <h2>🎯 マップ概要</h2>
+            <p>
+                京浜大田は、<strong>本線</strong>と<strong>空港線</strong>が分岐する、<strong>6本のホーム（1〜6番線）</strong>を備えた要衝駅です。
+                本線を上下する列車、本線から空港線へ直通する列車、空港線から本線へ乗り入れる列車、そして駅で<strong>折り返す</strong>列車が入り混じり、
+                進路の組み立てが最も問われるマップです。
+            </p>
+            <ul>
+                <li><strong>番線</strong>: 1番線（空港線）／ 2・3番線（本線下り）／ 4番線（空港線）／ 5・6番線（本線上り）</li>
+                <li><strong>方面</strong>: 本線下り ・ 本線上り ・ 空港線</li>
+                <li><strong>折り返し</strong>: あり（本線⇔空港線の折り返し運用）</li>
+                <li><strong>増結・併合</strong>: <strong>なし</strong>（このマップでは車両の連結作業は発生しません）</li>
+            </ul>
+            <div class="callout">
+                <strong>番線の役割をまず押さえましょう。</strong> 京浜大田では番線ごとに用途がほぼ決まっています。
+                下表の「どの方面へはどの番線・どの進路を使うか」を覚えれば、朝ラッシュでも迷いません。
+            </div>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 てこの配置図</h2>
+            <img src="keihin-ohta-levers.png" alt="京浜大田のてこ配置図" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>駅構内のてこ（発点・着点）と番線の位置関係を上の図で確認してください。進路は<strong>発点てこ</strong>と<strong>着点てこ</strong>の組み合わせで開通させます（例：進路 <strong>1B</strong> は発点てこ「1」と着点てこ「B」で開通）。</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔀 方面別 進路の使い分け</h2>
+            <p>
+                京浜大田では、列車が「どこから来て」「どの番線に入り」「どの方面へ出るか」で使う進路が決まります。
+                下の一覧が、このマップの<strong>基本の8パターン</strong>です。到着・出発の進路をセットで覚えてください。
+            </p>
+            <div class="callout">
+                <strong>「＋」でつないだ進路は、2つを同時に開通させます。</strong>
+                京浜大田では、列車が2つの進路を続けて通るパターンが多くあります（例：本線下り 3番線の出発は <strong>3D ＋ 5E</strong> の2進路を同時に開通）。片方だけだと列車は途中までしか進めません。
+            </div>
+
+            <h3><span class="badge badge-down">本線下り</span> 本線下り（左 → 右）</h3>
+            <table>
+                <tr><th>パターン</th><th>使う番線</th><th>到着進路</th><th>出発進路</th><th>備考</th></tr>
+                <tr>
+                    <td><strong>本線下り（通過・停車）</strong></td>
+                    <td>3番線</td>
+                    <td><strong>1B</strong></td>
+                    <td><strong>3D ＋ 5E</strong></td>
+                    <td>本線下りをまっすぐ通す基本進路。特急など優等列車もこの番線。</td>
+                </tr>
+                <tr>
+                    <td><strong>本線下り（2番線退避）</strong></td>
+                    <td>2番線</td>
+                    <td><strong>1B ＋ 3C</strong></td>
+                    <td><strong>4E</strong></td>
+                    <td>後続の優等列車に追い抜かれる普通列車が退避する番線。1B で3番線側へ入れつつ 3C で2番線へ振る。</td>
+                </tr>
+                <tr>
+                    <td><strong>本線下り → 空港線 直通</strong></td>
+                    <td>1番線</td>
+                    <td><strong>1A</strong></td>
+                    <td><strong>2F ＋ 23O</strong></td>
+                    <td>本線下りから入り、そのまま空港線へ抜ける直通列車。</td>
+                </tr>
+            </table>
+
+            <h3><span class="badge badge-up">本線上り</span> 本線上り（右 → 左）</h3>
+            <table>
+                <tr><th>パターン</th><th>使う番線</th><th>到着進路</th><th>出発進路</th><th>備考</th></tr>
+                <tr>
+                    <td><strong>本線上り（通過・停車）</strong></td>
+                    <td>6番線</td>
+                    <td><strong>11G ＋ 12J</strong></td>
+                    <td><strong>15L</strong></td>
+                    <td>本線上りをまっすぐ通す基本進路。特急など優等列車もこの番線。</td>
+                </tr>
+                <tr>
+                    <td><strong>本線上り（5番線退避）</strong></td>
+                    <td>5番線</td>
+                    <td><strong>11H</strong></td>
+                    <td><strong>13J ＋ 15L</strong></td>
+                    <td>後続の優等列車に追い抜かれる普通列車が退避する番線。</td>
+                </tr>
+                <tr>
+                    <td><strong>空港線 → 本線上り 直通</strong></td>
+                    <td>4番線</td>
+                    <td><strong>31N ＋ 33K</strong></td>
+                    <td><strong>16L</strong></td>
+                    <td>空港線から入り、そのまま本線上りへ抜ける直通列車。</td>
+                </tr>
+            </table>
+
+            <h3><span class="badge badge-air">折り返し</span> 駅で方向転換する列車</h3>
+            <table>
+                <tr><th>パターン</th><th>使う番線</th><th>到着進路</th><th>出発進路</th><th>備考</th></tr>
+                <tr>
+                    <td><strong>本線上り → 折り返し → 空港線</strong></td>
+                    <td>4番線</td>
+                    <td><strong>11I ＋ 14K</strong></td>
+                    <td><strong>21M ＋ 22O</strong></td>
+                    <td>本線上りで到着 → 折り返して空港線へ発車。</td>
+                </tr>
+                <tr>
+                    <td><strong>空港線 → 折り返し → 本線下り</strong></td>
+                    <td>1番線</td>
+                    <td><strong>31F ＋ 32A</strong></td>
+                    <td><strong>2E</strong></td>
+                    <td>空港線から到着 → 折り返して本線下りへ発車。</td>
+                </tr>
+            </table>
+
+            <div class="callout">
+                <strong>番線の役割まとめ</strong><br>
+                ・<strong>1番線</strong>＝<strong>空港線</strong>（本線下り⇔空港線の直通・空港線からの折り返し下り）<br>
+                ・<strong>2番線</strong>＝本線下りの退避<br>
+                ・<strong>3番線</strong>＝本線下りの本務（通過・停車）<br>
+                ・<strong>4番線</strong>＝<strong>空港線</strong>（本線上り⇔空港線の直通・本線上りからの折り返し空港）<br>
+                ・<strong>5番線</strong>＝本線上りの退避<br>
+                ・<strong>6番線</strong>＝本線上りの本務（通過・停車）
+            </div>
+        </section>
+
+        <section id="departure-boards">
+            <h2>🔔 3つの発車ボタン群</h2>
+            <p>
+                京浜大田の発車ボタンは、行き先の方面ごとに<strong>3枚のボード</strong>に分かれています。
+                発車させたい列車が「どの方面へ向かうか」でボードを選んでください。
+            </p>
+            <table>
+                <tr><th>発車ボタン群</th><th>対象の番線 → 方面</th><th>番線を出る側の進路</th></tr>
+                <tr><td><span class="badge badge-down">下り方面</span></td><td>1・2・3番線 → 下り本線</td><td>2E（1番）／4E（2番）／3D（3番）</td></tr>
+                <tr><td><span class="badge badge-up">上り方面</span></td><td>4・5・6番線 → 上り本線</td><td>16L（4番）／13J（5番）／15L（6番）</td></tr>
+                <tr><td><span class="badge badge-air">空港方面</span></td><td>1・4番線 → 空港線</td><td>2F（1番）／21M（4番）</td></tr>
+            </table>
+            <div class="callout">
+                同じ番線でも行き先で使うボードが変わります。たとえば<strong>1番線</strong>は、本線下りへ出すなら「下り方面」ボード、空港線へ出すなら「空港方面」ボードを使います。
+                なお、上の表の進路は<strong>番線を出る側</strong>のもので、その先で追加の進路が要る場合は「方面別 進路の使い分け」の表（＋でつないだ2進路）を参照してください。
+            </div>
+        </section>
+
+        <section id="refuge">
+            <h2>⏱ 退避運用（朝ラッシュ）</h2>
+            <p>
+                朝ラッシュの時間帯は、普通列車が後続の優等列車に追い抜かれるため、本務の番線（3番線・6番線）ではなく<strong>退避用の番線</strong>に入ります。
+            </p>
+            <table>
+                <tr><th>方面</th><th>退避番線</th><th>使い始める時間の目安</th></tr>
+                <tr><td><span class="badge badge-up">上り普通</span></td><td><strong>5番線</strong></td><td>おおむね <strong>7:20 頃以降</strong></td></tr>
+                <tr><td><span class="badge badge-down">下り普通</span></td><td><strong>2番線</strong></td><td>おおむね <strong>7:37 頃以降</strong></td></tr>
+            </table>
+            <div class="callout">
+                この時間より前（日中ダイヤ）の普通列車は、退避せず本務の番線（上り＝6番線／下り＝3番線）をそのまま通ります。
+                朝ラッシュに入ったら、普通列車は退避番線（上り＝5番線／下り＝2番線）に振り分けて、優等列車を先に通してください。
+            </div>
+        </section>
+
+        <section id="turnaround-intro">
+            <h2>🔄 折り返し運用の手順</h2>
+            <p>
+                京浜大田の折り返しは、<strong>到着したホームでそのまま方向転換し、続けて別の便として発車する</strong>運用です。
+                引き上げ線は使わず、番線上で折り返します。折り返しは次の2種類があります。
+            </p>
+            <ul>
+                <li><strong>1番線</strong>：空港線から到着 → 折り返して<strong>本線下り</strong>へ発車</li>
+                <li><strong>4番線</strong>：本線上りから到着 → 折り返して<strong>空港線</strong>へ発車</li>
+            </ul>
+            <p>
+                京浜大田の折り返しは<strong>回送（回○○）ではありません</strong>。同じ車両が「到着便 → その折り返し便」を担い、
+                折り返し便は運用番号の末尾に「<strong>_2</strong>」が付く形で管理されています（例：<strong>641T</strong> で到着 → <strong>641T_2</strong> として発車）。
+                発車標で到着便と折り返し便の対応を確認しながら操作しましょう。
+            </p>
+        </section>
+
+        <section id="turnaround-steps">
+            <h2>🔢 操作手順</h2>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>到着進路を引く</strong>
+                        <p>
+                            折り返す列車を、折り返し用の番線に迎え入れます。
+                            <strong>1番線</strong>なら空港線からの到着進路 <strong>31F ＋ 32A</strong>、<strong>4番線</strong>なら本線上りからの到着進路 <strong>11I ＋ 14K</strong> を同時に開通させます。
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>到着・折り返しを待つ</strong>
+                        <p>
+                            列車が番線に停車し、方向転換すると続行の折り返し便（末尾に「_2」が付く運用）に切り替わります。発車標で発車時刻と発車方面を確認します。
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>出発進路を引く</strong>
+                        <p>
+                            折り返し後の方面へ出発進路を開通させます。
+                            <strong>1番線 → 本線下り</strong>なら <strong>2E</strong>、<strong>4番線 → 空港線</strong>なら <strong>21M ＋ 22O</strong> を使います。
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>発車ボタンを押す</strong>
+                        <p>
+                            折り返し後の方面のボードで発車ボタンを押します（<strong>下り</strong>へ出すなら「下り方面」、<strong>空港線</strong>へ出すなら「空港方面」）。出発時刻になると発車します。
+                        </p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section id="turnaround-cautions">
+            <h2>⚠ よくある間違い・注意点</h2>
+
+            <h3>① 方面（発車ボタン群）の取り違え</h3>
+            <p>1番線・4番線は複数の方面へ出発できます。折り返し後に向かう方面のボードを選んでいるか、発車前に確認してください。</p>
+
+            <h3>② 退避番線への振り分け忘れ</h3>
+            <p>朝ラッシュ（上り約7:20以降・下り約7:37以降）の普通列車を本務番線（3番線・6番線）に入れてしまうと、後続の優等列車が詰まります。普通は退避番線（2番線・5番線）へ。</p>
+
+            <h3>③ 折り返し列車の取り違え</h3>
+            <p>折り返しでは、到着便とその折り返し便（末尾に「_2」が付く運用。例：641T → 641T_2）が同じ車両です。回送にはなりません。発車標で到着便と折り返し便の対応を確認し、別の列車と混同しないようにしてください。</p>
+        </section>
+
+        <section id="related">
+            <h2>関連ガイド</h2>
+            <ul>
+                <li><a href="../help.html" style="color: var(--accent);">← 遊び方ガイド（共通操作）</a></li>
+                <li><a href="heikai-jima.html" style="color: var(--accent);">平海島マップガイド</a></li>
+                <li><a href="keihin-kawata.html" style="color: var(--accent);">京浜川田マップガイド</a></li>
+                <li><a href="takanawa.html" style="color: var(--accent);">高輪マップガイド</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">サポートページ</a> | <a href="https://tadimaru.github.io/steam-support/privacy.html">プライバシーポリシー</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 たでぃまる / 合同会社たでぃまる
+</footer>
+
+</body>
+</html>

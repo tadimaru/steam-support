@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keihin-Ohta Map Guide | Railway Dispatch Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-down     { background: #713f12; color: #fde68a; }
+        .badge-up       { background: #14532d; color: #86efac; }
+        .badge-air      { background: #1e3a5f; color: #93c5fd; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Keihin-Ohta Map Guide</h1>
+        <p>Railway Dispatch Simulator</p>
+    </div>
+    <div class="lang-switch"><a href="keihin-ohta.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#routes">Routes by Direction</a></li>
+            <li><a href="#departure-boards">The Three Departure Boards</a></li>
+            <li><a href="#refuge">Refuge Ops (Morning Rush)</a></li>
+        </ul>
+        <div class="section-title">Turnaround</div>
+        <ul>
+            <li><a href="#turnaround-intro">Introduction</a></li>
+            <li><a href="#turnaround-steps">Procedure</a></li>
+            <li><a href="#turnaround-cautions">Common Mistakes</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="heikai-jima.en.html">Heikai-jima Map</a></li>
+            <li><a href="keihin-kawata.en.html">Keihin-Kawata Map</a></li>
+            <li><a href="takanawa.en.html">Takanawa Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Keihin-Ohta Map
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Keihin-Ohta is a key junction station where the <strong>Main Line</strong> and the <strong>Airport Line</strong> diverge, with <strong>six platforms (Tracks 1–6)</strong>.
+                Trains running up and down the Main Line, trains through-running from the Main Line onto the Airport Line, trains coming from the Airport Line onto the Main Line,
+                and trains that <strong>turn around</strong> at the station are all mixed together — making this the map where route-building matters most.
+            </p>
+            <ul>
+                <li><strong>Tracks</strong>: Track 1 (Airport Line) / Tracks 2–3 (Main Outbound) / Track 4 (Airport Line) / Tracks 5–6 (Main Inbound)</li>
+                <li><strong>Directions</strong>: Main Line Outbound · Main Line Inbound · Airport Line</li>
+                <li><strong>Turnaround</strong>: Yes (Main Line ⇔ Airport Line turnarounds)</li>
+                <li><strong>Coupling / Merging</strong>: <strong>None</strong> (no coupling operations occur on this map)</li>
+            </ul>
+            <div class="callout">
+                <strong>Start by learning what each track is for.</strong> At Keihin-Ohta the role of each track is largely fixed.
+                Once you memorize the table below — which track and which route to use for each direction — you won't get lost even during the morning rush.
+            </div>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="keihin-ohta-levers.png" alt="Keihin-Ohta lever layout" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>Use the diagram above to see how Start Levers, End Levers, and tracks are arranged in the station. A route is set by combining a <strong>Start Lever</strong> and an <strong>End Lever</strong> (e.g. route <strong>1B</strong> is set with Start Lever "1" and End Lever "B").</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔀 Routes by Direction</h2>
+            <p>
+                At Keihin-Ohta, the route you use is determined by where a train comes from, which track it enters, and which direction it departs toward.
+                The list below covers the <strong>eight basic patterns</strong> of this map. Learn the arrival and departure routes as a set.
+            </p>
+            <div class="callout">
+                <strong>Routes joined with "+" must be set together.</strong>
+                At Keihin-Ohta, many trains pass through two consecutive routes (e.g. the Outbound Track 3 departure is <strong>3D + 5E</strong>, set at the same time). If you set only one, the train can only advance partway.
+            </div>
+
+            <h3><span class="badge badge-down">Outbound</span> Main Line Outbound (Left → Right)</h3>
+            <table>
+                <tr><th>Pattern</th><th>Track</th><th>Arrival</th><th>Departure</th><th>Notes</th></tr>
+                <tr>
+                    <td><strong>Outbound (pass / stop)</strong></td>
+                    <td>Track 3</td>
+                    <td><strong>1B</strong></td>
+                    <td><strong>3D + 5E</strong></td>
+                    <td>The basic straight-through route for the Outbound line. Express-class trains also use this track.</td>
+                </tr>
+                <tr>
+                    <td><strong>Outbound (Track 2 refuge)</strong></td>
+                    <td>Track 2</td>
+                    <td><strong>1B + 3C</strong></td>
+                    <td><strong>4E</strong></td>
+                    <td>Where a local train waits to be overtaken. 1B brings it toward Track 3, then 3C diverts it into Track 2.</td>
+                </tr>
+                <tr>
+                    <td><strong>Outbound → Airport through</strong></td>
+                    <td>Track 1</td>
+                    <td><strong>1A</strong></td>
+                    <td><strong>2F + 23O</strong></td>
+                    <td>Enters from the Outbound line and continues straight onto the Airport Line.</td>
+                </tr>
+            </table>
+
+            <h3><span class="badge badge-up">Inbound</span> Main Line Inbound (Right → Left)</h3>
+            <table>
+                <tr><th>Pattern</th><th>Track</th><th>Arrival</th><th>Departure</th><th>Notes</th></tr>
+                <tr>
+                    <td><strong>Inbound (pass / stop)</strong></td>
+                    <td>Track 6</td>
+                    <td><strong>11G + 12J</strong></td>
+                    <td><strong>15L</strong></td>
+                    <td>The basic straight-through route for the Inbound line. Express-class trains also use this track.</td>
+                </tr>
+                <tr>
+                    <td><strong>Inbound (Track 5 refuge)</strong></td>
+                    <td>Track 5</td>
+                    <td><strong>11H</strong></td>
+                    <td><strong>13J + 15L</strong></td>
+                    <td>Where a local train waits to be overtaken by a following limited-stop train.</td>
+                </tr>
+                <tr>
+                    <td><strong>Airport → Main Inbound through</strong></td>
+                    <td>Track 4</td>
+                    <td><strong>31N + 33K</strong></td>
+                    <td><strong>16L</strong></td>
+                    <td>Enters from the Airport Line and continues straight onto the Inbound line.</td>
+                </tr>
+            </table>
+
+            <h3><span class="badge badge-air">Turnaround</span> Trains that reverse at the station</h3>
+            <table>
+                <tr><th>Pattern</th><th>Track</th><th>Arrival</th><th>Departure</th><th>Notes</th></tr>
+                <tr>
+                    <td><strong>Main Inbound → turn → Airport</strong></td>
+                    <td>Track 4</td>
+                    <td><strong>11I + 14K</strong></td>
+                    <td><strong>21M + 22O</strong></td>
+                    <td>Arrives on the Inbound line → reverses → departs onto the Airport Line.</td>
+                </tr>
+                <tr>
+                    <td><strong>Airport → turn → Main Outbound</strong></td>
+                    <td>Track 1</td>
+                    <td><strong>31F + 32A</strong></td>
+                    <td><strong>2E</strong></td>
+                    <td>Arrives from the Airport Line → reverses → departs onto the Outbound line.</td>
+                </tr>
+            </table>
+
+            <div class="callout">
+                <strong>Track roles at a glance</strong><br>
+                ・<strong>Track 1</strong> = <strong>Airport Line</strong> (Outbound ⇔ Airport through / turnaround from airport to outbound)<br>
+                ・<strong>Track 2</strong> = Outbound refuge<br>
+                ・<strong>Track 3</strong> = Outbound main (pass / stop)<br>
+                ・<strong>Track 4</strong> = <strong>Airport Line</strong> (Inbound ⇔ Airport through / turnaround from inbound to airport)<br>
+                ・<strong>Track 5</strong> = Inbound refuge<br>
+                ・<strong>Track 6</strong> = Inbound main (pass / stop)
+            </div>
+        </section>
+
+        <section id="departure-boards">
+            <h2>🔔 The Three Departure Boards</h2>
+            <p>
+                Keihin-Ohta's departure buttons are split into <strong>three boards</strong> by destination direction.
+                Pick the board based on where the train you want to dispatch is headed.
+            </p>
+            <table>
+                <tr><th>Departure board</th><th>Track → Direction</th><th>Platform-exit route</th></tr>
+                <tr><td><span class="badge badge-down">Outbound</span></td><td>Tracks 1・2・3 → Outbound line</td><td>2E (Tk1) / 4E (Tk2) / 3D (Tk3)</td></tr>
+                <tr><td><span class="badge badge-up">Inbound</span></td><td>Tracks 4・5・6 → Inbound line</td><td>16L (Tk4) / 13J (Tk5) / 15L (Tk6)</td></tr>
+                <tr><td><span class="badge badge-air">Airport</span></td><td>Tracks 1・4 → Airport line</td><td>2F (Tk1) / 21M (Tk4)</td></tr>
+            </table>
+            <div class="callout">
+                The same track can use a different board depending on the destination. For example, <strong>Track 1</strong> uses the "Outbound" board to send a train onto the Outbound line, but the "Airport" board to send it onto the Airport Line.
+                Note that the routes above are the <strong>platform-exit</strong> routes; when an additional onward route is needed, see the "Routes by Direction" table (the two routes joined with "+").
+            </div>
+        </section>
+
+        <section id="refuge">
+            <h2>⏱ Refuge Operations (Morning Rush)</h2>
+            <p>
+                During the morning rush, local trains are overtaken by following limited-stop trains, so instead of the main tracks (Track 3 / Track 6) they enter the <strong>refuge tracks</strong>.
+            </p>
+            <table>
+                <tr><th>Direction</th><th>Refuge track</th><th>Approx. start time</th></tr>
+                <tr><td><span class="badge badge-up">Inbound locals</span></td><td><strong>Track 5</strong></td><td>roughly <strong>from ~7:20</strong></td></tr>
+                <tr><td><span class="badge badge-down">Outbound locals</span></td><td><strong>Track 2</strong></td><td>roughly <strong>from ~7:37</strong></td></tr>
+            </table>
+            <div class="callout">
+                Before these times (daytime schedule), local trains pass straight through on the main tracks (Inbound = Track 6 / Outbound = Track 3) without taking refuge.
+                Once the morning rush begins, route locals into the refuge tracks (Inbound = Track 5 / Outbound = Track 2) and let the limited-stop trains go first.
+            </div>
+        </section>
+
+        <section id="turnaround-intro">
+            <h2>🔄 Turnaround Procedure</h2>
+            <p>
+                A turnaround at Keihin-Ohta means a train <strong>reverses direction right at the platform it arrived on and continues in service as the next leg</strong>.
+                No siding is used — the train reverses on the platform track. There are two types of turnaround:
+            </p>
+            <ul>
+                <li><strong>Track 1</strong>: arrives from the Airport Line → reverses → departs onto the <strong>Outbound line</strong></li>
+                <li><strong>Track 4</strong>: arrives on the Inbound line → reverses → departs onto the <strong>Airport Line</strong></li>
+            </ul>
+            <p>
+                Turnarounds here are <strong>not deadhead (non-revenue) moves</strong>. The same train handles both "arriving leg → its turnaround leg", and the turnaround leg is tracked with a "<strong>_2</strong>" suffix on the operation number (e.g. arrives as <strong>641T</strong> → departs as <strong>641T_2</strong>). Use the departure board to keep the pairs straight.
+            </p>
+        </section>
+
+        <section id="turnaround-steps">
+            <h2>🔢 Procedure</h2>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>Set the arrival route</strong>
+                        <p>
+                            Bring the turning train into the turnaround track.
+                            For <strong>Track 1</strong>, set the Airport-Line arrival route <strong>31F + 32A</strong>; for <strong>Track 4</strong>, set the Inbound arrival route <strong>11I + 14K</strong> (both together).
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Wait for arrival and reversal</strong>
+                        <p>
+                            The train stops at the track and, when it reverses, it switches to the continuing turnaround leg (the operation with the "_2" suffix). Check the departure board for the departure time and direction.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the departure route</strong>
+                        <p>
+                            Set the departure route toward the post-turnaround direction.
+                            <strong>Track 1 → Outbound</strong> uses <strong>2E</strong>; <strong>Track 4 → Airport</strong> uses <strong>21M + 22O</strong>.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Press the departure button</strong>
+                        <p>
+                            Press the departure button on the board for the post-turnaround direction (the "Outbound" board for outbound, the "Airport" board for the Airport Line). The train departs at its scheduled time.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section id="turnaround-cautions">
+            <h2>⚠ Common Mistakes &amp; Cautions</h2>
+
+            <h3>① Picking the wrong direction (departure board)</h3>
+            <p>Tracks 1 and 4 can depart toward more than one direction. Before dispatching, confirm you've selected the board for the direction the train will head after turning around.</p>
+
+            <h3>② Forgetting to route locals into the refuge tracks</h3>
+            <p>If you put a morning-rush local (Inbound from ~7:20 / Outbound from ~7:37) onto the main tracks (Track 3 / Track 6), the following limited-stop trains back up. Send locals to the refuge tracks (Track 2 / Track 5).</p>
+
+            <h3>③ Mixing up turnaround trains</h3>
+            <p>In a turnaround, the arriving leg and its turnaround leg (the operation with a "_2" suffix, e.g. 641T → 641T_2) are the same train — it is not a deadhead move. Use the departure board to match the arriving number with its turnaround number, so you don't confuse it with another train.</p>
+        </section>
+
+        <section id="related">
+            <h2>Related Guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (common controls)</a></li>
+                <li><a href="heikai-jima.en.html" style="color: var(--accent);">Heikai-jima Map Guide</a></li>
+                <li><a href="keihin-kawata.en.html" style="color: var(--accent);">Keihin-Kawata Map Guide</a></li>
+                <li><a href="takanawa.en.html" style="color: var(--accent);">Takanawa Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru LLC
+</footer>
+
+</body>
+</html>
