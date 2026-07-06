@@ -82,6 +82,7 @@
         <li><a href="map-editor-equipment.en.html">Equipment</a></li>
         <li><a href="map-editor-trainlist.en.html">Operations</a></li>
         <li><a href="user-maps.en.html">Playing User Maps</a></li>
+        <li><a href="workshop.en.html">Steam Workshop</a></li>
         <li><a href="glossary.en.html">Glossary</a></li>
     </ul>
     <div class="section-title">Hands-on (build it)</div>
@@ -95,6 +96,7 @@
         <li><a href="#overview">Overview</a></li>
         <li><a href="#train-class">Train Class</a></li>
         <li><a href="#train-type">Train Type</a></li>
+        <li><a href="#import">Import</a></li>
     </ul>
     <div class="section-title">Related</div>
     <ul>
@@ -189,6 +191,41 @@
         <div class="callout">
             <strong>Bringing your own icon:</strong> if the official bank does not have the icon you want, you can drop PNG files into the user folder and reference them.
             See the <a href="train-icon.en.html">train icon guide</a> for details.
+        </div>
+    </section>
+
+    <section id="import">
+        <h2>📥 Import (Reuse from Another Map)</h2>
+        <p>
+            When you build several maps for the same line, re-entering the <strong>train classes</strong> and <strong>train types</strong> from scratch every time is tedious.
+            <strong>Import</strong> lets you <strong>bring those masters over as-is</strong> from another map where they are already defined.
+        </p>
+        <p>Open it from the <strong>Import</strong> tab, added to the Company category.</p>
+
+        <h3>Import flow</h3>
+        <ol class="step-list">
+            <li>Open the <strong>Import</strong> tab in the Company category</li>
+            <li>Pick the source map from the list (the search box filters by map name or company name)</li>
+            <li>Review the details in the overwrite confirmation dialog</li>
+            <li>On execute, the data is <strong>saved to the company folder automatically</strong> and the screen switches to the Train Class master</li>
+            <li>Confirm the imported classes and types are now in the list</li>
+        </ol>
+
+        <h3>What gets imported</h3>
+        <table>
+            <tr><th>Target</th><th>Description</th></tr>
+            <tr><td><strong>Train classes</strong></td><td>Label and color definitions such as "Local" and "Express" (<code>TrainClasses.csv</code>)</td></tr>
+            <tr><td><strong>Train types</strong></td><td>Rolling-stock specs — series, car count, icon, etc. (<code>TrainTypes.csv</code>)</td></tr>
+        </table>
+
+        <div class="callout">
+            <strong>Handled per company folder.</strong>
+            Classes and types are <strong>company-level</strong> masters, so the source list is de-duplicated by company folder.
+            The company you are currently editing does not appear in the list (you cannot import from yourself).
+        </div>
+        <div class="callout warn">
+            Import <strong>overwrites</strong> your existing class and type masters. Review the overwrite confirmation dialog carefully before executing.
+            If you cancel, your existing data is left unchanged.
         </div>
     </section>
 

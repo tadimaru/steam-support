@@ -263,6 +263,7 @@
         <li><a href="map-editor-equipment.html">設備編集</a></li>
         <li><a href="map-editor-trainlist.html">運行編集</a></li>
         <li><a href="user-maps.html" class="active">ユーザーマップ起動</a></li>
+        <li><a href="workshop.html">Steam Workshop</a></li>
         <li><a href="glossary.html">用語集</a></li>
     </ul>
     <div class="section-title">実践（つくってみる）</div>
@@ -278,7 +279,7 @@
         <li><a href="#bundle-info">タイトル・作者・説明・プレビュー</a></li>
         <li><a href="#import">他人のマップを入れる</a></li>
         <li><a href="#data-location">データの保存先</a></li>
-        <li><a href="#workshop">Steam Workshop（予定）</a></li>
+        <li><a href="#workshop">Steam Workshop</a></li>
     </ul>
     <div class="section-title">関連</div>
     <ul>
@@ -340,14 +341,19 @@
             設定情報は <code>&lt;マップフォルダ&gt;/bundle.json</code> と <code>&lt;マップフォルダ&gt;/preview.png</code> に保存されます。
         </div>
         <div class="callout tip">
-            <strong>Steam Workshop 連携（予定）：</strong>このバンドル情報は、今後のアップデートで Steam Workshop に投稿する際のタイトル・説明・サムネとしてそのまま使われる予定です。マップを配布する側は、Workshop 対応前から bundle.json と preview.png を整えておけばスムーズに公開できるようになります。
+            <strong>Steam Workshop 連携：</strong>このバンドル情報は、<a href="workshop.html">Steam Workshop</a> に投稿する際のタイトル・説明・サムネとしてそのまま使われます。投稿前にタイトル・説明・プレビュー画像を整えておくと、スムーズに公開できます。
         </div>
     </section>
 
     <section id="import">
         <h2>📥 他人のマップを入れる</h2>
+        <div class="callout tip">
+            <strong>いちばん簡単なのは Steam Workshop：</strong>
+            <a href="workshop.html">Steam Workshop</a> を使えば、ゲーム内から<strong>ワンクリックで購読・ダウンロード</strong>でき、下記のフォルダコピーは不要です。
+            以下は Workshop を使わずに手動でマップを受け渡す場合の方法です。
+        </div>
         <p>
-            他のユーザーが作ったマップを遊びたい場合、現状は<strong>マップフォルダを所定の場所にコピー</strong>する方式です。
+            Workshop を使わず、他のユーザーが作ったマップフォルダを直接もらった場合は、<strong>所定の場所にコピー</strong>して導入できます。
         </p>
         <ol class="step-list">
             <li>マップフォルダ（中に <code>Data/</code> フォルダが入っているもの）を入手する（圧縮されていれば展開する）</li>
@@ -385,13 +391,17 @@
     </section>
 
     <section id="workshop">
-        <h2>🛒 Steam Workshop（予定）</h2>
+        <h2>🛒 Steam Workshop</h2>
         <p>
-            将来のアップデート（V1.7.x 系）で <strong>Steam Workshop 連携</strong>を予定しています。
-            実装後はマップを 1 クリックで購読・公開できるようになり、フォルダコピーなしでマップが共有できるようになります。
+            <strong>Steam Workshop 連携</strong>に対応しました。
+            マップを 1 クリックで<strong>購読・公開</strong>でき、フォルダコピーなしでマップを共有できます。
         </p>
+        <ul>
+            <li><strong>探す・遊ぶ</strong> — 「ユーザーマップ」画面から Workshop ブラウザを開き、購読するだけでダウンロードされ、この一覧に合流します</li>
+            <li><strong>投稿する</strong> — マップエディタから自作マップを一般公開できます</li>
+        </ul>
         <div class="callout tip">
-            <strong>それまでの間：</strong>マップフォルダの ZIP 配布や、SNS（X など）でのスクリーンショット共有でユーザー同士の交流ができます。
+            使い方の詳細は <a href="workshop.html"><strong>Steam Workshop でマップを共有する</strong></a> を参照してください。
         </div>
     </section>
 
