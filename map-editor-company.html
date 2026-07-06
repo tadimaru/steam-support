@@ -82,6 +82,7 @@
         <li><a href="map-editor-equipment.html">設備編集</a></li>
         <li><a href="map-editor-trainlist.html">運行編集</a></li>
         <li><a href="user-maps.html">ユーザーマップ起動</a></li>
+        <li><a href="workshop.html">Steam Workshop</a></li>
         <li><a href="glossary.html">用語集</a></li>
     </ul>
     <div class="section-title">実践（つくってみる）</div>
@@ -95,6 +96,7 @@
         <li><a href="#overview">概要</a></li>
         <li><a href="#train-class">列車種別</a></li>
         <li><a href="#train-type">列車形式</a></li>
+        <li><a href="#import">インポート</a></li>
     </ul>
     <div class="section-title">関連</div>
     <ul>
@@ -190,6 +192,41 @@
         <div class="callout">
             <strong>自前アイコンを使う：</strong>公式バンクに無いアイコンを使いたい場合は、ユーザーフォルダに PNG を置いて参照する方法があります。
             詳しくは <a href="train-icon.html">列車アイコン変更ガイド</a> を参照してください。
+        </div>
+    </section>
+
+    <section id="import">
+        <h2>📥 インポート（他マップから流用）</h2>
+        <p>
+            同じ路線で複数のマップを作るとき、<strong>列車種別</strong>と<strong>列車形式</strong>を毎回ゼロから入力し直すのは手間です。
+            <strong>インポート</strong>を使うと、別のマップで定義済みのこれらのマスタを<strong>そのまま取り込む</strong>ことができます。
+        </p>
+        <p>会社カテゴリのタブに追加された <strong>「インポート」</strong> から開きます。</p>
+
+        <h3>取り込みの流れ</h3>
+        <ol class="step-list">
+            <li>会社カテゴリの <strong>「インポート」</strong> タブを開く</li>
+            <li>取り込み元のマップを一覧から選ぶ（検索窓でマップ名・会社名を絞り込めます）</li>
+            <li>上書き確認ダイアログで内容を確認する</li>
+            <li>取り込みを実行すると、<strong>会社フォルダへ自動保存</strong>され、列車種別マスターの画面に切り替わります</li>
+            <li>取り込んだ種別・形式が一覧に入っていることを確認する</li>
+        </ol>
+
+        <h3>取り込まれるもの</h3>
+        <table>
+            <tr><th>対象</th><th>内容</th></tr>
+            <tr><td><strong>列車種別</strong></td><td>「普通」「急行」などの種別ラベル・色の定義（<code>TrainClasses.csv</code>）</td></tr>
+            <tr><td><strong>列車形式</strong></td><td>系列・編成数・アイコンなど車両のスペック（<code>TrainTypes.csv</code>）</td></tr>
+        </table>
+
+        <div class="callout">
+            <strong>会社フォルダ単位で扱われます。</strong>
+            種別・形式は<strong>会社レベル</strong>のマスタなので、取り込み元の一覧は会社フォルダ単位で重複が除かれて表示されます。
+            現在編集中の会社は一覧に出ません（自分自身からは取り込めません）。
+        </div>
+        <div class="callout warn">
+            取り込みは既存の種別・形式マスタを<strong>上書き</strong>します。実行前に上書き確認ダイアログの内容をよく確認してください。
+            キャンセルした場合は既存データは変更されません。
         </div>
     </section>
 

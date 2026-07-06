@@ -313,12 +313,14 @@
                 <li><a href="#screen-layout">Screen Layout</a></li>
                 <li><a href="#map-controls">Map Controls</a></li>
                 <li><a href="#time-controls">Time Controls</a></li>
-                <li><a href="#menu">Menu</a></li>
+                <li><a href="#menu">Settings &amp; Return to Title</a></li>
+                <li><a href="#settings">Settings Screen</a></li>
                 <li><a href="#ui-elements">On-screen Icons</a></li>
                 <li><a href="#flow">Core Gameplay Loop</a></li>
                 <li><a href="#lever">Using Levers</a></li>
                 <li><a href="#departure">Departure Button</a></li>
                 <li><a href="#release">Releasing Levers</a></li>
+                <li><a href="#route-preview">Route Preview</a></li>
                 <li><a href="#tips">Useful Tips</a></li>
             </ul>
         </details>
@@ -353,6 +355,7 @@
             <summary>User Maps</summary>
             <ul>
                 <li><a href="user-maps.en.html">Playing User Maps</a></li>
+                <li><a href="workshop.en.html">Share on Steam Workshop</a></li>
             </ul>
         </details>
         <details>
@@ -434,14 +437,62 @@
         </section>
 
         <section id="menu">
-            <h2>🔙 Menu &amp; Return to Title</h2>
-            <p>Press <kbd>Esc</kbd> to open the menu. From the menu you can:</p>
+            <h2>🔙 Settings &amp; Return to Title</h2>
+            <p>Press <kbd>Esc</kbd> to <strong>open the Settings screen</strong>. Here you can change the volume, screen mode, language, and more (see <a href="#settings">Settings Screen</a> below).</p>
+            <p>The Settings screen also has <strong>Return to Title</strong> and <strong>Quit</strong> buttons, which take you back to the main menu or exit the game.</p>
+            <p>In-game time pauses while the Settings screen is open.</p>
+        </section>
+
+        <section id="settings">
+            <h2>⚙ Settings Screen</h2>
+            <p>
+                The <strong>Settings screen</strong> lets you adjust the basics like volume and screen mode, and also tune the
+                <strong>difficulty of operation</strong> — incidents (lost items / emergency stops) and door re-opening — to your taste.
+                Open it from <strong>SETTINGS</strong> on the title screen, or by pressing <kbd>Esc</kbd> during play.
+            </p>
+
+            <h3>Basic settings</h3>
+            <table>
+                <tr><th>Item</th><th>Description</th></tr>
+                <tr><td><strong>Volume</strong></td><td>Adjust Master / Announcements / SFX independently with three sliders</td></tr>
+                <tr><td><strong>Screen mode</strong></td><td>Switch between fullscreen and windowed</td></tr>
+                <tr><td><strong>Language</strong></td><td>Switch between Japanese and English (applies to the whole UI)</td></tr>
+                <tr><td><strong>Signal handling mode</strong></td><td>Switch between held and non-held. See <a href="#signal-handling">Signal Handling Mode</a> for details</td></tr>
+            </table>
+
+            <h3>Block signal display</h3>
+            <p>
+                You can turn the display of <strong>block signals</strong> placed between stations ON / OFF (shown by default).
+                Turn them <strong>off</strong> to declutter the screen on maps with complex track layouts.
+                The change applies immediately — no need to reload the scenario.
+            </p>
+            <div class="callout">
+                Hiding them does not change how the signals actually work. Only their appearance disappears; train control and interlocking with other signals are unaffected.
+            </div>
+
+            <h3>Lost-item / emergency-stop probability</h3>
+            <p>
+                For <strong>incidents</strong> inside a station (searching for lost items, handling emergency-stop buttons), you can choose whether to play with the
+                <strong>scenario's default</strong> or to <strong>override it yourself</strong>.
+            </p>
             <ul>
-                <li><strong>Return to Title</strong> — Go back to the map selection screen.</li>
-                <li><strong>Adjust Volume</strong> — Change volumes for announcements and SFX.</li>
-                <li><strong>Toggle Window Mode</strong> — Switch between fullscreen and windowed mode.</li>
+                <li><strong>Check "Use scenario default"</strong> — incidents occur at the probability the scenario intends</li>
+                <li><strong>Uncheck it</strong> — set the probability of "lost items" and "emergency stops" freely with sliders</li>
             </ul>
-            <p>The simulation pauses while the menu is open.</p>
+            <div class="callout tip">
+                Set the probability to <strong>0</strong> to focus on pure operation with no incidents, or raise it to practice handling irregularities.
+                See each map's own guide for what the incidents themselves involve.
+            </div>
+
+            <h3>Door re-opening</h3>
+            <p>
+                How often doors <strong>re-open and re-close</strong> (for last-second boarders and the like) can also use the default or be overridden.
+                Uncheck the box to apply a <strong>probability</strong> and a <strong>maximum count (1–4 times)</strong> uniformly to all trains.
+            </p>
+            <div class="callout">
+                <strong>Effect on scoring:</strong> a minor delay from door re-opening (up to +35 seconds) counts as on-time, so it does not immediately cost points even in Scoring Mode.
+                See the delay tolerance in <a href="#scoring-mode">Scoring Mode</a> for details.
+            </div>
         </section>
 
         <section id="flow">
@@ -608,6 +659,30 @@
             <p>If a train is <strong>actively approaching</strong> the route, you cannot release the lever. Once the train stops, a <strong>30-second countdown</strong> must elapse before the lock automatically releases. The remaining time is shown in the log on the left.</p>
             <h3>Occupancy Locking</h3>
             <p>While a train is <strong>occupying a track inside the route</strong>, that section cannot be reused by another route. It releases automatically once the train has cleared.</p>
+        </section>
+
+        <section id="route-preview">
+            <h2>🚦 Route Preview</h2>
+            <p>
+                <strong>Click a running train's icon</strong> to enter <strong>Route Preview</strong>, which highlights the
+                <strong>path the train is about to take</strong> along the track with color coding. See at a glance "where is this train headed?" and "which platform will it reach?".
+            </p>
+            <ul>
+                <li><span class="badge badge-orange">Orange</span> — the leg toward a stop</li>
+                <li><span class="badge badge-blue">Cyan</span> — a leg it passes through</li>
+            </ul>
+            <p>
+                <strong>In-game time pauses</strong> during preview, so you can study the route at your leisure.
+            </p>
+            <h3>How to exit</h3>
+            <ul>
+                <li>Press <kbd>Esc</kbd> or <strong>right-click</strong> to end the preview</li>
+                <li>On exit, the track circuit colors return to normal and time resumes at its previous speed</li>
+                <li>Clicking a different train switches straight to that train's route</li>
+            </ul>
+            <div class="callout tip">
+                Hover over a train icon and the cursor changes to a <strong>hand</strong>. That is your cue that it is clickable.
+            </div>
         </section>
 
         <section id="tips">

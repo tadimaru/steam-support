@@ -314,11 +314,13 @@
                 <li><a href="#map-controls">マップ操作</a></li>
                 <li><a href="#time-controls">時間操作</a></li>
                 <li><a href="#menu">メニュー</a></li>
+                <li><a href="#settings">設定画面</a></li>
                 <li><a href="#ui-elements">画面上のアイコン</a></li>
                 <li><a href="#flow">基本の流れ</a></li>
                 <li><a href="#lever">てこを操作する</a></li>
                 <li><a href="#departure">出発ボタンを押す</a></li>
                 <li><a href="#release">てこを戻す</a></li>
+                <li><a href="#route-preview">列車の経路プレビュー</a></li>
                 <li><a href="#tips">知っておくと便利なこと</a></li>
             </ul>
         </details>
@@ -353,6 +355,7 @@
             <summary>ユーザーマップ</summary>
             <ul>
                 <li><a href="user-maps.html">ユーザーマップを起動する</a></li>
+                <li><a href="workshop.html">Steam Workshop で共有する</a></li>
             </ul>
         </details>
         <details>
@@ -434,14 +437,62 @@
         </section>
 
         <section id="menu">
-            <h2>🔙 メニュー・タイトル画面に戻る</h2>
-            <p><kbd>Esc</kbd> キーを押すとメニューが開きます。メニューからは以下の操作ができます。</p>
+            <h2>🔙 設定画面・タイトルに戻る</h2>
+            <p><kbd>Esc</kbd> キーを押すと<strong>設定画面が開きます</strong>。ここで音量・画面モード・言語などを変更できます（下記 <a href="#settings">設定画面</a>）。</p>
+            <p>設定画面には <strong>「タイトルに戻る」</strong>「終了」ボタンもあり、ここからメインメニューへ戻ったりゲームを終了したりできます。</p>
+            <p>設定画面を開いている間、ゲーム内の時間は一時停止します。</p>
+        </section>
+
+        <section id="settings">
+            <h2>⚙ 設定画面</h2>
+            <p>
+                <strong>設定画面</strong>では、音量や画面まわりの基本設定に加えて、
+                インシデント（落とし物・非常停止）やドアの再開閉といった<strong>運行の難しさ</strong>まで自分好みに調整できます。
+                タイトル画面の <strong>SETTINGS</strong>、またはプレイ中に <kbd>Esc</kbd> キーを押すと開きます。
+            </p>
+
+            <h3>基本の設定</h3>
+            <table>
+                <tr><th>項目</th><th>内容</th></tr>
+                <tr><td><strong>音量</strong></td><td>マスター / アナウンス / 効果音 の 3 系統をスライダーで個別に調整</td></tr>
+                <tr><td><strong>画面モード</strong></td><td>フルスクリーン / ウィンドウ を切り替え</td></tr>
+                <tr><td><strong>言語</strong></td><td>日本語 / English を切り替え（UI 全体に反映）</td></tr>
+                <tr><td><strong>信号扱い方式</strong></td><td>保留式 / 非保留式 を切り替え。詳しくは <a href="#signal-handling">信号扱い方式</a> を参照</td></tr>
+            </table>
+
+            <h3>閉塞信号の表示</h3>
+            <p>
+                駅間に置かれた<strong>閉塞信号機</strong>の表示を ON / OFF できます（既定は表示）。
+                配線が複雑なマップで画面をすっきりさせたいときに<strong>非表示</strong>にできます。
+                切り替えは即時反映され、シナリオの読み込み直しは不要です。
+            </p>
+            <div class="callout">
+                非表示にしても信号の動作そのものは通常どおりです。見た目が消えるだけで、列車の制御や他の信号への連動には影響しません。
+            </div>
+
+            <h3>落とし物・非常停止の発生確率</h3>
+            <p>
+                駅構内で起きる<strong>インシデント</strong>（落とし物の捜索・非常停止ボタンの扱い）の発生しやすさを、
+                <strong>シナリオの既定値</strong>で遊ぶか、<strong>自分で上書き</strong>するかを選べます。
+            </p>
             <ul>
-                <li><strong>タイトル画面に戻る</strong> — マップ選択画面に戻ります</li>
-                <li><strong>音量調整</strong> — BGM・効果音の音量を変更できます</li>
-                <li><strong>ウィンドウモード切替</strong> — フルスクリーン / ウィンドウを切り替えられます</li>
+                <li><strong>「シナリオの既定値を使う」にチェック</strong> — そのシナリオが想定する確率で発生します</li>
+                <li><strong>チェックを外す</strong> — 「落とし物」「非常停止」の発生確率をスライダーで自由に設定できます</li>
             </ul>
-            <p>メニューを開いている間、ゲーム内の時間は一時停止します。</p>
+            <div class="callout tip">
+                確率を <strong>0</strong> にすればインシデントなしで純粋な運行に集中でき、高くすればイレギュラー対応の練習になります。
+                インシデントそのものの内容は各マップ別ガイドも参照してください。
+            </div>
+
+            <h3>ドアの再開閉</h3>
+            <p>
+                駆け込み乗車などで<strong>ドアをもう一度開け閉めする</strong>頻度も、既定値で遊ぶか上書きするかを選べます。
+                チェックを外すと、<strong>発生確率</strong>と<strong>最大回数（1〜4 回）</strong>を全列車に一律で適用できます。
+            </p>
+            <div class="callout">
+                <strong>採点への影響：</strong>ドアの再開閉による軽微な遅れ（+35 秒まで）は定時扱いなので、採点モードでもすぐには減点になりません。
+                詳しくは <a href="#scoring-mode">採点モード</a> の遅延許容を参照してください。
+            </div>
         </section>
 
         <section id="flow">
@@ -635,6 +686,30 @@
             <p>列車が進路に<strong>接近中</strong>のときは、てこを戻すことができません。列車が停車した後、<strong>30秒が経過すると自動的に解錠</strong>されます。画面左のログに残り秒数が表示されます。</p>
             <h3>在線鎖錠（ざいせんさじょう）</h3>
             <p>列車が<strong>進路内の線路に在線中</strong>（乗っている状態）は、その区間は他の進路に使えません。列車が通過し終わると自動で解錠されます。</p>
+        </section>
+
+        <section id="route-preview">
+            <h2>🚦 列車の経路プレビュー</h2>
+            <p>
+                走行中の<strong>列車アイコンをクリック</strong>すると、その列車が<strong>これから通る進路</strong>を線路上に色分けで表示する
+                <strong>経路プレビュー</strong>に入れます。「この列車はどこへ向かうのか」「どの番線に着くのか」をひと目で確認できます。
+            </p>
+            <ul>
+                <li><span class="badge badge-orange">オレンジ</span> — 停車駅へ向かう区間</li>
+                <li><span class="badge badge-blue">水色</span> — 通過する区間</li>
+            </ul>
+            <p>
+                プレビュー中は<strong>ゲーム内の時間が一時停止</strong>するので、あわてずにじっくり経路を確認できます。
+            </p>
+            <h3>終了のしかた</h3>
+            <ul>
+                <li><kbd>Esc</kbd> キー、または<strong>右クリック</strong>でプレビューを終了</li>
+                <li>終了すると軌道回路の色が通常表示に戻り、時間も元の速度で再開します</li>
+                <li>別の列車をクリックすると、そのまま新しい列車の経路に切り替わります</li>
+            </ul>
+            <div class="callout tip">
+                列車アイコンにカーソルを乗せると<strong>手のひらカーソル</strong>に変わります。これがクリックできる合図です。
+            </div>
         </section>
 
         <section id="tips">
