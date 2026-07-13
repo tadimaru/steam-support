@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taninokuchi Map Guide | Railway Dispatch Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-rinkan   { background: #0d4f43; color: #99f6e4; }
+        .badge-nakanobu { background: #713f12; color: #fde68a; }
+        .badge-shunting { background: #14532d; color: #86efac; }
+        .badge-blue  { background: #1e3a5f; color: #93c5fd; }
+        .badge-green { background: #14532d; color: #86efac; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Taninokuchi Map Guide</h1>
+        <p>Railway Dispatch Simulator — Tokyo Kanagawa Express</p>
+    </div>
+    <div class="lang-switch"><a href="taninokuchi.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#lines">Two Lines and Classes</a></li>
+            <li><a href="#routes">Route List</a></li>
+        </ul>
+        <div class="section-title">Operations</div>
+        <ul>
+            <li><a href="#localtypes">Blue vs. Green Locals</a></li>
+            <li><a href="#turnaround">Nakanobu Line Turnaround</a></li>
+            <li><a href="#buttons">Departure Buttons</a></li>
+            <li><a href="#cautions">Common Mistakes</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="ohta.en.html">Ohta Map</a></li>
+            <li><a href="aoyama.en.html">Aoyama Map</a></li>
+            <li><a href="daigakumae.en.html">Daigakumae Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Taninokuchi Map
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Taninokuchi is the first map in the game where you manage <strong>multiple stations at once</strong>.
+                Four stations — Yuen-mae, Futako, Shinmachi, and Taninokuchi — sit on a quadruple-track corridor,
+                where you handle two lines simultaneously: the <strong>Rinkan Line</strong> on the outer tracks
+                and the <strong>Nakanobu Line</strong> on the inner tracks.
+            </p>
+            <ul>
+                <li><strong>Stations</strong>: Yuen-mae (4 tracks) → Futako (2 tracks) → Shinmachi (2 tracks) → Taninokuchi (4 tracks)</li>
+                <li><span class="badge badge-rinkan">Rinkan Line</span> … Outer tracks. Runs straight through the map (Local / Semi Express / Express; inbound trains run through to the Subway)</li>
+                <li><span class="badge badge-nakanobu">Nakanobu Line</span> … Inner tracks. Terminates at Taninokuchi and turns around via the tail tracks (Blue Local / Green Local / Express)</li>
+                <li><strong>Tail tracks</strong>: Two beyond Taninokuchi (for Nakanobu Line turnarounds), plus a spare set on the Yuen-mae side</li>
+                <li><strong>Only Taninokuchi requires departure signals</strong> — the other stations depart automatically on time as long as the route is open</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="taninokuchi-levers.png" alt="Taninokuchi lever layout" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>Levers are spread across the entire map: Yuen-mae on the left, Taninokuchi and its tail tracks on the right.</p>
+        </section>
+
+        <section id="lines">
+            <h2>🚈 Two Lines and Their Classes</h2>
+            <table>
+                <tr><th>Line</th><th>Tracks</th><th>Classes</th><th>Behavior</th></tr>
+                <tr>
+                    <td><span class="badge badge-rinkan">Rinkan Line</span></td>
+                    <td>Outer</td>
+                    <td>Local / Semi Express / Express</td>
+                    <td>Runs straight through the map, no turnarounds. Inbound trains continue as Subway through services</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-nakanobu">Nakanobu Line</span></td>
+                    <td>Inner</td>
+                    <td>Blue Local / Green Local / Express</td>
+                    <td>Terminates on Taninokuchi Track 2, reverses via the tail tracks, and returns from Track 3</td>
+                </tr>
+            </table>
+            <div class="callout">
+                <strong>Nakanobu Line Expresses are special.</strong> They use the Nakanobu platforms (Yuen-mae Tracks 2 and 3)
+                but run on the <strong>outer tracks</strong> between stations, passing Futako and Shinmachi and continuing through the map.
+                They merge into the same tracks as Rinkan Line trains, so watch out for route conflicts.
+            </div>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 Route List</h2>
+            <p>
+                A route is defined by a <strong>Start Lever</strong> and an <strong>End Lever</strong>.
+                Routes are grouped by station below.
+            </p>
+
+            <h3>Yuen-mae Station (left edge)</h3>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>Entry from the outbound approach into Yuen-mae Track 1 (Rinkan Line)</td></tr>
+                <tr><td><strong>2B</strong></td><td>2 → B</td><td>Entry from the outbound approach into Yuen-mae Track 2 (Nakanobu Line)</td></tr>
+                <tr><td><strong>3E</strong></td><td>3 → E</td><td>Departure from Yuen-mae Track 1 toward Futako (Rinkan Line outbound)</td></tr>
+                <tr><td><strong>4E</strong></td><td>4 → E</td><td>Departure from Yuen-mae Track 2 <strong>crossing over to the outer track</strong> (Blue Local: stops at Futako and Shinmachi)</td></tr>
+                <tr><td><strong>4F</strong></td><td>4 → F</td><td>Departure from Yuen-mae Track 2 <strong>straight down the inner track</strong> (Green Local: passes Futako and Shinmachi)</td></tr>
+                <tr><td><strong>14C</strong></td><td>14 → C</td><td>Entry from the Futako side into Yuen-mae Track 3 (Nakanobu Line inbound)</td></tr>
+                <tr><td><strong>15C</strong></td><td>15 → C</td><td>Entry from the Futako side into Yuen-mae Track 3 (crossover variant)</td></tr>
+                <tr><td><strong>15D</strong></td><td>15 → D</td><td>Entry from the Futako side into Yuen-mae Track 4 (Rinkan Line inbound)</td></tr>
+                <tr><td><strong>16G</strong></td><td>16 → G</td><td>Departure from Yuen-mae Track 3 to the inbound exit (Nakanobu Line)</td></tr>
+                <tr><td><strong>16H</strong></td><td>16 → H</td><td>Departure from Yuen-mae Track 3 to the inbound exit (crossover)</td></tr>
+                <tr><td><strong>17G</strong></td><td>17 → G</td><td>Departure from Yuen-mae Track 4 to the inbound exit (crossover)</td></tr>
+                <tr><td><strong>17H</strong></td><td>17 → H</td><td>Departure from Yuen-mae Track 4 to the inbound exit (Rinkan Line)</td></tr>
+            </table>
+
+            <h3>Between Shinmachi and Taninokuchi</h3>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>5K</strong></td><td>5 → K</td><td>From Shinmachi Track 1 toward Taninokuchi (Rinkan Line outbound, staying outer)</td></tr>
+                <tr><td><strong>5L</strong></td><td>5 → L</td><td>From Shinmachi Track 1 <strong>crossing back to the inner track</strong> (Blue Local returning to the Nakanobu Line)</td></tr>
+                <tr><td><strong>6L</strong></td><td>6 → L</td><td>Inner-track through trains continuing toward Taninokuchi Track 2 (Green Local)</td></tr>
+                <tr><td><strong>18T</strong></td><td>18 → T</td><td>Inbound train from Taninokuchi Track 3 <strong>staying on the inner track</strong> (Green Local: passes Shinmachi)</td></tr>
+                <tr><td><strong>18U</strong></td><td>18 → U</td><td>Inbound train from Taninokuchi Track 3 <strong>crossing to the outer track</strong> into Shinmachi Track 2 (Blue Local: stops at Shinmachi)</td></tr>
+                <tr><td><strong>19U</strong></td><td>19 → U</td><td>Inbound train from Taninokuchi Track 4 into Shinmachi Track 2 (Rinkan Line inbound)</td></tr>
+            </table>
+
+            <h3>Taninokuchi Station (right edge)</h3>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>9I</strong></td><td>9 → I</td><td>Entry from the outbound main line into Taninokuchi Track 1 (Rinkan Line)</td></tr>
+                <tr><td><strong>10J</strong></td><td>10 → J</td><td>Entry from the outbound inner track into Taninokuchi Track 2 (Nakanobu Line arrivals)</td></tr>
+                <tr><td><strong>7M</strong></td><td>7 → M</td><td>Departure from Taninokuchi Track 1 to the outbound exit (Rinkan Line)</td></tr>
+                <tr><td><strong>20Q</strong></td><td>20 → Q</td><td>Entry from the inbound approach into Taninokuchi Track 4 (Rinkan Line)</td></tr>
+                <tr><td><strong>11W</strong></td><td>11 → W</td><td>Entry from the inbound approach toward Track 4 (second home signal)</td></tr>
+                <tr><td><strong>11O</strong></td><td>11 → O</td><td>Entry from the inbound approach directly into Tail Track 2 (empty-stock feed-in)</td></tr>
+                <tr><td><strong>13S</strong></td><td>13 → S</td><td>Departure from Taninokuchi Track 4 toward Shinmachi (Rinkan Line inbound)</td></tr>
+                <tr><td><strong>12R</strong></td><td>12 → R</td><td>Departure from Taninokuchi Track 3 toward Shinmachi (Nakanobu Line inbound)</td></tr>
+                <tr><td><strong>21M</strong></td><td>21 → M</td><td>From Tail Track 1 out to the outbound exit (empty-stock return)</td></tr>
+            </table>
+
+            <h3><span class="badge badge-shunting">Shunting</span> Taninokuchi ↔ Tail Tracks</h3>
+            <p>Shunting routes used for Nakanobu Line turnarounds. Start levers light up green.</p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>31N</strong></td><td>31 → N</td><td>From Taninokuchi Track 2 into Tail Track 1</td></tr>
+                <tr><td><strong>31O</strong></td><td>31 → O</td><td>From Taninokuchi Track 2 into Tail Track 2</td></tr>
+                <tr><td><strong>32P</strong></td><td>32 → P</td><td>From Tail Track 1 into Taninokuchi Track 3</td></tr>
+                <tr><td><strong>33P</strong></td><td>33 → P</td><td>From Tail Track 2 into Taninokuchi Track 3</td></tr>
+            </table>
+            <div class="callout">
+                There is also a spare tail track with shunting routes (35F, 35V, 36C, 37C) on the Yuen-mae side,
+                but it is rarely used in the standard scenarios.
+            </div>
+        </section>
+
+        <section id="localtypes">
+            <h2>🟦🟩 Blue Locals vs. Green Locals (Nakanobu Line stopping patterns)</h2>
+            <p>
+                The Nakanobu Line runs two kinds of Local trains, and <strong>the class color tells you whether they stop
+                at Futako and Shinmachi</strong>. Their stopping pattern also changes which tracks they use — and therefore which routes you set.
+            </p>
+            <table>
+                <tr><th>Class</th><th>Futako / Shinmachi</th><th>Outbound path</th><th>Inbound path</th></tr>
+                <tr>
+                    <td><span class="badge badge-blue">Blue Local</span></td>
+                    <td><strong>Stops</strong></td>
+                    <td>Crosses to the outer track via <strong>4E</strong> → stops at Futako and Shinmachi → returns inner via <strong>5L</strong> to Taninokuchi Track 2</td>
+                    <td>From Taninokuchi Track 3 via <strong>12R → 18U</strong>, crossing outer to stop at Shinmachi and Futako</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-green">Green Local</span></td>
+                    <td><strong>Passes</strong></td>
+                    <td>Straight down the inner track via <strong>4F</strong> → <strong>6L</strong> → Taninokuchi Track 2</td>
+                    <td>From Taninokuchi Track 3 via <strong>12R → 18T</strong>, staying inner</td>
+                </tr>
+            </table>
+            <div class="callout warn">
+                <strong>⚠ Same "Local", different routes</strong><br>
+                Give a Blue Local the inner through routes (4F / 18T) and it will skip Futako and Shinmachi where it was supposed to stop.
+                Check the class color and the departure board carefully. The arrival announcements also state whether the train
+                stops at Shinmachi.
+            </div>
+        </section>
+
+        <section id="turnaround">
+            <h2>🔄 Nakanobu Line Turnaround (Taninokuchi)</h2>
+            <p>
+                When a Nakanobu Line train reaches Taninokuchi Track 2, it <strong>becomes an out-of-service move,
+                reverses on a tail track, and departs from Track 3 as an inbound service</strong>.
+                The train keeps its base number throughout, gaining the suffixes "_1" (out-of-service move into the tail track) →
+                "_2" (out-of-service move back out) → "_3" (the inbound service after the turnaround) — e.g. 8001 → 8001_1 → 8001_2 → 8001_3.
+            </p>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>Receive the Nakanobu train on Track 2</strong>
+                        <p>Open home route <strong>10J</strong> to bring it onto Taninokuchi Track 2. On arrival it gains the "_1" suffix and goes out of service.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the shunting route into a tail track</strong>
+                        <p>
+                            Open <strong>31N</strong> (Tail Track 1) or <strong>31O</strong> (Tail Track 2), whichever is free,
+                            then press Track 2's departure button to send it off.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the return route to Track 3</strong>
+                        <p>
+                            Check the time of the return move ("_2" suffix) on the departure board and open <strong>32P</strong> or <strong>33P</strong>.
+                            At the scheduled time the train moves to Track 3 and becomes an inbound service.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the inbound departure route and send it off</strong>
+                        <p>
+                            Open <strong>12R</strong>, prepare the following section route — <strong>18T</strong> (Green Local)
+                            or <strong>18U</strong> (Blue Local) — and press Track 3's departure button.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="callout">
+                <strong>Feed-ins and returns also appear.</strong>
+                Depending on the scenario, empty stock arrives from outside directly into a tail track (route <strong>11O</strong>),
+                and finished stock leaves the tail tracks for the outside (route <strong>21M</strong>).
+                They show up as "Out of Service" on the departure board — don't miss them.
+            </div>
+        </section>
+
+        <section id="buttons">
+            <h2>🔔 Departure Buttons</h2>
+            <p>
+                Departure buttons exist <strong>only for Taninokuchi's four tracks</strong>.
+                The other stations (Yuen-mae, Futako, Shinmachi) depart automatically on schedule as long as their routes are open.
+            </p>
+            <table>
+                <tr><th>Track</th><th>Role</th><th>Button color</th></tr>
+                <tr><td>Track 1</td><td><span class="badge badge-rinkan">Rinkan Line</span> outbound</td><td>Green</td></tr>
+                <tr><td>Track 2</td><td><span class="badge badge-nakanobu">Nakanobu Line</span> arrivals / moves to the tail tracks</td><td>Gray</td></tr>
+                <tr><td>Track 3</td><td><span class="badge badge-nakanobu">Nakanobu Line</span> turnaround departures</td><td>Orange</td></tr>
+                <tr><td>Track 4</td><td><span class="badge badge-rinkan">Rinkan Line</span> inbound</td><td>Green</td></tr>
+            </table>
+        </section>
+
+        <section id="cautions">
+            <h2>⚠ Common Mistakes</h2>
+
+            <h3>① Overlooking the Local's color</h3>
+            <p>
+                When dispatching Nakanobu Line Locals from Yuen-mae (4E vs. 4F) or from Taninokuchi (18U vs. 18T),
+                <strong>the correct route depends on whether it's a Blue or Green Local</strong>.
+                Check the color and the departure board before setting the route.
+            </p>
+
+            <h3>② Dropping the turnaround chain</h3>
+            <p>
+                Every Nakanobu Line train cycles through four stages: arrive → into the tail track → back out → depart.
+                Miss one move and Track 2 stays occupied, backing up every following Nakanobu train.
+                Keep an eye on Track 2 and the tail-track occupancy at all times.
+            </p>
+
+            <h3>③ Express trains merging across lines</h3>
+            <p>
+                Nakanobu Line Expresses run on the outer (Rinkan Line) tracks between stations.
+                Watch the spacing against Rinkan Line trains and sequence the mid-section routes (5K, 6L, etc.) to avoid conflicts.
+            </p>
+
+            <h3>④ Forgetting routes at distant stations</h3>
+            <p>
+                Only Taninokuchi needs departure signals, but <strong>routes must be set at all four stations</strong>.
+                Don't keep the camera glued to Taninokuchi — regularly check arrivals and departures at the left side of the map (Yuen-mae).
+            </p>
+        </section>
+
+        <section id="related">
+            <h2>Related Guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (common controls)</a></li>
+                <li><a href="ohta.en.html" style="color: var(--accent);">Ohta Map Guide</a></li>
+                <li><a href="aoyama.en.html" style="color: var(--accent);">Aoyama Map Guide</a></li>
+                <li><a href="daigakumae.en.html" style="color: var(--accent);">Daigakumae Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru LLC
+</footer>
+
+</body>
+</html>

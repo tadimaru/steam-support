@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aoyama Map Guide | Railway Dispatch Simulator</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSM1S8XQZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM1S8XQZQ');
+    </script>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4a90d9;
+            --accent2: #6ab04c;
+            --text: #e8eaf6;
+            --text-dim: #9ca3af;
+            --border: #2e3250;
+            --warn: #f59e0b;
+            --radius: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        header {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .icon { font-size: 22px; }
+        header h1 { font-size: 18px; font-weight: bold; color: var(--text); }
+        header p { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+        header .lang-switch { margin-left: auto; font-size: 12px; }
+        header .lang-switch a { color: var(--text-dim); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; }
+        header .lang-switch a:hover { color: var(--accent); border-color: var(--accent); }
+
+        .layout {
+            display: flex;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        nav {
+            width: 240px;
+            min-width: 220px;
+            padding: 28px 16px;
+            position: sticky;
+            top: 65px;
+            align-self: flex-start;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        nav ul { list-style: none; }
+        nav li + li { margin-top: 4px; }
+
+        nav a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        nav .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            padding: 16px 12px 4px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 28px;
+            min-width: 0;
+        }
+
+        section { margin-bottom: 48px; }
+
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text);
+            margin: 28px 0 10px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text); }
+        strong { color: #fff; }
+
+        main ul { padding-left: 1.5em; margin: 8px 0; }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            color: var(--text-dim);
+        }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout strong { color: var(--text); }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 16px 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: flex-start;
+        }
+        .step-list li::before {
+            content: counter(step);
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .step-list .step-content { flex: 1; }
+        .step-list img {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+        th {
+            background: var(--surface2);
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-rinkan   { background: #0d4f43; color: #99f6e4; }
+        .badge-shibuyoko { background: #6b1024; color: #fecdd3; }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 32px 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #ccc; }
+
+        @media (max-width: 800px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="icon">🚉</span>
+    <div>
+        <h1>Aoyama Map Guide</h1>
+        <p>Railway Dispatch Simulator — Tokyo Kanagawa Express</p>
+    </div>
+    <div class="lang-switch"><a href="aoyama.html">日本語</a></div>
+</header>
+
+<div class="layout">
+    <nav>
+        <div class="section-title">Map</div>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#lever-layout">Lever Layout</a></li>
+            <li><a href="#routes">Route List</a></li>
+        </ul>
+        <div class="section-title">Operations</div>
+        <ul>
+            <li><a href="#turnaround">Platform Turnaround (Shibuyoko Line)</a></li>
+            <li><a href="#buttons">Departure Buttons</a></li>
+            <li><a href="#cautions">Common Mistakes</a></li>
+        </ul>
+        <div class="section-title">Related</div>
+        <ul>
+            <li><a href="../help.en.html">← How to Play</a></li>
+            <li><a href="ohta.en.html">Ohta Map</a></li>
+            <li><a href="daigakumae.en.html">Daigakumae Map</a></li>
+            <li><a href="taninokuchi.en.html">Taninokuchi Map</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <div class="breadcrumb">
+            <a href="../help.en.html">← How to Play</a> / Aoyama Map
+        </div>
+
+        <section id="overview">
+            <h2>🎯 Map Overview</h2>
+            <p>
+                Aoyama is a <strong>combined terminal where two Tokyo Kanagawa Express lines meet</strong>.
+                You control two lines with very different personalities on a single screen:
+                the <strong>Rinkan Line</strong>, with its mix of Local, Express, and Semi Express services,
+                and the <strong>Shibuyoko Line</strong>, home to Limited Expresses, Commuter Limited Expresses, and through services.
+            </p>
+            <ul>
+                <li><span class="badge badge-rinkan">Rinkan Line</span> … Track 1 / Track 2</li>
+                <li><span class="badge badge-shibuyoko">Shibuyoko Line</span> … Tracks 3–6</li>
+                <li><strong>Siding</strong>: None (Shibuyoko Line turnarounds happen at platforms 4 and 5)</li>
+                <li><strong>Through services</strong>: Outbound Shibuyoko Line trains include "Minato Line Through" and "Sagami Express Through" services</li>
+                <li><strong>Train lengths</strong>: Rinkan Line is all 10-car; the Shibuyoko Line mixes 8-car and 10-car trains</li>
+            </ul>
+        </section>
+
+        <section id="lever-layout">
+            <h2>🗺 Lever Layout</h2>
+            <img src="aoyama-levers.png" alt="Aoyama lever layout" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <p>The levers are fully separated by line: the Rinkan Line (Tracks 1–2) on top, the Shibuyoko Line (Tracks 3–6) below.</p>
+        </section>
+
+        <section id="routes">
+            <h2>🔧 Route List</h2>
+            <p>
+                A route is defined by a <strong>Start Lever</strong> and an <strong>End Lever</strong>.
+                All routes at Aoyama are main-line routes (home and starting) — there are no shunting routes.
+            </p>
+
+            <h3><span class="badge badge-rinkan">Rinkan Line</span> (Tracks 1–2)</h3>
+            <p>The standard pattern is "outbound = Track 1 / inbound = Track 2", but crossovers let you use the opposite track as well.</p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>1A</strong></td><td>1 → A</td><td>Entry from the outbound main line into Track 1</td></tr>
+                <tr><td><strong>1C</strong></td><td>1 → C</td><td>Entry from the outbound main line into Track 2 (crossover)</td></tr>
+                <tr><td><strong>11C</strong></td><td>11 → C</td><td>Entry from the inbound main line into Track 2</td></tr>
+                <tr><td><strong>2B</strong></td><td>2 → B</td><td>Departure from Track 1 onto the outbound main line</td></tr>
+                <tr><td><strong>3B</strong></td><td>3 → B</td><td>Departure from Track 2 onto the outbound main line (crossover)</td></tr>
+                <tr><td><strong>12D</strong></td><td>12 → D</td><td>Departure from Track 2 onto the inbound main line</td></tr>
+                <tr><td><strong>13D</strong></td><td>13 → D</td><td>Departure from Track 1 onto the inbound main line (crossover)</td></tr>
+            </table>
+
+            <h3><span class="badge badge-shibuyoko">Shibuyoko Line</span> (Tracks 3–6)</h3>
+            <p>
+                Outbound trains can be received on Tracks 3, 4, and 5; inbound trains on Tracks 4, 5, and 6.
+                <strong>Tracks 4 and 5 are center tracks usable by both directions</strong> and are also used for turnarounds.
+            </p>
+            <table>
+                <tr><th>Route</th><th>Start → End</th><th>Purpose</th></tr>
+                <tr><td><strong>31E</strong></td><td>31 → E</td><td>Entry from the outbound main line into Track 3</td></tr>
+                <tr><td><strong>31F</strong></td><td>31 → F</td><td>Entry from the outbound main line into Track 4</td></tr>
+                <tr><td><strong>31G</strong></td><td>31 → G</td><td>Entry from the outbound main line into Track 5</td></tr>
+                <tr><td><strong>41F</strong></td><td>41 → F</td><td>Entry from the inbound main line into Track 4</td></tr>
+                <tr><td><strong>41G</strong></td><td>41 → G</td><td>Entry from the inbound main line into Track 5</td></tr>
+                <tr><td><strong>41H</strong></td><td>41 → H</td><td>Entry from the inbound main line into Track 6</td></tr>
+                <tr><td><strong>32I</strong></td><td>32 → I</td><td>Departure from Track 3 onto the outbound main line</td></tr>
+                <tr><td><strong>33I</strong></td><td>33 → I</td><td>Departure from Track 4 onto the outbound main line</td></tr>
+                <tr><td><strong>34I</strong></td><td>34 → I</td><td>Departure from Track 5 onto the outbound main line</td></tr>
+                <tr><td><strong>42J</strong></td><td>42 → J</td><td>Departure from Track 4 onto the inbound main line</td></tr>
+                <tr><td><strong>43J</strong></td><td>43 → J</td><td>Departure from Track 5 onto the inbound main line</td></tr>
+                <tr><td><strong>44J</strong></td><td>44 → J</td><td>Departure from Track 6 onto the inbound main line</td></tr>
+            </table>
+        </section>
+
+        <section id="turnaround">
+            <h2>🔄 Platform Turnaround (Shibuyoko Line)</h2>
+            <p>
+                On the Shibuyoko Line, some services <strong>arrive as inbound trains, reverse direction right at the platform,
+                and depart again as outbound trains</strong>. They turn around on revenue tracks (usually Track 4, occasionally Track 5)
+                without using a siding, so no shunting is involved. The procedure is three steps:
+            </p>
+
+            <ol class="step-list">
+                <li>
+                    <div class="step-content">
+                        <strong>Receive the inbound train on Track 4 (or 5)</strong>
+                        <p>
+                            Identify the turnaround train on the departure board, then set the inbound home route
+                            (41F or 41G) to bring it onto a center track.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Set the outbound departure route</strong>
+                        <p>
+                            The train becomes an outbound service while passengers board, keeping its train number with a "_1" suffix added.
+                            Confirm it on the departure board, then open the outbound departure route — 33I for Track 4, 34I for Track 5.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-content">
+                        <strong>Press the departure button</strong>
+                        <p>
+                            When departure time comes, send it off with that track's departure button.
+                            Most turnaround trains leave as through services such as "Minato Line Through".
+                        </p>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="callout warn">
+                <strong>⚠ A turnaround blocks one center track</strong><br>
+                While a turnaround train occupies Track 4, outbound arrivals are limited to Track 3.
+                When the turnaround train's turn to depart comes, dispatch it promptly so that following outbound trains don't pile up.
+            </div>
+        </section>
+
+        <section id="buttons">
+            <h2>🔔 Departure Buttons</h2>
+            <p>
+                There is one departure button per track — six in total, color-coded by line and direction.
+            </p>
+            <table>
+                <tr><th>Tracks</th><th>Group</th><th>Button color</th></tr>
+                <tr><td>Track 1</td><td><span class="badge badge-rinkan">Rinkan Line</span> outbound</td><td>Green</td></tr>
+                <tr><td>Track 2</td><td><span class="badge badge-rinkan">Rinkan Line</span> inbound</td><td>Purple</td></tr>
+                <tr><td>Track 3 / Track 4</td><td><span class="badge badge-shibuyoko">Shibuyoko Line</span> outbound</td><td>Red</td></tr>
+                <tr><td>Track 5 / Track 6</td><td><span class="badge badge-shibuyoko">Shibuyoko Line</span> inbound</td><td>Brown</td></tr>
+            </table>
+            <div class="callout">
+                <strong>Every train stops at Aoyama.</strong> There are no passing trains, so every arrival needs a departure.
+                The Morning Rush in particular runs a huge number of trains across both lines — a missed departure button
+                turns straight into delay.
+            </div>
+        </section>
+
+        <section id="cautions">
+            <h2>⚠ Common Mistakes</h2>
+
+            <h3>① Sending trains to the wrong platform</h3>
+            <p>
+                The Shibuyoko Line offers many choices (outbound: 3/4/5, inbound: 4/5/6) and the routes conflict with each other.
+                Check the track number on the departure board before setting the home route — an arbitrary choice can leave
+                no room for the next turnaround train.
+            </p>
+
+            <h3>② Missing a turnaround train</h3>
+            <p>
+                Turnaround trains gain a "_1" suffix on their train number when they arrive (some even become out-of-service moves).
+                If you see an inbound train heading for a center track, that's your cue — check the departure board
+                for its departure time.
+            </p>
+
+            <h3>③ Tunnel vision on one line</h3>
+            <p>
+                The Rinkan and Shibuyoko Lines are completely independent — tracks and levers alike.
+                Make a habit of scanning both departure boards alternately instead of locking onto one line.
+            </p>
+        </section>
+
+        <section id="related">
+            <h2>Related Guides</h2>
+            <ul>
+                <li><a href="../help.en.html" style="color: var(--accent);">← How to Play (common controls)</a></li>
+                <li><a href="ohta.en.html" style="color: var(--accent);">Ohta Map Guide</a></li>
+                <li><a href="daigakumae.en.html" style="color: var(--accent);">Daigakumae Map Guide</a></li>
+                <li><a href="taninokuchi.en.html" style="color: var(--accent);">Taninokuchi Map Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    <a href="https://tadimaru.github.io/steam-support/">Support</a> | <a href="https://tadimaru.github.io/steam-support/privacy.en.html">Privacy Policy</a> | <a href="https://x.com/tadi_maru">X @tadi_maru</a><br>
+    &copy; 2026 Tadimaru LLC
+</footer>
+
+</body>
+</html>
