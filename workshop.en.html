@@ -8,6 +8,9 @@
     <meta name="description" content="Publishing your maps and subscribing to others' maps.">
     <link rel="alternate" hreflang="ja" href="https://tadimaru.github.io/steam-support/workshop.html">
     <link rel="alternate" hreflang="en" href="https://tadimaru.github.io/steam-support/workshop.en.html">
+    <link rel="alternate" hreflang="ko" href="https://tadimaru.github.io/steam-support/workshop.ko.html">
+    <link rel="alternate" hreflang="zh-Hant" href="https://tadimaru.github.io/steam-support/workshop.zh-Hant.html">
+    <link rel="alternate" hreflang="zh-Hans" href="https://tadimaru.github.io/steam-support/workshop.zh-Hans.html">
     <link rel="alternate" hreflang="x-default" href="https://tadimaru.github.io/steam-support/workshop.en.html">
     <script>/* テーマ初期反映（FOUC回避）: 保存済みの明示テーマを CSS 読込前に適用 */
     (function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
@@ -36,6 +39,9 @@
             <div class="menu">
                 <a href="workshop.html" lang="ja">日本語</a>
                 <a class="current" href="workshop.en.html" lang="en">English</a>
+                <a href="workshop.ko.html" lang="ko">한국어</a>
+                <a href="workshop.zh-Hant.html" lang="zh-Hant">繁體中文</a>
+                <a href="workshop.zh-Hans.html" lang="zh-Hans">简体中文</a>
             </div>
         </details>
     </div>
@@ -106,25 +112,25 @@
         <p>Use the in-game <strong>Workshop browser</strong> to find and subscribe to published maps.</p>
         <ol class="step-list">
             <li>Title screen → open <strong>User Maps</strong></li>
-            <li>Press the <strong>Open Workshop browser</strong> button (the list loads)</li>
-            <li>On the <strong>Everyone's posts</strong> tab, use tag filters and sorting to find maps</li>
-            <li>Press <strong>Subscribe &amp; DL</strong> on a map that catches your eye to start the download</li>
-            <li>Once done, the label changes to <strong>Subscribed (downloaded)</strong></li>
+            <li>Press the <strong>Browse Steam Workshop</strong> button (the list loads)</li>
+            <li>On the <strong>All</strong> tab, use tag filters and sorting to find maps</li>
+            <li>Press <strong>Subscribe</strong> on a map that catches your eye to start the download</li>
+            <li>Once done, the label changes to <strong>Subscribed</strong></li>
             <li>Close the browser and pick the map from the User Maps list to play</li>
         </ol>
 
         <h3>Tabs</h3>
         <ul>
-            <li><strong>Everyone's posts</strong> — all maps published on Workshop. Tag filtering and sorting are available</li>
-            <li><strong>My posts</strong> — maps you have published. Ones you set to Unlisted also appear here</li>
+            <li><strong>All</strong> — all maps published on Workshop. Tag filtering and sorting are available</li>
+            <li><strong>Mine</strong> — maps you have published. Ones you set to Unlisted also appear here</li>
         </ul>
 
         <h3>Sorting</h3>
-        <p>On the "Everyone's posts" tab, you can change the order of the list.</p>
+        <p>On the "All" tab, you can change the order of the list.</p>
         <table>
             <tr><th>Order</th><th>What it shows</th></tr>
             <tr><td><strong>Popular</strong></td><td>Established maps with high subscriptions and ratings on top</td></tr>
-            <tr><td><strong>Newest</strong></td><td>Most recently published first</td></tr>
+            <tr><td><strong>Recent</strong></td><td>Most recently published first</td></tr>
             <tr><td><strong>Trending</strong></td><td>Maps gaining attention lately</td></tr>
         </table>
 
@@ -144,7 +150,7 @@
         <p>Publishing is done from the <strong>Map Editor</strong>. Have a playable map ready first.</p>
         <ol class="step-list">
             <li>Open the map you want to publish in the Map Editor</li>
-            <li>Choose <strong>File menu → "Edit Bundle Info…"</strong> to open the Bundle Info dialog</li>
+            <li>Choose <strong>File menu → "Bundle Info…"</strong> to open the Bundle Info dialog</li>
             <li>Set the <strong>title, description, tags, and thumbnail</strong> (the thumbnail can be <a href="#thumbnail">auto-captured</a>)</li>
             <li>Check the box to <strong>agree to the publishing guidelines</strong> (first time only; it defaults to ON afterward → <a href="#guideline">Publishing Guidelines</a>)</li>
             <li>Click <strong>"Save &amp; Publish / Update on Steam Workshop"</strong> inside the dialog</li>
@@ -161,7 +167,7 @@
         </div>
         <div class="callout warn">
             <strong>Posts are made "public."</strong>
-            A published map appears in search and in the browser's "Everyone's posts," and anyone can subscribe.
+            A published map appears in search and on the browser's "All" tab, and anyone can subscribe.
             If you'd rather not have it public, change the visibility on the Steam item page after publishing.
         </div>
     </section>
@@ -173,7 +179,7 @@
             Get a single shot with the whole map neatly framed, with no fuss.
         </p>
         <ol class="step-list">
-            <li>In the Bundle Info dialog's <strong>thumbnail field</strong>, press <strong>"✨ Auto-capture"</strong> (or "Retake" if one already exists)</li>
+            <li>In the Bundle Info dialog's <strong>thumbnail field</strong>, press <strong>"✨ Auto capture"</strong> (or "Recapture" if one already exists)</li>
             <li>The view briefly switches to the game and the whole map is fit into the camera automatically (trains are not shown)</li>
             <li>When done, it returns to the Bundle Info dialog automatically and the thumbnail is applied</li>
         </ol>
@@ -181,7 +187,7 @@
             You can also use a preview image you prepared yourself (<code>preview.png</code>) as-is. Auto-capture is handy when you have "no thumbnail yet" or "want to retake it."
         </div>
         <div class="callout tip">
-            If you try to publish without a thumbnail set, the <strong>pre-publish check screen</strong> also offers <strong>"🖼 Auto-capture thumbnail and publish"</strong>, so you can capture and publish right there.
+            If you try to publish without a thumbnail set, the <strong>pre-publish check screen</strong> also offers <strong>"🖼 Auto-capture &amp; publish"</strong>, so you can capture and publish right there.
         </div>
     </section>
 
@@ -196,8 +202,8 @@
             <tr><th>Category</th><th>Examples</th></tr>
             <tr><td><strong>Scale</strong></td><td>Single station / Small / Medium / Large, etc.</td></tr>
             <tr><td><strong>Difficulty</strong></td><td>Easy / Normal / Hard, etc.</td></tr>
-            <tr><td><strong>Time of day</strong></td><td>Morning rush / Daytime / Evening rush, etc.</td></tr>
-            <tr><td><strong>Features</strong></td><td>Turnaround / Shunting / Coupling, and other map traits</td></tr>
+            <tr><td><strong>Time of day</strong></td><td>Morning / Daytime / Evening, etc.</td></tr>
+            <tr><td><strong>Features</strong></td><td>Reversing / Shunting / Coupling, and other map traits</td></tr>
             <tr><td><strong>Language</strong></td><td>Japanese / English, and other supported languages</td></tr>
         </table>
         <div class="callout tip">
@@ -292,7 +298,7 @@
             <tr><th>Question</th><th>Answer</th></tr>
             <tr>
                 <td>I published but it doesn't show in the browser</td>
-                <td>Right after publishing, it can take Steam a little while to reflect. Wait a moment and reopen "Everyone's posts." You can always find your own posts on the "My posts" tab.</td>
+                <td>Right after publishing, it can take Steam a little while to reflect. Wait a moment and reopen the "All" tab. You can always find your own posts on the "Mine" tab.</td>
             </tr>
             <tr>
                 <td>A subscribed map doesn't appear in the list</td>
