@@ -93,13 +93,13 @@
             <h2>🎯 地图概要</h2>
             <p>
                 高轮地图是包含 <strong>高轮站</strong> 与 <strong>南高轮站</strong> 2 座车站的终端站型地图。
-                高轮站设有 1 至 3 股道，南高轮站设有 1 至 2 股道，站内一侧备有折返用的<strong>引上线 X／引上线 Y</strong>。
+                高轮站设有 1 至 3 股道，南高轮站设有 1 至 2 股道，站内一侧备有折返用的<strong>牵出线 X／牵出线 Y</strong>。
                 折返列车、通过列车与增结解联列车会在同一站内交错，因此需要比以往更高一阶的调度技巧。
             </p>
             <ul>
                 <li><strong>高轮站</strong>: 1 股道 / 2 股道 / 3 股道（玩家操作进路的主要车站）</li>
                 <li><strong>南高轮站</strong>: 1 股道 / 2 股道。<strong>只有普通列车停靠的车站</strong>，列车<strong>无需玩家任何操作，即会自动停车・发车（或通过）</strong>。</li>
-                <li><strong>引上线</strong>: 引上线 X / 引上线 Y（用于折返・增结解联）。<strong>画面上 X 为上方线、Y 为下方线</strong>并排。</li>
+                <li><strong>牵出线</strong>: 牵出线 X / 牵出线 Y（用于折返・增结解联）。<strong>画面上 X 为上方线、Y 为下方线</strong>并排。</li>
             </ul>
         </section>
 
@@ -107,13 +107,13 @@
             <h2>🗺 控制杆配置图</h2>
             <img src="takanawa-levers.png" alt="高轮地图（高轮・南高轮）的控制杆配置图" style="width: 100%; max-width: 860px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
             <!-- TODO: capture screenshot — 高輪駅・南高輪駅・引上線 X/Y を含む駅構内全体のてこ配置（発点 1〜5・11〜13・21〜27・31〜36 と増結用 81・82、着点 A〜L が見える構図）。 -->
-            <p>请通过上图确认站内控制杆（起点・终点）与股道・引上线的位置关系。</p>
+            <p>请通过上图确认站内控制杆（起点・终点）与股道・牵出线的位置关系。</p>
 
             <h3>起点控制杆的种类</h3>
             <table>
                 <tr><th>框线颜色</th><th>用途</th><th>控制杆编号</th></tr>
                 <tr><td><strong>黄框</strong> <span class="badge badge-general">正线</span></td><td>营业运转中的进路设定</td><td>1〜5（右行）／ 11〜13（左行）</td></tr>
-                <tr><td><strong>绿框</strong> <span class="badge badge-shunting">调车</span></td><td>进入引上线・折返</td><td>21〜27（右行）／ 31〜36（左行）</td></tr>
+                <tr><td><strong>绿框</strong> <span class="badge badge-shunting">调车</span></td><td>进入牵出线・折返</td><td>21〜27（右行）／ 31〜36（左行）</td></tr>
                 <tr><td><strong>橘框</strong> <span class="badge badge-coupling">增结</span></td><td>用于连结的特殊调车</td><td>81（右行）／ 82（左行）</td></tr>
             </table>
         </section>
@@ -145,15 +145,15 @@
 
             <h3>调车进路</h3>
             <p>
-                用于站内调车移动（进入引上线・折返・返回 1 股道）的进路。起点控制杆会亮起<strong>绿色</strong>。
+                用于站内调车移动（进入牵出线・折返・返回 1 股道）的进路。起点控制杆会亮起<strong>绿色</strong>。
                 与正线进路相同，基本上 <strong>1 次操作需要连续排列多条进路</strong>。
             </p>
             <table>
                 <tr><th>操作</th><th>使用的进路（由左依序排列）</th></tr>
-                <tr><td>高轮站 2 股道 → 调车至引上线 X</td><td><strong>33J → 35K</strong></td></tr>
-                <tr><td>高轮站 2 股道 → 调车至引上线 Y</td><td><strong>33J → 35L</strong></td></tr>
-                <tr><td>引上线 X → 调车至高轮站 1 股道</td><td><strong>21A → 23B → 24C</strong></td></tr>
-                <tr><td>引上线 Y → 调车至高轮站 1 股道</td><td><strong>22A → 23B → 24C</strong></td></tr>
+                <tr><td>高轮站 2 股道 → 调车至牵出线 X</td><td><strong>33J → 35K</strong></td></tr>
+                <tr><td>高轮站 2 股道 → 调车至牵出线 Y</td><td><strong>33J → 35L</strong></td></tr>
+                <tr><td>牵出线 X → 调车至高轮站 1 股道</td><td><strong>21A → 23B → 24C</strong></td></tr>
+                <tr><td>牵出线 Y → 调车至高轮站 1 股道</td><td><strong>22A → 23B → 24C</strong></td></tr>
             </table>
 
             <h3>增结用调车进路</h3>
@@ -164,7 +164,7 @@
             <table>
                 <tr><th>进路名称</th><th>起点 → 终点</th><th>用途</th></tr>
                 <tr><td><strong>81B</strong></td><td>81 → B</td><td>右行：将后续的连结车，靠向已先停于高轮 1 股道（终点 B 侧）的列车</td></tr>
-                <tr><td><strong>82L</strong></td><td>82 → L</td><td>左行：将另一列车，靠向已停于引上线 Y（终点 L 侧）的列车</td></tr>
+                <tr><td><strong>82L</strong></td><td>82 → L</td><td>左行：将另一列车，靠向已停于牵出线 Y（终点 L 侧）的列车</td></tr>
             </table>
             <div class="callout coupling">
                 <strong>💡 增结用调车进路独有的特性：</strong> 一般进路在其行经的轨道电路上有列车占用时无法排列。
@@ -184,9 +184,9 @@
             <p>
                 这是高轮地图首次登场的运用：<strong>对 1 个车次，以多个编组组合运行</strong>的机制。
                 早尖峰时，有一种运用是将以 <strong>12 辆编组</strong>到达高轮站 2 股道的列车分割为 <strong>前 8 辆 + 后 4 辆</strong>，
-                前 8 辆直接发车前往上行正线，后 4 辆则引上至引上线。
+                前 8 辆直接发车前往上行正线，后 4 辆则引上至牵出线。
                 傍晚则相反，在高轮站 1 股道，于从下行正线到达的 <strong>8 辆编组</strong>后方，
-                <strong>从引上线调来 4 辆编组连结</strong>，以 12 辆编组发车前往下行正线。
+                <strong>从牵出线调来 4 辆编组连结</strong>，以 12 辆编组发车前往下行正线。
                 此外，在同一股道将 2 列列车前后纵向停放的 <strong>「纵列停车」</strong> 也在本地图首次登场。
             </p>
 
@@ -200,7 +200,7 @@
 
             <h3 id="decoupling" class="op-major">解联的基本步骤</h3>
             <p>
-                在高轮地图中，解联会在 <strong>高轮站 2 股道</strong> 或 <strong>引上线 X</strong> 发生。
+                在高轮地图中，解联会在 <strong>高轮站 2 股道</strong> 或 <strong>牵出线 X</strong> 发生。
             </p>
             <ol class="step-list coupling">
                 <li>
@@ -227,11 +227,11 @@
                         </p>
                         <ul>
                             <li>例: 在高轮站 2 股道，前 8 辆作为特急发车前往上行正线 → <strong>13H</strong></li>
-                            <li>例: 在高轮站 2 股道，前 4 辆作为回送进入引上线 → <strong>33J</strong></li>
+                            <li>例: 在高轮站 2 股道，前 4 辆作为回送进入牵出线 → <strong>33J</strong></li>
                         </ul>
                         <div class="callout">
                             <strong>在高轮站 2 股道解联时：</strong>排列进路后，需要<strong>按下发车按钮</strong>。<br>
-                            <strong>在引上线 X 解联时：</strong>无需发车按钮。只要先排列好进路，<strong>到达时刻即会自动发车</strong>。
+                            <strong>在牵出线 X 解联时：</strong>无需发车按钮。只要先排列好进路，<strong>到达时刻即会自动发车</strong>。
                         </div>
                         <img src="takanawa-coupling-step6.png" alt="Step 2: 使前侧列车发车">
                         <!-- TODO: capture screenshot -->
@@ -242,7 +242,7 @@
                         <strong>使留下的<u>后侧</u>列车发车</strong>
                         <p>
                             前侧发车后，后侧列车（多为回送）会留在同一停车位置。以相同要领排列<strong>后侧列车的进路</strong>，
-                            在高轮站 2 股道时按下发车按钮即会发车；在引上线 X 时，到达时刻即会自动发车。
+                            在高轮站 2 股道时按下发车按钮即会发车；在牵出线 X 时，到达时刻即会自动发车。
                         </p>
                         <img src="takanawa-coupling-step7.png" alt="Step 3: 使后侧列车发车">
                         <!-- TODO: capture screenshot -->
@@ -256,15 +256,15 @@
             <ul>
                 <li>
                     <strong>切离后 4 辆的类型</strong>: <code>557H</code> / <code>659H</code> / <code>661H</code><br>
-                    前 8 辆（<code>557Hb</code> / <code>659Hb</code> / <code>661Hb</code>）先发车前往上行正线方向，后 4 辆（<code>回557H</code> / <code>回659H</code> / <code>回661H</code>）前往引上线 Y。
+                    前 8 辆（<code>557Hb</code> / <code>659Hb</code> / <code>661Hb</code>）先发车前往上行正线方向，后 4 辆（<code>回557H</code> / <code>回659H</code> / <code>回661H</code>）前往牵出线 Y。
                 </li>
                 <li>
                     <strong>切离前 4 辆的类型</strong>: <code>663H</code> / <code>665H</code> / <code>667H</code> / <code>669H</code> / <code>671H</code> / <code>673H</code> / <code>775H</code> / <code>777H</code><br>
-                    前 4 辆（<code>回◯◯H</code>）前往引上线 Y，后 8 辆（<code>◯◯Hb</code>）作为上行正线方向后发。
+                    前 4 辆（<code>回◯◯H</code>）前往牵出线 Y，后 8 辆（<code>◯◯Hb</code>）作为上行正线方向后发。
                 </li>
             </ul>
 
-            <p><strong>早尖峰 — 在引上线 X 解联</strong></p>
+            <p><strong>早尖峰 — 在牵出线 X 解联</strong></p>
             <ul>
                 <li><code>回653A</code>（12 辆）→ 4 辆（<code>回724Cb</code>）先发车并增结至 <code>724C</code> 后方／8 辆（<code>回720A</code>）随后以 <code>720A</code> 发车</li>
                 <li><code>回603B</code>（12 辆）→ 4 辆（<code>回724H</code>）先发车并增结至 <code>724H</code> 后方／8 辆（<code>回722A</code>）随后以 <code>722A</code> 发车</li>
@@ -274,7 +274,7 @@
             <ul>
                 <li>
                     <strong>切离后 4 辆的类型</strong>: <code>1833H</code><br>
-                    前 8 辆（<code>1833Hb</code>）先发车前往上行正线方向，后 4 辆（<code>回1833H</code>）回送至引上线 Y。
+                    前 8 辆（<code>1833Hb</code>）先发车前往上行正线方向，后 4 辆（<code>回1833H</code>）回送至牵出线 Y。
                 </li>
             </ul>
 
@@ -283,7 +283,7 @@
                 <li>
                     <div class="step-content">
                         <strong>将连结目标列车停在规定的股道</strong>
-                        <p>以一般的正线进路或调车进路，将作为基底的列车引入股道（或引上线）。</p>
+                        <p>以一般的正线进路或调车进路，将作为基底的列车引入股道（或牵出线）。</p>
                         <img src="takanawa-coupling-step1.png" alt="Step 1: 连结目标列车待机">
                         <!-- TODO: capture screenshot -->
                     </div>
@@ -291,7 +291,7 @@
                 <li>
                     <div class="step-content">
                         <strong>以调车带来要连结的追加编组</strong>
-                        <p>将连结用编组（多为位于引上线・其他股道的短编组），以调车靠向增结对象附近的轨道。</p>
+                        <p>将连结用编组（多为位于牵出线・其他股道的短编组），以调车靠向增结对象附近的轨道。</p>
                         <img src="takanawa-coupling-step2.png" alt="Step 2: 靠近连结编组">
                         <!-- TODO: capture screenshot -->
                     </div>
@@ -299,7 +299,7 @@
                 <li>
                     <div class="step-content">
                         <strong>以橘色控制杆 81 / 82 排列增结进路</strong>
-                        <p>在高轮站 1 股道增结时操作 <strong>81 → B</strong>，在引上线 Y 增结时操作 <strong>82 → L</strong>。
+                        <p>在高轮站 1 股道增结时操作 <strong>81 → B</strong>，在牵出线 Y 增结时操作 <strong>82 → L</strong>。
                         由于这是进入占用中轨道电路的特殊进路，请确认<strong>增结用调车信号机显示进行</strong>。</p>
                         <img src="takanawa-coupling-step3.png" alt="Step 3: 排列增结进路">
                         <!-- TODO: capture screenshot -->
@@ -326,25 +326,25 @@
                 <li><code>756H</code> + <code>回756H</code> → 以 12 辆作为 <code>756H</code> 发车</li>
                 <li><code>858H</code> + <code>回858H</code> → 以 12 辆作为 <code>858H</code> 发车</li>
                 <li><code>860H</code> + <code>回860H</code> → 以 12 辆作为 <code>860H</code> 发车</li>
-                <li><code>回724Ca</code>（8 辆、由引上线 Y 出发）+ <code>回724Cb</code>（4 辆、由引上线 X 出发）→ 以 12 辆作为 <code>724C</code> 发车</li>
+                <li><code>回724Ca</code>（8 辆、由牵出线 Y 出发）+ <code>回724Cb</code>（4 辆、由牵出线 X 出发）→ 以 12 辆作为 <code>724C</code> 发车</li>
             </ul>
-            <div class="callout">4 辆侧（<code>回◯◯H</code> / <code>回724Cb</code>）皆从引上线 X 操作 <strong>81B</strong>，连结到在 1 股道待机的 8 辆编组后方。</div>
+            <div class="callout">4 辆侧（<code>回◯◯H</code> / <code>回724Cb</code>）皆从牵出线 X 操作 <strong>81B</strong>，连结到在 1 股道待机的 8 辆编组后方。</div>
 
-            <p><strong>早尖峰 — 在引上线 Y 增结（使用 82L）</strong></p>
+            <p><strong>早尖峰 — 在牵出线 Y 增结（使用 82L）</strong></p>
             <ul>
                 <li><code>回659H</code> + <code>回661H</code> → 8 辆（其后移动至高轮站 1 股道，作为 <code>回724Ca</code> 充当 <code>724C</code> 的前 8 辆）</li>
                 <li><code>回557H</code> + <code>回663H</code> + <code>回665H</code> → 12 辆（其后作为 <code>726C</code> 从高轮站 1 股道发车）</li>
             </ul>
-            <div class="callout">后到达的编组操作 <strong>82L</strong>，连结到在引上线 Y 待机的编组后方。</div>
+            <div class="callout">后到达的编组操作 <strong>82L</strong>，连结到在牵出线 Y 待机的编组后方。</div>
 
             <p><strong>晚尖峰 — 在高轮站 1 股道增结（使用 81B）</strong></p>
             <ul>
-                <li><code>1972H</code>（8 辆）+ <code>回1972H</code>（4 辆、由引上线 Y 出发）→ 以 12 辆作为 <code>1972H</code> 发车</li>
+                <li><code>1972H</code>（8 辆）+ <code>回1972H</code>（4 辆、由牵出线 Y 出发）→ 以 12 辆作为 <code>1972H</code> 发车</li>
             </ul>
 
             <h3 id="parallel" class="op-major">纵列停车的基本步骤</h3>
             <p>
-                纵列停车<strong>只会在引上线 Y</strong> 发生，使用的进路只有 <strong>82L</strong>。
+                纵列停车<strong>只会在牵出线 Y</strong> 发生，使用的进路只有 <strong>82L</strong>。
                 基本步骤与 <a href="#coupling" style="color: var(--accent);">增结的基本步骤</a> 的 Step 1〜3 相同，只是不会连结，2 列列车会在同一轨道上前后纵向停放。
             </p>
             <div class="callout">
@@ -354,12 +354,12 @@
 
             <h3>发生纵列停车的运用（依剧本）</h3>
 
-            <p><strong>早尖峰 — 在引上线 Y 纵列停车</strong></p>
+            <p><strong>早尖峰 — 在牵出线 Y 纵列停车</strong></p>
             <ul>
                 <li><code>回659H</code> 纵列停放于 <code>回557H</code> 旁</li>
             </ul>
 
-            <p><strong>晚尖峰 — 在引上线 Y 纵列停车</strong></p>
+            <p><strong>晚尖峰 — 在牵出线 Y 纵列停车</strong></p>
             <ul>
                 <li><code>回1767</code> 与 <code>回1863b</code> 纵列停放</li>
                 <li><code>回1723</code> 纵列停放于 <code>回1833H</code> 旁。<code>回1723</code> 出库后，改由 <code>回1713</code> 与 <code>回1833H</code> 纵列停放（不会同时并列 3 列）</li>
