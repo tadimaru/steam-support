@@ -713,6 +713,27 @@ footer a:hover { color: var(--accent); }
     .portal { padding: 24px 16px; }
 }
 
+/* ---- 別製品「鉄道運行管理シミュレーターPro」のページ配色 ----
+   本編（青）と視覚的にはっきり区別し、DLC との誤認を防ぐためのアクセント差し替え（金系）。
+   body に .theme-pro が付くのは product: "pro" のページのみ（build.py が付与）。 */
+body.theme-pro {
+    --accent: #a56a0b;
+    --accent2: #8a5a0a;
+    --code-fg: #9a5b06;
+}
+:root[data-theme="dark"] body.theme-pro {
+    --accent: #e0b04a;
+    --accent2: #c99a3c;
+    --code-fg: #e6bb63;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) body.theme-pro {
+        --accent: #e0b04a;
+        --accent2: #c99a3c;
+        --code-fg: #e6bb63;
+    }
+}
+
 /* ↓ build.py が :root[data-theme="dark"] から自動展開（OSのダーク設定追従用） */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
